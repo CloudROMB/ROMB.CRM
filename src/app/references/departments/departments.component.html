@@ -1,0 +1,155 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        #mainList
+        source="departments"
+        [itemStructure]="docStructure"
+        [dtView]="dtView"
+        (beforeAddNew)="beforeAddNew($event)">
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #f="ngForm" class="dt-card-form tab-form">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group label-floating">
+                <label class="control-label">Название точки</label>
+                <input #name [(ngModel)]="item.name" name="itemName"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <romb-ref-select
+                source="brands"
+                label="Бренд"
+                [rcValue]="getBrandValue(item)"
+                formElementName="brandItem"
+                (selected)="onSelectBrand($event, item)"
+                >
+              </romb-ref-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group label-floating">
+                <label class="control-label">Адрес точки</label>
+                <input name="itemAddressString" type="text" class="form-control"
+                       [ngModel]="mainList.getDaDataObjectPresentation(item.address)"
+                       daData [suggType]="mainList.suggType.ADDRESS"
+                       (daSelect)="selectAddress($event)">
+              </div>
+            </div>
+            <div class="col-md-1 check-valid">
+                <span class="" *ngIf="item.address && item.address.value">
+                <fa id="validName" name="check" class=""></fa>
+              </span>
+            </div>
+            <div class="col-md-5">
+              <romb-ref-select
+                source="users"
+                label="Менеджер ТТ"
+                [listCriteria]="managerTtCriteria"
+                [rcValue]="item.manager"
+                [customColsHide]="customColsHide"
+                formElementName="managerTtItem">
+              </romb-ref-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <romb-ref-select
+                  source="partners"
+                  label="Компания (партнер)"
+                  [rcValue]="item.partner"
+                  (selected)="onPartnerSelect($event, item)"
+                  (openModalSelect)="mainList.openExernalModalSelect($event)"
+                  (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+              </romb-ref-select>
+            </div>
+            <div class="col-sm-6">
+              <romb-combo-list
+                [clDisabled]="!item.partner.id"
+                [(clValue)]="item.bank_account"
+                [viewValues]="['bank_name', 'settlement_account']"                
+                [mode]="'property'"
+                [propValue]="'bank_accounts'"
+                source="partners"
+                [filter]="true"
+                [documentId]="item.partner.id"
+              ></romb-combo-list>
+            </div>
+          </div>          
+          <div class="row">
+            <div class="col-md-10">           
+            <mat-accordion *ngIf="item.bank_account && item.bank_account.bank">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Банковские реквизиты
+                  </mat-panel-title>
+                </mat-expansion-panel-header>            
+                <mat-list *ngIf="item.bank_account && item.bank_account.bank">
+                  <mat-list-item>
+                    <div class="col-md-6">
+                      <span class="item-title"><b>Название:</b></span>
+                      <span>{{ item.bank_account.bank.name.payment }}</span>
+                    </div>                    
+                    <div class="col-md-6">
+                      <span class="item-title"><b>Счет:</b></span>
+                      <span>{{ item.bank_account.settlement_account}}</span>
+                    </div>
+                  </mat-list-item>
+                  <mat-divider></mat-divider>
+                  <mat-list-item>
+                    <div class="col-md-6">
+                      <span class="item-title"><b>БИК:</b></span>
+                      <span>{{ item.bank_account.bank.bic }}</span>
+                    </div>
+                    <div class="col-md-6">
+                      <span class="item-title"><b>К/С:</b></span>
+                      <span>{{ item.bank_account.bank.correspondent_account }}</span>
+                    </div>
+                  </mat-list-item>          
+                </mat-list>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          </div>
+          <!-- Общие реквизиты -->
+          <div class="row">
+            <!-- etalon field COMMENT-->
+            <div class="col-sm-8">
+              <div class="form-group label-floating">
+                <label class="control-label">Комментарий</label>
+                <textarea [(ngModel)]="item.comment" name="commentItem" rows="3"
+                       type="text" class="form-control"></textarea>
+              </div>
+            </div>
+
+            <!-- standard field CHECKBOX -->
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label [style.color]="(item.active)?'green':'red'">
+                  <input type="checkbox"
+                         [(ngModel)]="item.active" name="activeItem">
+                  Активность: <strong>{{mainList.getActiveTitle()}}</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+      <ng-template #dataTableHeaderFilterTemplate let-item="item">
+        <romb-ref-select
+            source="partners"
+            label="Компания"
+            [rcValue]="partnersFilter"
+            (selected)="filterSelected($event, 'partner')"
+            (valueCleared)="filterCleared('partner.id')"
+            (openModalSelect)="mainList.openExernalModalSelect($event)"
+            (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+        </romb-ref-select>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

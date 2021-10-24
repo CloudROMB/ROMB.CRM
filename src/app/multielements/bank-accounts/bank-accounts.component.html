@@ -1,0 +1,77 @@
+<div class="container bank-accounts-container">
+<div class="row">
+  <div class="col-md-2">
+    <span>Банковские реквизиты</span>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-sm btn-success"
+      (click)="onAddBankAccount()">
+      Добавить<i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+  </div>             
+</div>
+<div *ngIf="accountsList && accountsList.length > 0" class="row">
+  <mat-accordion>
+    <div *ngFor="let account of accountsList; let i = index;" class="contaner-fluid">
+      <div class="row">
+        <mat-checkbox
+         [checked]="!account.active"
+         (change)="onToggleActive(account)"
+        >отключен</mat-checkbox>
+        <button mat-icon-button color="warn">
+          <mat-icon aria-label="Удалить реквизиты" placeholder="Удалить реквизиты"
+          (click)="onDeleteBankAccount(i)">
+          delete_forever</mat-icon>
+        </button>
+      </div>
+      <div class="row">
+      <div class="col-md-12">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Реквизиты № {{ i + 1 }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label [for]="'itemBankName-' + i">Банк</label>
+                  <input [name]="'itemBankName-' + i" class="form-control" [id]="'itemBankName-' + i"  placeholder=""
+                    daData [suggType]="suggType.BANK"
+                    (daSelect)="onSelectBank($event, account)"
+                    [(ngModel)]="account.bank.name.payment">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label [for]="'itemSetAcc-' + i">Расчетный счет</label>
+                  <input [name]="'itemSetAcc-' + i" class="form-control" [id]="'itemSetAcc-' + i"  placeholder=""
+                    [(ngModel)]="account.settlement_account">
+                </div>                                    
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                    <label [for]="'itemСA-' + i">К/С</label>
+                    <input [name]="'itemСA-' + i" class="form-control" [id]="'itemСA-' + i"  placeholder=""
+                        [(ngModel)]="account.bank.correspondent_account">
+                  </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                    <label [for]="'itemBic-' + i">БИК</label>
+                    <input [name]="'itemBic-' + i" class="form-control" [id]="'itemBic-' + i"  placeholder=""
+                        [(ngModel)]="account.bank.bic">
+                  </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </div>
+  </mat-accordion>
+</div>
+</div>

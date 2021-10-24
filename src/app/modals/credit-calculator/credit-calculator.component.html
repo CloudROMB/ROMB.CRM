@@ -1,0 +1,108 @@
+<romb-modal #modalRoot *ngIf="modalRootEnabled"
+            [modalTitle]="'Кредитный калькулятор'"
+            [width]="500"
+            [zIndex]="zIndex"
+            [maximizable]="false"
+            [minimizable]="true"
+            [resizable]="false"
+            [overlay]="false"
+            (close)="onCloseModal()">
+  <ng-container class="modal-body">
+    <div class="row">
+      <div class="col-md-7">
+        <div class="form-group">
+          <label for="creditAmountItem">
+            Сумма кредита
+          </label>
+          <!-- (input)="onCreditAmountInput($event)" -->
+          <input name="creditAmountItem" class="form-control" id="creditAmountItem"
+                 [(ngModel)]="calculateData.creditAmount"
+                 [textMask]="{mask: currencyMask, modelClean: true}"                 
+          >
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7">
+        <div class="form-group">
+          <label for="creditAnnualRate">
+            Годовая % ставка
+          </label>
+          <input name="creditAnnualRate" class="form-control" id="creditAnnualRate"
+                 [(ngModel)]="calculateData.annualRate"
+                 (ngModelChange)="onAnnualRateChange($event)"
+          >
+        </div>
+      </div>
+    </div>
+    <div class="row credit-term-row">
+      <div class="col-md-4">
+        <mat-form-field class="form-select">
+          <mat-select
+              placeholder="Срок кредита"
+              [value]="0"
+              [(ngModel)]="calculateData.years" name="creditYearsItem" id="creditYearsItem">
+            <mat-option [value]=0>— 0 лет —</mat-option>
+            <mat-option [value]=1>1 год</mat-option>
+            <mat-option [value]=2>2 года</mat-option>
+            <mat-option [value]=3>3 года</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field class="form-select">
+          <mat-select
+              [value]="0"
+              [(ngModel)]="calculateData.months" name="creditMonthsItem" id="creditMonthsItem">
+            <mat-option [value]=0>— 0 месяцев —</mat-option>
+            <mat-option [value]=1>1 месяц</mat-option>
+            <mat-option [value]=2>2 месяца</mat-option>
+            <mat-option [value]=3>3 месяца</mat-option>
+            <mat-option [value]=4>4 месяца</mat-option>
+            <mat-option [value]=5>5 месяцев</mat-option>
+            <mat-option [value]=6>6 месяцев</mat-option>
+            <mat-option [value]=7>7 месяцев</mat-option>
+            <mat-option [value]=8>8 месяцев</mat-option>
+            <mat-option [value]=9>9 месяцев</mat-option>
+            <mat-option [value]=10>10 месяцев</mat-option>
+            <mat-option [value]=11>11 месяцев</mat-option>
+            <mat-option [value]=12>12 месяцев</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <button class="btn btn-danger btn-round btn-md btn-calculate"
+                (click)="calculate()"
+        >
+          <i class="fa fa-calculator"></i>Рассчитать
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h5><b>ИТОГ РАСЧЁТА</b></h5>
+      </div>
+    </div>
+    <mat-list>
+      <mat-list-item>
+        <div class="col-md-6">Ежемесячный платёж</div>
+        <div class="col-md-6">{{calculateData.result.monthlyPayment | number:'1.0-0':'ru'}}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div class="col-md-6">Количество платежей</div>
+        <div class="col-md-6">{{calculateData.result.paymentsNum}}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div class="col-md-6">Фактическая стоимость</div>
+        <div class="col-md-6">{{calculateData.result.actualCost | number:'1.0-0':'ru'}}</div>
+      </mat-list-item>
+      <mat-list-item>
+        <div class="col-md-6">Переплата по кредиту</div>
+        <div class="col-md-6">{{calculateData.result.overPayment | number:'1.0-0':'ru'}}</div>
+      </mat-list-item>
+    </mat-list>
+  </ng-container>
+</romb-modal>

@@ -1,0 +1,120 @@
+<div class="data-table-header">
+  <ul class="nav navbar-nav tool-panel">
+    <li *ngIf="checkVisibility('view', false)" class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon mi-icon"
+         [title]="dataTable.translations.headerViewDoc"
+         (click)="dataTable.viewCardClicked()">
+        <i class="material-icons">remove_red_eye</i>
+      </a>
+    </li>
+    <li *ngIf="checkVisibility('new', false)" class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon mi-icon"
+         [title]="dataTable.translations.headerAddNew"
+         (click)="dataTable.openNewCard()">
+        <i class="material-icons">note_add</i>
+      </a>
+    </li>
+    <li>
+      <div class="form-group dt-search">
+        <input type="text" class="form-control"
+               #filterInput
+               [(ngModel)]="filter"
+               (focus)="setKeyState($event)"
+               (blur)="setKeyState($event)"
+               [placeholder]="dataTable.translations.headerSearch"
+               (keyup)="searchKeyUp($event)">
+      </div>
+    </li>
+    <li class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon mi-icon"
+         *ngIf="filter"
+         [title]="dataTable.translations.headerClearSearch"
+         (click)="clearSearchFilter()">
+        <i class="material-icons">close</i>
+      </a>
+    </li>
+    <li class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon mi-icon"
+         [title]="dataTable.translations.headerSearch"
+         (click)="setSearchFilter()">
+        <i class="material-icons">search</i>
+      </a>
+    </li>
+    <li style="margin-left: 1rem;" class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon mi-icon"
+         [title]="dataTable.translations.headerRefresh"
+         (click)="dataTable.reloadItems()">
+        <i class="material-icons">refresh</i>
+      </a>
+    </li>
+    <li *ngIf="checkVisibility('columns_change', false)" class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon mi-icon"
+         [title]="dataTable.translations.headerColumns"
+         (click)="dataTable.dtView.columnSelectorOpened = !dataTable.dtView.columnSelectorOpened; $event.stopPropagation()"
+      >
+        <i class="material-icons" *ngIf="!dataTable.dtView.columnSelectorOpened">format_align_justify</i>
+        <i class="material-icons"
+           *ngIf="dataTable.dtView.columnSelectorOpened"
+           style="color: red;">close</i>
+      </a>
+    </li>
+  </ul>
+  <!-- COLUMNS VISIBILITY -->
+  <div class="column-selector-wrapper" (click)="$event.stopPropagation()">
+    <div *ngIf="dataTable.dtView.columnSelectorOpened" class="column-selector-box panel panel-default">
+      <div class="column-selector-fixed-column checkbox has-success">
+        <label>
+          <input type="checkbox" [(ngModel)]="dataTable.dtView.showExpandableRows"/>
+          <span>{{dataTable.translations.expandColumn}}</span>
+        </label>
+      </div>
+      <div class="column-selector-fixed-column checkbox">
+        <label>
+          <input type="checkbox" [(ngModel)]="dataTable.dtView.showIndexColumn"/>
+          <span>{{dataTable.translations.indexColumnHeader}}</span>
+        </label>
+      </div>
+      <div class="column-selector-fixed-column checkbox">
+        <label>
+          <input type="checkbox" [(ngModel)]="dataTable.dtView.showSelectColumn"/>
+          <span>{{dataTable.translations.showSelectColumn}}</span>
+        </label>
+      </div>
+      <div *ngFor="let column of dataTable.columns" class="column-selector-column checkbox">
+        <label *ngIf="column && column.listField===true">
+          <input type="checkbox"
+                 [(ngModel)]="column.visible" name="visibleCol"
+                 (change)="dataTable.changeColumnsVisibility(column)"/>
+          <span [textContent]="column.header"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <ng-container
+      [ngTemplateOutlet]="headerTemplate"
+      [ngTemplateOutletContext]="{item: null}">
+  </ng-container>
+
+  <h4 *ngIf="dataTable.dtView.headerTitle && dataTable.selectMode"
+      class="tool-title text-info" [textContent]="dataTable.dtView.headerTitle">
+  </h4>
+
+  <ul class="nav navbar-nav tool-modal pull-right"
+      *ngIf="dataTable.selectMode">
+    <li class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon fa-icon text-success"
+         [title]="dataTable.translations.headerSelectDoc"
+         (click)="dataTable.selectItemModal()">
+        <fa name="hand-o-down"></fa>
+      </a>
+    </li>
+    <li class="round-tool-btn">
+      <a href="javascript:void(0);" class="icon fa-icon text-danger"
+         [title]="dataTable.translations.headerCancelSelect"
+         (click)="dataTable.cancelSelect()">
+        <fa name="times-circle"></fa>
+      </a>
+    </li>
+  </ul>
+</div>

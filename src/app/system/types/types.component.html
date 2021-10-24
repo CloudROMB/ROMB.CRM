@@ -1,0 +1,16 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        source="types"
+        [dtView]="dtView"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <div *ngIf="item">
+          <p>ID: {{item._id}}</p>
+          <p>Наименование: {{item.name}}</p>
+          <p>Простой тип: {{item.simple}}</p>
+        </div>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

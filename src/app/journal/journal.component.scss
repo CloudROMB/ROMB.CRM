@@ -1,0 +1,135 @@
+:host ::ng-deep div.card.document-card {
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  -webkit-transition: all 1s ease-out;
+  transition: all 1s ease-out;
+}
+
+
+.datatable-card {
+  width: auto;
+}
+
+:host ::ng-deep .data-table.table td {
+  text-align: center;
+}
+#questionnaire .background-print {
+  @media print {
+    background-color: #D9D9D9!important;
+    -webkit-print-color-adjust: exact;
+    }
+  }
+  #order-pan {
+    h6{
+      margin-bottom: 5px;
+    }
+
+    label, /deep/ .form-group>label {
+      font-size: 11px;
+      margin: 0;
+      color: #333333;
+      display: inline-table;
+      >.btn-sm {
+        font-size: 9px;
+        margin: 2px 1px;;
+        padding: 2px 10px 1px;
+      }
+    }
+
+    div.form-group {
+      margin: 0;
+      padding-top: 5px;
+      &[child="textarea"]{
+        padding-bottom: 5px;
+      }
+    }
+  
+    .form-group.is-focused label, mat-form-field.mat-focused label, /deep/ .form-group.is-focused label {
+      color: #4caf50;
+    }
+
+    input {
+      padding-top: 6px;
+    }
+    
+    mat-form-field.mat-form-field {
+      mat-select.mat-select{
+        padding-bottom: 5px;
+      }
+      /deep/ .mat-input-wrapper {
+        padding-bottom: 10px;
+      }
+      label{ 
+        padding-bottom: 20px;
+      }
+      /deep/ .mat-input-infix {
+        border-top: 5px solid transparent;
+      }
+    }
+    
+    mat-divider.mat-divider{
+      margin: 10px 0;
+    }
+    
+  }
+
+  #partner-pan {
+    mat-card.mat-card{
+      mat-card-title.mat-card-title h5{
+        font-size: 15px;
+      }
+    }
+  }
+
+  #bank-pan {
+    max-height: 340px;
+    .container {
+      width: 100%;
+    }
+    div.bank-order-row{
+      max-height: 65vh;//650px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      a{
+        cursor: pointer;
+      }
+    }
+    div.primary-check-row {
+      mat-expansion-panel.mat-expansion-panel {
+        ::ng-deep div.mat-expansion-panel-content {
+          max-height: 25vh;
+          overflow-y: auto;
+        }
+      mat-list.mat-list {
+        div.list-header {
+          position: sticky;
+          top: 0;
+          z-index: 10;
+          background: white;
+        }
+        mat-list-item.mat-list-item {
+          div {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+    mat-form-field.mat-form-field label {
+      font-size: 13px;
+      padding-bottom: 15px;
+    }
+    div.check-info {
+      margin-top: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    div.comment-info {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+  }
+    .btn.btn-success:hover {
+      background-color: #3c8c3f;
+    }
+
+  }

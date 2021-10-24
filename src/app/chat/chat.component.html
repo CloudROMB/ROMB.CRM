@@ -1,0 +1,56 @@
+<div class="romb-chat"
+     [class.active]="isActiveClass()">
+  <ul class="pages">
+    <li class="chat page">
+      <ul class="nav navbar-nav tool-modal pull-left bg-info"
+          style="width: 100%;">
+        <li class="toolbar-item pull-left" style="margin: 12px;">
+          <h3 class="title" style="margin: 0;">{{chatRoomName}}</h3>
+        </li>
+        <li class="round-tool-btn pull-right">
+          <button class="btn btn-just-icon btn-danger" (click)="closeChat()">
+            <i class="material-icons">close</i>
+          </button>
+        </li>
+      </ul>
+      <div class="card" style="height: 80%;">
+        <div class="card-body">
+          <div class="chatArea">
+            <ul class="messages"></ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <ul class="nav navbar-nav tool-modal bg-info inputMessageFooter"
+              style="width: 100%;">
+            <li class="toolbar-item pull-left">
+              <input class="inputMessage"
+                     [placeholder]="labels.typeMessageHere"
+                     (input)="updateTyping()"/>
+            </li>
+            <li class="round-tool-btn pull-right">
+              <button class="btn btn-just-icon"
+                      (click)="sendMessage()"
+                      [ngClass]="connectedClass()">
+                <i class="material-icons">message</i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </li>
+    <li class="login page">
+      <div class="form">
+        <h3 class="title">{{labels.typeYourNickname}}</h3>
+
+        <input class="usernameInput"
+               [value]="user.name" name="userName"
+               type="text" maxlength="14"/>
+      </div>
+    </li>
+    <li class="settings page">
+      <div class="form">
+        <h3 class="title">Settings</h3>
+      </div>
+    </li>
+  </ul>
+</div>

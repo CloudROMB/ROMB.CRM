@@ -1,0 +1,151 @@
+.ui-modal-overlay {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ui-modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  max-width: 100%;
+  outline: none;
+  background-color: #fefefe;
+  padding: 0;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.ui-modal-header {
+  position: relative;
+  padding: 2px 16px;
+  background-color: #e3ff00;
+  background-color: #3C4858;
+  color: #333333;
+  color: #FFF;
+  font-weight: bold;
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.ui-modal-body {
+  position: relative;
+  padding: 10px 16px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ui-modal-footer {
+  padding: 15px;
+}
+
+.ui-titlebar {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ui-modal-title {
+  font-size: 18px;
+}
+
+.ui-controlbar {
+  display: flex;
+  align-items: center;
+  span {
+    margin: 5px;
+    .fa {
+      cursor: pointer;
+      font-size: 16px;
+      &:hover {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.ui-icon {
+  cursor: pointer;
+  padding-top: 9px;
+}
+
+.ui-icon:hover {
+  opacity: 0.75;
+}
+
+.dragging {
+  cursor: move;
+  border-color: #edff66;
+  border-color: #3C48AA;
+  outline: 0;
+  box-shadow: 0 4px 8px rgba(227,255,0,.6), 0 6px 20px rgba(0,0,0,.2);
+  box-shadow: 0 4px 8px rgba(100,150,200,.6), 0 6px 20px rgba(0,0,0,.2);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.resizing {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ui-resizable-se {
+  position:absolute;
+  cursor: se-resize;
+  height: 15px;
+  width: 15px;
+  right: 0;
+  bottom: 0;
+}
+
+.ui-resizable-e {
+  position:absolute;
+  cursor: e-resize;
+  height: 100%;
+  width: 7px;
+  right: -5px;
+  top: 0;
+}
+
+.ui-resizable-s {
+  position:absolute;
+  cursor: s-resize;
+  height: 7px;
+  width: 100%;
+  bottom: -5px;
+  left: 0;
+}
+.ui-modal.minimized {
+  top: 95%!important;  
+  max-width: 150px;
+
+  .ui-modal-header {
+    .ui-modal-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+    }
+    span .fa {
+      font-size: 14px;
+    } 
+  }
+
+  .ui-modal-body {
+    display: none;
+  }
+
+  .ui-modal-footer {
+    display: none;
+  }
+}

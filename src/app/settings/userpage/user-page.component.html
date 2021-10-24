@@ -1,0 +1,177 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="nav-center">
+              <ul class="nav nav-pills nav-pills-warning nav-pills-icons" role="tablist">
+                <!--                    color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"                -->
+                <li class="active">
+                  <a href="#tab-1" role="tab" data-toggle="tab">
+                    <i class="material-icons">info</i> Основные
+                  </a>
+                </li>
+                <li>
+                  <a href="#tab-files" role="tab" data-toggle="tab">
+                    <i class="material-icons">location_on</i> Файлы
+                  </a>
+                </li>
+                <li>
+                  <a href="#tab-3" role="tab" data-toggle="tab">
+                    <i class="material-icons">gavel</i> Реестры
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="tab-content">
+              <br>
+              <div class="tab-pane active" id="tab-1">
+                <div class="card card-profile">
+                  <div class="card-avatar">
+                    <a routerLink="/settings/userpage/changephoto">
+                      <img class="img" src="/assets/img/faces/v_kapyushone_bez_lica.jpg"/>
+                    </a>
+                  </div>
+                  <div class="card-content">
+                    <h4 class="card-title">Редактировать профиль</h4>
+                    <form class="bio-form">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Компания</label>
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="user.company" name="company" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group label-floating login">
+                            <label class="control-label">Имя пользователя CRM</label>
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="user.login" name="login" disabled>
+                          </div>
+                        </div>
+
+                        <div class="col-md-4">
+                          <div class="form-group label-floating">
+                            <label class="control-label">E-mail</label>
+                            <input type="email" class="form-control"
+                                   [(ngModel)]="user.email" name="email">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group label-floating">
+                            <div class="form-group label-floating">
+                              <label class="control-label">Полное имя</label>
+                              <input type="text" class="form-control"
+                                     [(ngModel)]="user.fullname" name="fullname" required>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div rombEmployees
+                             [contactList]="contacts"
+                             (multiChange)="changeContacts($event)"
+                             class="col-md-12">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Основной телефон</label>
+                            <input type="tel" class="form-control" placeholder="+7 999 123-45-67"
+                                   [(ngModel)]="user.phone" name="phone" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Рабочий телефон телефон</label>
+                            <input type="tel" class="form-control" placeholder="+7 999 123-45-67"
+                                   [(ngModel)]="user.workphone" name="workphone" required>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Почтовый адрес</label>
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="user.address" name="address">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Город</label>
+                            <mat-select placeholder="Город" [(ngModel)]="selectedCity" name="city" required>
+                              <mat-option *ngFor="let city of cities" [value]="city.value">
+                                {{ city.viewValue }}
+                              </mat-option>
+                            </mat-select>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group label-floating">
+                            <label class="control-label">Страна</label>
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="user.country" name="country" disabled>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group label-floating">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Почтовый индекс" value="115088">
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <div class="form-group label-floating">
+                              <label class="control-label">Краткая информация</label>
+                              <textarea class="form-control" rows="5" [(ngModel)]="user.info" name="info">
+                              </textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-rose pull-right">Обновить данные</button>
+                      <div class="clearfix"></div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="tab-files">
+                <romb-fresh-files
+                  [filesList]="user.files">
+                </romb-fresh-files>
+              </div>
+              <div class="tab-pane" id="tab-3">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">Legal info of the product</h4>
+                    <p class="category">
+                      More information here
+                    </p>
+                  </div>
+                  <div class="card-content">
+                    Completely synergize resource taxing relationships via premier niche markets.
+                    Professionally cultivate one-to-one customer service with robust ideas.
+                    <br/>
+                    <br/>Dynamically innovate resource-leveling customer service for state of the
+                    art customer service.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

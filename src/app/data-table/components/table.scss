@@ -1,0 +1,221 @@
+.col-md-12 {
+  padding: 0;
+}
+
+:host ::ng-deep .data-table.table > tbody + tbody {
+  border-top: none;
+}
+
+:host ::ng-deep .data-table.table td {
+  vertical-align: middle;
+}
+
+:host ::ng-deep .data-table > thead > tr > th,
+:host ::ng-deep .data-table > tbody > tr > td {
+  overflow: hidden;
+}
+
+/* I can't use the bootstrap striped table, because of the expandable rows */
+:host ::ng-deep .row-odd {
+  background-color: #F6F6F6;
+}
+
+:host ::ng-deep .row-even {
+}
+
+.data-table .substitute-rows > tr:hover,
+:host ::ng-deep .data-table .data-table-row:hover,
+:host ::ng-deep .row-selected {
+  //background-color: #ECECEC;
+  background-color: #90a4ae;
+  background-color: lightblue;
+  color: black;
+}
+
+:host ::ng-deep .row-selected {
+  background-color: #37474f;
+  background-color: lightsteelblue;
+  color: black;
+}
+
+/* table itself: */
+
+.data-table {
+  box-shadow: 0 0 15px rgb(236, 236, 236);
+  table-layout: fixed;
+}
+
+/* header cells: */
+
+.column-header {
+  position: relative;
+}
+
+.expand-column-header {
+  width: 36px;
+}
+
+.select-column-header {
+  width: 36px;
+  text-align: center;
+}
+
+.index-column-header {
+  width: 40px;
+}
+
+.column-header.sortable {
+  cursor: pointer;
+}
+
+.column-header .column-sort-icon {
+  float: right;
+}
+
+.column-header.resizable .column-sort-icon {
+  margin-right: 8px;
+}
+
+.column-header .column-sort-icon .column-sortable-icon {
+  color: lightgray;
+}
+
+.column-header .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+/* cover: */
+
+.data-table-box {
+  position: relative;
+}
+
+.loading-cover {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(255, 200, 200, 0.5);
+  top: 0;
+  left: 0;
+}
+
+//.modal {
+//  padding: 32px 32px;
+//}
+//
+//.document-card {
+//  //max-width: 1024px;
+//  width: 100%;
+//  //min-height: 50vh;
+//  //width: 94vw;
+//  //height: 95vh;
+//
+//  //margin: 32px auto;
+//  padding: 0 0 16px 0;
+//  display: inline-block;
+//
+//  .card-content-header {
+//    padding: 8px 8px 0 0;
+//    display: flex;
+//    justify-content: space-between;
+//    flex-wrap: nowrap;
+//    flex-direction: row;
+//
+//    .col-header.left {
+//      flex: auto;
+//      text-align: left;
+//
+//      .card-title {
+//        padding: 0 !important;
+//      }
+//
+//      .card-id {
+//        font-size: 10px !important;
+//      }
+//    }
+//
+//    .col-header.right {
+//      flex: 1;
+//      text-align: right;
+//
+//      .card-btn-save {
+//        margin-right: 2rem;
+//        margin-top: 0;
+//      }
+//
+//      .card-btn-close {
+//        margin-top: 0;
+//      }
+//    }
+//  }
+//
+//  .dt-card-content {
+//    display: inline-block;
+//    width: 100%;
+//    height: 100%;
+//
+//    form.dt-card-form:after {
+//      background-color: greenyellow;
+//
+//      .row {
+//        display: flex !important;
+//        align-items: center;
+//      }
+//
+//      .suggestions-addon {
+//        display: none;
+//      }
+//    }
+//  }
+//}
+//
+//.modal-body {
+//  padding: 8px;
+//
+//  .card {
+//    -webkit-box-shadow: none;
+//    box-shadow: none;
+//    margin: 0;
+//
+//    .card-title {
+//      padding: 0 !important;
+//    }
+//
+//    .card-id {
+//      font-size: 10px !important;
+//
+//      .form-group {
+//        font-size: 10px !important;
+//        padding: 0;
+//        margin: 0;
+//
+//        input {
+//          font-size: 10px !important;
+//          padding: 0;
+//          margin: 0;
+//        }
+//      }
+//    }
+//  }
+//}
+
+a {
+  cursor: pointer;
+
+  &:hover {
+    color: #00b2f1;
+  }
+}
+
+.datatable-wrapper {
+  max-width: 1920px;
+}

@@ -1,0 +1,435 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <romb-datatable-lite
+          #mainList
+          [source]="source"
+          [itemStructure]="structureDoc"
+          [titleTail]="titleTail"
+          (afterOpen)="afterOpen($event)"
+          (beforeSave)="beforeSave($event)"
+          (afterClose)="afterClose($event)"
+          (afterReloadCard) = afterReloadCard($event)
+      >
+        <ng-template #dataTableCardTemplate let-item="item">
+          <form #f="ngForm" class="dt-card-form tab-form">
+            <!-- закладки -->
+            <div class="nav-center">
+              <ul class="nav nav-pills nav-pills-info" role="tablist">
+                <li class="active">
+                  <a href="#card-pan" role="tab" data-toggle="tab">
+                      Карточка
+                  </a>
+                </li>
+                <li>
+                  <a href="#contacts-pan" role="tab" data-toggle="tab">
+                    Контакты
+                  </a>
+                </li>
+                <li >
+                  <a href="#departments-pan" role="tab" data-toggle="tab"
+                     (click)="showDepartments(item)">
+                    ТТ
+                  </a>
+                </li>
+                <li>
+                  <a href="#banks-pan" role="tab" data-toggle="tab">
+                    Банки
+                  </a>
+                </li>
+                <li>
+                  <a href="#files-pan" role="tab" data-toggle="tab">
+                    Файлы
+                  </a>
+                </li>
+                <li>
+                  <a href="#payment-pan" role="tab" data-toggle="tab">
+                    Оплата
+                  </a>
+                </li>
+                <!-- <li>
+                  <a href="#extend-pan" role="tab" data-toggle="tab">
+                    Дополнительно
+                  </a>
+                </li> -->
+              </ul>
+            </div>
+  
+            <!-- tab content -->
+            <div class="tab-content">
+              <!-----------------Вкладка "карточка"------------------------------>
+              <div class="tab-pane active" id="card-pan">
+                <div class="row header-row">
+                  <div class="col-md-3">
+                      <h4><strong>Карточка партнёра</strong></h4>
+                  </div>
+                  <div class="col-md-2">
+                      <h4 *ngIf="!item.active"><span class="label label-danger">Заблокирован</span></h4>
+                  </div>                  
+                </div>
+                  <div class="row">
+                    <div class="col-md-9">
+                      <div class="form-group">
+                      <label for="fullNameItem">Юридическое наименование Организации (в соответствии с учредительными документами)</label>
+                        <input name="fullNameItem" class="form-control" id="fullNameItem" placeholder="введите наименование"
+                          [ngModel]="mainList.getDaDataObjectPresentation(item.requisites.name, 'full_with_opf')"
+                          daData [suggType]="dataTable.suggType.COMPANY"
+                          (daSelect)="selectCompany($event)">
+                      </div>
+                    </div>
+                    <div *ngIf="!isNewRow(item) && checkCrendential('partner_blocking_toggle')" class="col-md-3 blocking">
+                      <romb-blocking
+                      [item]="item"
+                      [source]="dataTable.source"
+                      [isChanged]="dataTable.checkCardChanged()"
+                      (saveItemMethod)="saveItem($event)"
+                      (UpdateItemMethod)="updateRows($event)"
+                      ></romb-blocking>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <label>Бренд</label>                                             
+                      <romb-ref-select
+                        source="brands"
+                        label=""
+                        placeholder="выберите бренд"
+                        [rcValue]="item.brand"
+                        [listCriteria]="brandCriteria"
+                        [customColsHide]="customColsHide"
+                        (selected)="selectBrand(item, $event)"
+                        (openModalSelect)="mainList.openExernalModalSelect($event)"
+                        (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+                      </romb-ref-select>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="itemSite">Сайт организации</label>
+                          <input name="itemSite" class="form-control" id="itemSite" placeholder=""
+                                [(ngModel)]="item.requisites.website">
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group">
+                          <label for="itemManagementName">Руководитель организации: ФИО (полностью)</label>
+                          <input name="itemManagementName" class="form-control" id="itemManagementName" placeholder=""
+                            [(ngModel)]="item.requisites.management.name">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="itemManagementPost">Должность руководителя</label>
+                        <input name="itemManagementPost" class="form-control" id="itemManagementPost" placeholder=""
+                          [(ngModel)]="item.requisites.management.post">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 mat">
+                      <div class="form-group">
+                        <label for="itemManagementPhone">Контактный телефон руководителя</label>
+                        <input name="itemManagementPhone" class="form-control" id="itemManagementPhone" placeholder=""
+                          [(ngModel)]="item.requisites.management.phone">
+                      </div>
+                    </div>
+                    <div class="col-md-4 mat">
+                      <div class="form-group">
+                          <label for="itemManagementEmail">Email руководителя</label>
+                          <input name="itemManagementEmail" class="form-control" id="itemManagementEmail" placeholder=""
+                            [(ngModel)]="item.requisites.management.email">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="itemManagementDob">Дата рождения руководителя</label>
+                        <mat-form-field>
+                          <input matInput [matDatepicker]="headdobpicker" placeholder="" name="itemManagementDob" id="itemManagementDob"
+                          [(ngModel)]="item.requisites.management.dob">
+                          <mat-datepicker-toggle matSuffix [for]="headdobpicker"></mat-datepicker-toggle>
+                          <mat-datepicker #headdobpicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="itemLegalAddress">Юридический адрес Организации (для ИП адрес по паспорту)</label>
+                          <input name="itemLegalAddress" class="form-control" id="itemLegalAddress" placeholder=""
+                            [(ngModel)]="item.requisites.address.value">
+                        </div>
+                      </div>
+                      <div class="col-md-6">                          
+                        <div class="form-group">
+                            <label for="itemActualAddress">Фактический адрес организации <button [disabled]="!item.requisites.postaddress.value" class="btn btn-sm btn-warning" (click)="copyFromAddress(item)">Скопировать из юр. адреса</button></label>
+                            <input name="itemActualAddress" class="form-control" id="itemActualAddress" placeholder=""
+                               daData [suggType]="dataTable.suggType.ADDRESS"
+                               (daSelect)="onSelectActualAddress($event, item)"
+                              [(ngModel)]="item.requisites.actualaddress.value">
+                          </div>
+                        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="itemInn">ИНН</label>
+                        <input name="itemInn" class="form-control" id="itemInn" placeholder=""
+                          [(ngModel)]="item.requisites.inn">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="itemKpp">КПП</label>
+                        <input name="itemKpp" class="form-control" id="itemKpp" placeholder=""
+                          [(ngModel)]="item.requisites.kpp">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="itemOgrn">ОГРН</label>
+                        <input name="itemOgrn" class="form-control" id="itemOgrn" placeholder=""
+                          [(ngModel)]="item.requisites.ogrn">
+                      </div>
+                    </div>
+                  </div>
+                    <romb-bank-accounts [accountsList]="item.bank_accounts"></romb-bank-accounts>
+                  <div class="row">
+                      <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="itemAccountantName">Главный бухгалтер Организации: ФИО (полностью)</label>
+                          <input name="itemAccountantName" class="form-control" id="itemAccountantName" placeholder=""
+                            [(ngModel)]="item.requisites.accountant.name">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="itemAccountantPhone">Контактный телефон главного бухгалтера</label>
+                              <input name="itemAccountantPhone" class="form-control" id="itemAccountantPhone" placeholder=""
+                                [(ngModel)]="item.requisites.accountant.phone">
+                            </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <label for="itemContractDate">Дата договора</label>
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="contractdatepicker" placeholder="" name="itemContractDate" id="itemContractDate"
+                        [(ngModel)]="item.requisites.contract_date">
+                        <mat-datepicker-toggle matSuffix [for]="contractdatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #contractdatepicker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3 mat">
+                      <div class="form-group">
+                        <label for="itemContractNum">Номер договора</label>
+                        <input name="itemContractNum" class="form-control" id="itemContractNum" placeholder=""
+                        [(ngModel)]="item.requisites.contract_number" >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group" style="padding-top: 5px;">
+                        <label for="commentItem">Комментарий</label>
+                          <textarea name="commentItem" class="form-control" id="commentItem" cols="3" rows="3"
+                          [(ngModel)]="item.comment">
+                        </textarea>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              <!-----------------Вкладка "контакты"------------------------------>
+              <div class="tab-pane" id="contacts-pan">
+                <div class="row">
+                  <h4>
+                    <strong>
+                      Контакты
+                    </strong>
+                  </h4>
+                </div>
+                <div class="row head-contacts-row">
+                  <div class="col-md-12">
+                    <mat-card>
+                        <mat-card-title> 
+                          <h5><strong>Руководство</strong></h5>
+                        </mat-card-title>                  
+                        <mat-card-content>
+                          <mat-accordion>
+                          <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                              <div class="col-md-4">
+                                <mat-panel-title
+                                  [textContent]="(item.requisites.management.post &&
+                                  item.requisites.management.post.length > 0) 
+                                  ? item.requisites.management.post + ':' : 'Руководитель'">
+                                </mat-panel-title>
+                              </div>
+                              <div class="col-md-8">
+                                <mat-panel-description
+                                  [textContent]="item.requisites.management.name || 'ФИО (пусто)'">
+                                </mat-panel-description>
+                              </div>
+                            </mat-expansion-panel-header>
+                            <mat-list>
+                              <mat-list-item>
+                                <div class="col-md-4">
+                                  <span class="contact-type">Контактный телефон -</span>
+                                  <span>{{ item.requisites.management.phone }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                  <span class="contact-type">E-mail - </span>
+                                  <span>{{ item.requisites.management.email }}</span>
+                                </div>
+                                <div class="col-md-4" [ngClass]="{'text-danger': isSoonBirthday(item.requisites.management.dob, 7)}">
+                                  <span>День рождения -</span>
+                                  <span>{{ item.requisites.management.dob | date: 'dd LLLL' }}</span>
+                                </div>
+                              </mat-list-item>                            
+                            </mat-list>
+                          </mat-expansion-panel>
+                          <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                              <div class="col-md-4">
+                                <mat-panel-title>Главный бухгалтер
+                                </mat-panel-title>
+                              </div>
+                              <div class="col-md-8">
+                                <mat-panel-description
+                                  [textContent]="item.requisites.accountant.name || 'ФИО (пусто)'">
+                                </mat-panel-description>
+                              </div>
+                            </mat-expansion-panel-header>
+                            <mat-list>
+                                <mat-list-item>
+                                  <div class="col-md-6">
+                                    <span class="contact-type">Контактный телефон -</span>
+                                    <span>{{ item.requisites.accountant.phone }}</span>
+                                  </div>
+                                  <!-- <div class="col-md-6">
+                                    <span class="contact-type">E-mail - </span>
+                                    <span>{{ item.requisites.accountant.email }}</span>
+                                  </div> -->
+                                </mat-list-item>                            
+                              </mat-list>
+                          </mat-expansion-panel>
+                          </mat-accordion>
+                        </mat-card-content>
+                    </mat-card>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-card>
+                      <mat-card-title> 
+                        <h5><strong>Сотрудники</strong></h5>
+                      </mat-card-title>                  
+                      <mat-card-content>
+                        <div rombEmployees
+                          [mainList]="mainList"
+                          [mode]="'advanced'"
+                          [itemId]="item._id"
+                          [partner]="makePartnerRef(item)"
+                          [contactList]="item.contacts"
+                          (multiChange)="changeContacts($event)">
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </div>                
+              </div>
+              
+              <!-----------------Вкладка "ТТ"------------------------------>
+              <div class="tab-pane" id="departments-pan">
+                <div class="row">
+                  <!-- БРЕНД -->
+                  <div class="col-sm-6">
+                    <!--Бренд здесь не нужен-->
+                    <!-- <romb-ref-select
+                        source="partners"
+                        label="БРЕНД (Головная компания холдинга)"
+                        [rcValue]="item.parent"
+                        (selected)="selectBrand(item, $event)"
+                        (openModalSelect)="mainList.openExernalModalSelect($event)"
+                        (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+                    </romb-ref-select> -->
+                  </div>
+                </div>
+  
+                <h4><strong>Подразделения (точки продаж) компании</strong></h4>
+                <div class="row" *ngFor="let department of departments"
+                     style="margin-bottom: 16px;border-bottom: 1px dashed darkgray;">
+                  <div class="col-sm-4" style="">
+                    <a class="multi-element-link"
+                       [routerLink]="['', 'references', 'departments', department._id]"
+                       target="_self">{{department.name}}</a>
+                  </div>
+                  <div class="col-sm-6">
+                    {{mainList.getDaDataObjectPresentation(department.address)}}
+                  </div>
+                  <div class="col-sm-2">
+                    {{department.active?'Работает':''}}
+                  </div>
+                </div>
+  
+                <h4><strong>Другие партнеры холдинга</strong></h4>
+              </div>
+              <div class="tab-pane" id="banks-pan">
+                <div class="row">
+                  <div class="col-md-12">
+                    <romb-mel-banks
+                        class="row"
+                        [banks]="item.banks"
+                        (multiChange)="dataTable.changeProps('banks', $event)">
+                    </romb-mel-banks>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="files-pan">
+                <romb-fresh-files
+                    [filesList]="item.files"
+                    (previewOpened)="dataTable.showPreview()"
+                    (previewClosed)="dataTable.closePreview()"
+                    (multiChange)="dataTable.changeFiles(item, $event)">
+                </romb-fresh-files>
+              </div>
+              <div class="tab-pane" id="payment-pan">
+              </div>
+              <div class="tab-pane" id="extend-pan">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group label-floating">
+                      <label class="control-label">Реквизиты компании</label>
+                      <textarea type="text" class="form-control"
+                                [ngModel]="shared.getObjJSON(item.requisites)" name="itemRequisites"
+                                rows="8" readonly>
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox"
+                               [(ngModel)]="item.mainCompany" name="mainCompanyItem">
+                        Юр. лицо входит в группу ФРЕШКРЕДИТ
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox"
+                               [(ngModel)]="item.applyOrders" name="applyOrdersItem">
+                        Через юр. лицо можно оформлять кредит
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </ng-template>
+      </romb-datatable-lite>
+    </div>
+  </div>

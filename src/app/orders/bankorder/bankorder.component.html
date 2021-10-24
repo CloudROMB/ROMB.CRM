@@ -1,0 +1,49 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+      source="orders"
+      [itemStructure]="structureCreditRequest"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #f="ngForm" class="dt-card-form tab-form">
+          <!-- tabs -->
+          <div class="nav-center">
+            <ul class="nav nav-pills nav-pills-info" role="tablist">
+              <li *ngFor="let cardTab of cardTabs"
+                  [class.active]="cardTab.active">
+                <a [href]="'#'+cardTab.id+'-pan'" role="tab" data-toggle="tab">
+                  {{cardTab.name}}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- tab content -->
+          <div class="tab-content">
+            <div *ngFor="let cardTab of cardTabs"
+                 [class.active]="cardTab.active"
+                 class="tab-pane" [id]="cardTab.id+'-pan'">
+
+              <div class="row">
+                <div class="col-md-12">
+                  <h3>{{cardTab.name}}</h3>
+                </div>
+              </div>
+              <div *ngFor="let field of cardFields"
+                class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="itemSite">{{field.label}}</label>
+                    <input class="form-control" id="itemSite" placeholder=""
+                           [(ngModel)]="item[field.name]" [name]="'item'+field.name">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

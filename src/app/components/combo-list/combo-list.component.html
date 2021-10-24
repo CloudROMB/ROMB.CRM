@@ -1,0 +1,50 @@
+<mat-form-field>
+  <label *ngIf="label" >{{this.label}}</label>
+  <mat-select #comboList
+    [disabled]="clDisabled"
+    [ngModel]="clValue"
+    (ngModelChange)="onSelectItem($event)"
+    (openedChange)="openedChange($event)"
+    panelClass="combo-panel">
+    <div *ngIf="filter" class="filter">
+      <mat-toolbar>
+        <mat-form-field>
+          <input #filterInput 
+            (input)="onFilterFieldInput($event)" matInput placeholder="Поиск" autocomplete="off">
+        </mat-form-field>
+      </mat-toolbar>
+    </div>
+    <mat-option *ngIf="!comboList.panelOpen && !isLoading" [value]="clValue">{{ clValue.name || makeViewValue(clValue) || '' }}</mat-option>
+    <mat-option *ngIf="options === null && !options.length" disabled></mat-option>
+    <mat-option *ngFor="let option of options" [value]="option">{{ makeViewValue(option) }}</mat-option>
+    <div *ngIf="pagination" class="toolbar">
+      <mat-toolbar>
+          <span class="fill-remaining-space"></span>
+          <ng-container *ngIf="isLoading">
+              <span class="loading-label" [class.hidden]="loadingLabelisHidden()">Загрузка...</span>
+              <mat-spinner class="spinner" diameter="20"></mat-spinner>
+            </ng-container>
+          <span class="page-info-span"
+            [style.marginRight]="!loadingLabelisHidden() ? '13px' : 0"
+          >{{ requestParams.offset + 1 }} - {{ requestParams.offset + requestParams.limit < optionsCount ? requestParams.offset + requestParams.limit:  optionsCount }} из {{ optionsCount }}</span>
+          <span class="nav-buttons-span">
+              <i matTooltip="Обновить" class="material-icons"
+                (click)="onRefresh()"
+              >refresh</i>
+              <i matTooltip="Первая стр." class="material-icons"
+                (click)="toFirstPage()"
+              >first_page</i>
+              <i matTooltip="Предыдущая стр." class="material-icons"
+                (click)="toPrevPage()"
+              >navigate_before</i>
+              <i matTooltip="Следующая стр." class="material-icons"
+              (click)="toNextPage()"
+              >navigate_next</i>
+              <i matTooltip="Последняя стр." class="material-icons"
+                (click)="toLastPage()"
+              >last_page</i>
+          </span>
+      </mat-toolbar>
+    </div>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,39 @@
+<div class="main-content">
+  <div class="container" style="padding-top: 30px">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-content text-center">
+            <h3>Заявка через КЦ</h3>
+            <img src="/assets/img/www/ccorder.jpg" alt="КЦ">
+            <a [routerLink]="['','cc-order']" class="btn btn-info btn-fill">
+              <!--<fa name="file-text-o"></fa>-->
+              &nbsp;Подать заявку
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-content text-center">
+            <h3>Самостоятельная заявка</h3>
+            <img src="/assets/img/www/selforder.jpg" alt="Самостоятельно">
+            <a [routerLink]="['','journal', 'reestr']" class="btn btn-success btn-fill">
+              <!--<fa name="list"></fa>-->
+              &nbsp;Перейти в журнал документов
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-content" [innerHTML]="updateHTMLView() | safeHtml">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

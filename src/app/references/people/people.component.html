@@ -1,0 +1,46 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        source="customers"
+        [dtRequest]="dtRequest"
+        [itemStructure]="structurePeople"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form action="#" class="dt-card-form">
+          <div class="row">
+            <div class="col-sm-10">
+              <div class="form-group label-floating">
+                <label class="control-label">ФИО (подсказка)</label>
+                <input [(ngModel)]="item.fullname" name="fullNameItem"
+                       daData [suggType]="dataTable.suggType.NAME"
+                       (daSelect)="selectFIO($event)"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group label-floating">
+                <label class="control-label">Пол</label>
+                <input #name [(ngModel)]="item.gender" name="genderItem"
+                       disabled
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+
+            </div>
+          </div>
+
+          <romb-fresh-files
+               [filesList]="item.files"
+               (previewOpened)="dataTable.showPreview()"
+               (previewClosed)="dataTable.closePreview()"
+               (multiChange)="dataTable.changeFiles(item, $event)">
+          </romb-fresh-files>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

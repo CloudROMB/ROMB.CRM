@@ -1,0 +1,506 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        source="addresses"
+        [dtView]="dtView"
+        [itemStructure]="obj"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="form-group label-floating">
+              <label class="control-label">Вводите адрес</label>
+              <input [(ngModel)]="item.name" name="itemName"
+                     daData [suggType]="dataTable.suggType.COMPANY"
+                     (daSelect)="selectAddress($event)"
+                     type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <a *ngIf="item.geo_lat && item.geo_lon"
+               [href]="'http://maps.yandex.ru/?text='+item.geo_lat+','+item.geo_lon"
+               class="text-info"
+               target="_blank"> Показать на карте
+            </a>
+          </div>
+          <div class="col-sm-1" hidden>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox"
+                       [(ngModel)]="item.valid"
+                       disabled
+                       name="itemSystem">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group label-floating">
+              <label class="control-label">Комментарий</label>
+              <input [(ngModel)]="item.comment" name="commentItem"
+                     type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div id="accordion" role="tablist">
+          <div class="card-collapse">
+            <div class="" role="tab" id="extendedFields">
+              <a data-toggle="collapse" href="#collapseExt"
+                 class="text-info"
+                 aria-expanded="false" aria-controls="collapseExt">
+                Показать расширенные параметры
+                <i class="material-icons">keyboard_arrow_down</i>
+              </a>
+            </div>
+
+            <div id="collapseExt" class="collapse"
+                 role="tabpanel"
+                 aria-labelledby="extendedFields"
+                 data-parent="#accordion">
+              <div class="col-sm-12">
+                <div class="form-group label-floating">
+                  <label class="control-label">country</label>
+                  <input [(ngModel)]="item.country" name="countryItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">area</label>
+                  <input [(ngModel)]="item.area" name="areaItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">area_fias_id</label>
+                  <input [(ngModel)]="item.area_fias_id" name="area_fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">area_kladr_id</label>
+                  <input [(ngModel)]="item.area_kladr_id" name="area_kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">area_type</label>
+                  <input [(ngModel)]="item.area_type" name="area_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">area_type_full</label>
+                  <input [(ngModel)]="item.area_type_full" name="area_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">area_with_type</label>
+                  <input [(ngModel)]="item.area_with_type" name="area_with_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">region_fias_id</label>
+                  <input [(ngModel)]="item.region_fias_id" name="region_fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">region_kladr_id</label>
+                  <input [(ngModel)]="item.region_kladr_id" name="region_kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">region</label>
+                  <input [(ngModel)]="item.region" name="regionItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">region_type</label>
+                  <input [(ngModel)]="item.region_type" name="region_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">region_type_full</label>
+                  <input [(ngModel)]="item.region_type_full" name="region_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">region_with_type</label>
+                  <input [(ngModel)]="item.region_with_type" name="region_with_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">settlement</label>
+                  <input [(ngModel)]="item.settlement" name="settlementItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">settlement_fias_id</label>
+                  <input [(ngModel)]="item.settlement_fias_id" name="settlement_fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">settlement_kladr_id</label>
+                  <input [(ngModel)]="item.settlement_kladr_id" name="settlement_kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">settlement_type</label>
+                  <input [(ngModel)]="item.settlement_type" name="settlement_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">settlement_type_full</label>
+                  <input [(ngModel)]="item.settlement_type_full" name="settlement_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">settlement_with_type</label>
+                  <input [(ngModel)]="item.settlement_with_type" name="settlement_with_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city</label>
+                  <input [(ngModel)]="item.city" name="itemcity"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group label-floating">
+                  <label class="control-label">capital_marker</label>
+                  <input [(ngModel)]="item.capital_marker" name="itemcapital_marker"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_fias_id</label>
+                  <input [(ngModel)]="item.city_fias_id" name="city_fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_kladr_id</label>
+                  <input [(ngModel)]="item.city_kladr_id" name="city_kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_type</label>
+                  <input [(ngModel)]="item.city_type" name="city_type"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_type_full</label>
+                  <input [(ngModel)]="item.city_type_full" name="city_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_with_type</label>
+                  <input [(ngModel)]="item.city_with_type" name="city_with_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_district</label>
+                  <input [(ngModel)]="item.city_district" name="city_districtItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_district_type</label>
+                  <input [(ngModel)]="item.city_district_type" name="city_district_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_district_type_full</label>
+                  <input [(ngModel)]="item.city_district_type_full" name="city_district_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">city_district_with_type</label>
+                  <input [(ngModel)]="item.city_district_with_type" name="city_district_with_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">street</label>
+                  <input [(ngModel)]="item.street" name="streetItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">street_type</label>
+                  <input [(ngModel)]="item.street_type" name="street_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">street_type_full</label>
+                  <input [(ngModel)]="item.street_type_full" name="street_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">street_with_type</label>
+                  <input [(ngModel)]="item.street_with_type" name="street_with_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">street_fias_id</label>
+                  <input [(ngModel)]="item.street_fias_id" name="street_fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">street_kladr_id</label>
+                  <input [(ngModel)]="item.street_kladr_id" name="street_kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">flat</label>
+                  <input [(ngModel)]="item.flat" name="flatItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">flat_type</label>
+                  <input [(ngModel)]="item.flat_type" name="flat_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">flat_type_full</label>
+                  <input [(ngModel)]="item.flat_type_full" name="flat_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">house</label>
+                  <input [(ngModel)]="item.house" name="houseItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">house_type</label>
+                  <input [(ngModel)]="item.house_type" name="house_typeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">house_type_full</label>
+                  <input [(ngModel)]="item.house_type_full" name="house_type_fullItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-12">
+                <div class="form-group label-floating">
+                  <label class="control-label">metro</label>
+                  <input [(ngModel)]="item.metro" name="metroItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-12">
+                <div class="form-group label-floating">
+                  <label class="control-label" for="postal_codeItem">postal_code</label>
+                  <input [(ngModel)]="item.postal_code" name="postal_codeItem"
+                         type="text" class="form-control" id="postal_codeItem">
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group label-floating">
+                  <label class="control-label">tax_office</label>
+                  <input [(ngModel)]="item.tax_office" name="tax_officeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group label-floating">
+                  <label class="control-label">tax_office_legal</label>
+                  <input [(ngModel)]="item.tax_office_legal" name="tax_office_legalItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group label-floating">
+                  <label class="control-label">okato</label>
+                  <input [(ngModel)]="item.okato" name="okatoItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group label-floating">
+                  <label class="control-label">oktmo</label>
+                  <input [(ngModel)]="item.oktmo" name="oktmoItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">qc_geo</label>
+                  <input [(ngModel)]="item.qc_geo" name="qc_geoItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">geo_lat</label>
+                  <input [(ngModel)]="item.geo_lat" name="geo_latItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">geo_lon</label>
+                  <input [(ngModel)]="item.geo_lon" name="geo_lonItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">fias_actuality_state</label>
+                  <input [(ngModel)]="item.fias_actuality_state" name="fias_actuality_stateItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">fias_code</label>
+                  <input [(ngModel)]="item.fias_code" name="fias_codeItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">fias_level</label>
+                  <input [(ngModel)]="item.fias_level" name="fias_levelItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">fias_id</label>
+                  <input [(ngModel)]="item.fias_id" name="fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">kladr_id</label>
+                  <input [(ngModel)]="item.kladr_id" name="kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">house_fias_id</label>
+                  <input [(ngModel)]="item.house_fias_id" name="house_fias_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">house_kladr_id</label>
+                  <input [(ngModel)]="item.house_kladr_id" name="house_kladr_idItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">source</label>
+                  <input [(ngModel)]="item.source" name="sourceItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group label-floating">
+                  <label class="control-label">update</label>
+                  <input [(ngModel)]="item.update" name="updateItem"
+                         type="text" class="form-control">
+                </div>
+              </div>
+              <!-- collapseExt -->
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

@@ -1,0 +1,139 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="loader" *ngIf="waiting">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="15" fill="none" stroke-width="4" stroke-miterlimit="10"/>
+      </svg>
+    </div>
+    <romb-datatable-lite
+        source="mail"
+        [itemStructure]="mail"
+        [dtRequest]="dtRequest"
+        [contextMenuItems]="contextMenu"
+        (selectMenuItem)="selectMenuItem($event)"
+        (afterOpen)="afterOpenCard($event)"
+        (beforeSave)="beforeSave($event)"
+    >
+      <ng-template #dataTableHeaderFilterTemplate let-item="item">
+        <div style="display: flex; align-items: center; outline: none;">
+          <label style="display: inline-block; margin: 0 8px;">
+            <input
+                type="checkbox"
+                checked="checked"
+                (change)="inboxChange($event)"
+                name="taskFinished">только входящие
+          </label>
+          <label style="display: inline-block; margin: 0 8px;">
+            <input
+                type="checkbox"
+                (change)="mymailChange($event)"
+                name="taskFinished">только мои письма
+          </label>
+          <label style="display: inline-block; margin: 0 8px;">
+            <input
+                type="checkbox"
+                (change)="linkedChange($event)"
+                name="taskFinished">неназначенные
+          </label>
+        </div>
+      </ng-template>
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #f="ngForm" class="dt-card-form tab-form">
+          <!-- закладки -->
+          <div class="nav-center">
+            <div class="row">
+              <div class="col-md-8">
+                <ul class="nav nav-pills nav-pills-info" role="tablist">
+                  <li class="active">
+                    <a href="#common-pan" role="tab" data-toggle="tab">
+                      Содержание
+                    </a>
+                  </li>
+                  <li class="">
+                    <a href="#files-pan" role="tab" data-toggle="tab">
+                      Файлы <span *ngIf="item.hasFiles">*</span>
+                    </a>
+                  </li>
+                  <li class="" [hidden]="sharedservice.checkCredential('sysadmin')">
+                    <a href="#extend-pan" role="tab" data-toggle="tab">
+                      Дополнительно {{sharedservice.checkCredential('sysadmin')}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-4">
+                <a class="btn btn-warning btn-sm btn-round pull-left"
+                   (click)="mailDone(item)"
+                   title="Снять письмо с контроля"
+                >Обработано</a>
+                <a class="btn btn-info btn-sm btn-round pull-right"
+                   (click)="createReestrOrder(item)"
+                   title="Создать новую заявку и открыть ее"
+                >Взять в работу</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- tab content -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="common-pan">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group label-floating"
+                       [title]="getAdressFrom(item, false)">
+                    <label class="control-label">Адресат</label>
+                    <input [ngModel]="getAdressFrom(item, true)" name="fromItem"
+                           readonly type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Тема письма</label>
+                    <input [ngModel]="item.body.subject" name="subjectItem"
+                           readonly type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <p title="Отправлено {{item.receivedDate | date:'dd.MM.yyyy HH:mm:ss':'+03'}}">
+                    {{item.stamp | date:'dd.MM.yyyy HH:mm:ss':'+03'}}</p>
+                </div>
+                <div class="col-sm-2">
+                  <a class="btn btn-info btn-sm btn-round" (click)="togleTextView()">HTML / Text</a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="mail-body"
+                       [hidden]="!modeHTML">
+                  </div>
+                  <div class="mail-text"
+                       [hidden]="modeHTML">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="files-pan">
+              <romb-fresh-files
+                  [filesList]="item.files"
+                  (previewOpened)="dataTable.showPreview()"
+                  (previewClosed)="dataTable.closePreview()"
+                  (multiChange)="dataTable.changeFiles(item, $event)">
+              </romb-fresh-files>
+            </div>
+            <div class="tab-pane" id="extend-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <romb-key-value
+                      textTitle="Письмо"
+                      [textSize]="20"
+                      [mulValue]="item">
+                  </romb-key-value>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

@@ -1,0 +1,63 @@
+div.container {
+    mat-toolbar.mat-toolbar {
+        & i {
+            margin:0 6px;
+            font-size: 25px;
+            cursor: pointer;
+            vertical-align: sub;
+            transition: all 0.2s ease-out;
+            -ms-user-select: none;
+            -moz-user-select: none;      
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            &:active {
+              box-shadow: 0px 0px 1px 4px rgba(79, 79, 79, 0.4);
+              border-radius: 3px;
+            }
+        }
+    }
+    .drop-target {
+        border: 1px dotted black;
+    }
+    max-width: 100%;
+    mat-card {
+        overflow-y: auto;
+        max-height: 60vh;
+    }
+    mat-accordion.mat-accordion {
+        mat-expansion-panel.mat-expansion-panel {
+            img {
+                height: 90px;
+                width: auto;
+            }
+            div.border{
+                margin: 15px 0;
+                border-bottom: 1px solid black;
+            }
+            .radio-group {
+                display: inline-flex;
+                flex-direction: column;
+              }
+              
+              .radio-button {
+                margin: 5px;
+              }
+              ::ng-deep .mat-expansion-panel-body .row {
+                align-items: center;
+              }
+        }
+    }
+}
+
+.drop-zone {
+    background: #98fb98;
+    opacity: 0.3;
+}
+
+.error-zone {
+    background: red;
+}
+
+.danger-zone {
+    background: yellow;
+}

@@ -1,0 +1,230 @@
+<div class="tab-pane active" id="order-pan">
+  <romb-print-forms [item]="item"></romb-print-forms>
+  <!-- EMPLOYEE AND ORDER DATE -->
+  <div class="row card-block">
+    <!-- Дата заявки -->
+    <div class="col-md-4">
+      <mat-form-field>
+        <mat-datepicker-toggle matSuffix [for]="orderDateItem">
+        </mat-datepicker-toggle>
+        <input
+          *ngIf="item"
+          matInput readonly
+          [(ngModel)]="item.orderDate" name="orderDateItem"
+          [matDatepicker]="orderDateItem"
+          (click)="orderDateItem.open()"
+          placeholder="Дата заявки">
+        <mat-datepicker #orderDateItem></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <!-- Сотрудник КЦ -->
+    <div class="col-sm-4">
+      <romb-ref-select
+        source="users"
+        label="Сотрудник КЦ"
+        [rcValue]="(item)?item.user:null"
+        [rcDisabled]="!checkCredential('credit_order_status_apply_user')"
+        (openModalSelect)="mainList.openExernalModalSelect($event)"
+        (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+      </romb-ref-select>
+    </div>
+  </div>
+  <!-- EMPLOYEE AND ORDER DATE - END -->
+
+  <!-- параметры заявки -->
+  <div class="card-block">
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput type="number" *ngIf="item"
+                 [(ngModel)]="item.orderPurchaseSumm" name="purchaseSummItem"
+                 (change)="getOrderCreditSumm(item)"
+                 placeholder="Стоимость товара/услуги ({{getSummPurchase(item) | currency:' ':'':'':'ru'}} руб.)"
+                 min="3000" max="3000000" step="1000">
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput type="number"
+                 *ngIf="item"
+                 [(ngModel)]="item.orderInitialFee" name="orderInitialFeeItem"
+                 (change)="getOrderCreditSumm(item)"
+                 placeholder="Первоначальный взнос ({{getSummInitialFee(item) | currency:' ':'':'':'ru'}} руб.)"
+                 min="0" max="1000000" step="1000">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- первоначальный взнос и страховка -->
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput type="number" *ngIf="item"
+                 [(ngModel)]="item.orderSMSSumm" name="orderSMSSummItem"
+                 (change)="getOrderCreditSumm(item)"
+                 placeholder="Стоимость SMS информ. ({{getSummSMS(item) | currency:' ':'':'':'ru'}} руб.)"
+                 min="0" max="5000" step="10">
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput type="number" *ngIf="item"
+                 [(ngModel)]="item.orderInsuranceSumm" name="orderInsuranceSummItem"
+                 (change)="getOrderCreditSumm(item)"
+                 placeholder="Стоимость страховки ({{getSummInsurance(item) | currency:' ':'':'':'ru'}} руб.)"
+                 min="0" max="1000000" step="10">
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput type="number" *ngIf="item"
+                 [(ngModel)]="item.orderDeliverySumm" name="orderDeliverySummItem"
+                 (change)="getOrderCreditSumm(item)"
+                 placeholder="Стоимость курьера ({{getSummDelivery(item) | currency:' ':'':'':'ru'}} руб.)"
+                 min="0" max="1000000" step="1000">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- сумма кредита -->
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput type="number" readonly *ngIf="item"
+                 style="color: red;"
+                 [value]="item.orderSumm" name="orderSummItem"
+                 placeholder="Стоимость кредита в заявке ({{item.orderSumm | currency:' ':'':'':'ru'}} руб.)"
+                 min="3000" max="3000000" step="1000">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <!-- параметры заявки - END -->
+
+  <!-- PARTNER -->
+  <div class="card-block">
+    <div class="row">
+      <div class="col-sm-6">
+        <romb-ref-select #refPartner
+                         *ngIf="item"
+                         source="partners"
+                         label="Партнер"
+                         [dtReqParams]="partnerDTReqParams"
+                         [rcValue]="item.partner"
+                         (selected)="partnerSelected(item)"
+                         (valueCleared)="partnerCleared(item)"
+                         (openModalSelect)="mainList.openExernalModalSelect($event)"
+                         (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+        </romb-ref-select>
+      </div>
+
+      <div class="col-sm-6">
+        <romb-ref-select
+          #refDepartment
+          *ngIf="item"
+          [rcDisabled]="!departmentEnabled"
+          source="departments"
+          label="Точка продаж"
+          [dtReqParams]="departmentDTReqParams"
+          [rcValue]="item.department"
+          (selected)="departmentSelected(item)"
+          (valueCleared)="departmentSelected(item)"
+          (openModalSelect)="mainList.openExernalModalSelect($event)"
+          (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+        </romb-ref-select>
+      </div>
+    </div>
+  </div>
+  <!-- PARTNER - END -->
+
+  <!-- CREDIT PARAMS -->
+  <div class="row card-block">
+    <div class="col-md-6">
+      <mat-form-field class="form-select">
+        <mat-select
+          *ngIf="item"
+          placeholder="Желаемый период кредитования (месяцев)"
+          [(ngModel)]="item.orderPeriod" name="orderPeriodItem">
+          <mat-option [value]=0> — выберите период —</mat-option>
+          <mat-option [value]=3>3 месяца</mat-option>
+          <mat-option [value]=4>4 месяца</mat-option>
+          <mat-option [value]=5>5 месяцев</mat-option>
+          <mat-option [value]=6>6 месяцев</mat-option>
+          <mat-option [value]=7>7 месяцев</mat-option>
+          <mat-option [value]=8>8 месяцев</mat-option>
+          <mat-option [value]=9>9 месяцев</mat-option>
+          <mat-option [value]=10>10 месяцев</mat-option>
+          <mat-option [value]=11>11 месяцев</mat-option>
+          <mat-option [value]=12>12 месяцев</mat-option>
+          <mat-option [value]=13>1 год 1 месяц</mat-option>
+          <mat-option [value]=14>1 год 2 месяца</mat-option>
+          <mat-option [value]=15>1 год 3 месяца</mat-option>
+          <mat-option [value]=16>1 год 4 месяца</mat-option>
+          <mat-option [value]=17>1 год 5 месяцев</mat-option>
+          <mat-option [value]=18>1 год 6 месяцев</mat-option>
+          <mat-option [value]=19>1 год 7 месяцев</mat-option>
+          <mat-option [value]=20>1 год 8 месяцев</mat-option>
+          <mat-option [value]=21>1 год 9 месяцев</mat-option>
+          <mat-option [value]=22>1 год 10 месяцев</mat-option>
+          <mat-option [value]=23>1 год 11 месяцев</mat-option>
+          <mat-option [value]=24>2 года</mat-option>
+          <mat-option [value]=25>2 года 1 месяц</mat-option>
+          <mat-option [value]=26>2 года 2 месяца</mat-option>
+          <mat-option [value]=27>2 года 3 месяца</mat-option>
+          <mat-option [value]=28>2 года 4 месяца</mat-option>
+          <mat-option [value]=29>2 года 5 месяцев</mat-option>
+          <mat-option [value]=30>2 года 6 месяцев</mat-option>
+          <mat-option [value]=31>2 года 7 месяцев</mat-option>
+          <mat-option [value]=32>2 года 8 месяцев</mat-option>
+          <mat-option [value]=33>2 года 9 месяцев</mat-option>
+          <mat-option [value]=34>2 года 10 месяцев</mat-option>
+          <mat-option [value]=35>2 года 11 месяцев</mat-option>
+          <mat-option [value]=36>3 ГОДА</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-6">
+      <mat-form-field class="form-select">
+        <mat-select
+          *ngIf="item"
+          placeholder="Тип кредита"
+          [(ngModel)]="item.orderCreditType" name="orderCreditTypeItem">
+          <mat-option [value]=0>— выберите тип кредита —</mat-option>
+          <mat-option [value]=1>КРЕДИТ</mat-option>
+          <mat-option [value]=2>РАССРОЧКА</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <!-- CREDIT PARAMS - END -->
+
+  <!-- Общие реквизиты -->
+  <!-- etalon field COMMENT-->
+  <div class="row card-block alert-danger">
+    <div class="col-sm-6">
+      <div class="form-group label-floating">
+        <label class="control-label">Комментарий</label>
+        <input [(ngModel)]="item.comment" name="commentItem"
+               type="text" class="form-control">
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <mat-form-field class="form-select">
+        <mat-select
+          placeholder="Статус заявки"
+          [disabled]="!checkCredential('credit_order_status_change_directly')"
+          [compareWith]="dataTable.compareMatSelectWithId"
+          [(ngModel)]="item.orderStatus" name="orderStatusItem"
+          (change)="updateChangeStatusLinkElement(item)"
+        >
+          <mat-option
+            *ngFor="let status of orderStatuses"
+            [style.display]="(status.visible===false)?'none':'block'"
+            [value]="status">{{status.descr + ' (' + status.id + ')'}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

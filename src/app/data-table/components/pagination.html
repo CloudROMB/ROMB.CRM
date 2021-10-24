@@ -1,0 +1,85 @@
+<div class="pagination-wrapper container-fluid" style="margin: 16px 0; padding: 0; border-radius: 15px;">
+  <table
+      *ngIf="dataTable && dataTable.dtRequest">
+    <tr>
+      <td class="left-pagination">
+        <p class="pagination-range">
+          {{dataTable.translations.paginationRange}}: {{dataTable.dtRequest.offset + 1}}—{{[dataTable.dtRequest.offset +
+          dataTable.dtRequest.limit,
+          dataTable.count] | min}}
+          /{{dataTable.count}}
+        </p>
+      </td>
+      <td class="center-pagination">
+        <div class="input-group pagination-limit">
+          <span class="input-group-addon pagination-limit-label"
+                style="padding-left: 0;"
+                [textContent]="dataTable.translations.paginationLimit"></span>
+          <div class="form-group">
+            <input #limitInput type="number" class="form-control" min="1" step="1"
+                   [ngModel]="limit"
+                   (focus)="setLimitInputKeyState($event)"
+                   (blur)="setLimitInputKeyState($event)"                  
+                   (keyup)="limitInputKeyUp($event)"
+            />
+          </div>
+        </div>
+      </td>
+      <td>
+        <div style="margin: auto"></div>
+      </td>
+      <td class="right-pagination">
+        <table>
+          <tr class="pagination-controls">
+            <td class="left-control">
+              <div class="btn-group" role="group">
+                <button [disabled]="dataTable.dtRequest.offset <= 0" (click)="pageFirst()"
+                        title="{{dataTable.translations.paginationBegin}}"
+                        class="btn btn-sm btn-round btn-info">
+                  <i class="fa fa-step-backward" aria-hidden="true"></i>
+                </button>
+                <button [disabled]="dataTable.dtRequest.offset <= 0" (click)="pageBack()"
+                        title="{{dataTable.translations.paginationPrev}}"
+                        class="btn btn-sm btn-primary">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </button>
+              </div>
+            </td>
+            <td class="center-control">
+              <div class="input-group pagination-page">
+                <span class="input-group-addon pagination-label"
+                      [textContent]="dataTable.translations.paginationPage"></span>
+                <div class="form-group">
+                  <input #pageInput type="number" class="form-control" min="1" step="1" max="{{maxPage}}"
+                         [ngModel]="page"
+                         (blur)="setPageInputKeyState($event)"
+                         (focus)="setPageInputKeyState($event)"
+                         (keyup)="pageInputKeyUp($event)">
+                </div>
+                <span class="input-group-addon"> / </span>
+                <span class="input-group-addon"
+                      [textContent]="dataTable.lastPage()"></span>
+              </div>
+            </td>
+            <td class="right-control">
+              <div class="btn-group" role="group">
+                <button [disabled]="(dataTable.dtRequest.offset + dataTable.dtRequest.limit) >= dataTable.count"
+                        (click)="pageForward()"
+                        [title]="dataTable.translations.paginationNext"
+                        class="btn btn-sm btn-primary">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                <button [disabled]="(dataTable.dtRequest.offset + dataTable.dtRequest.limit) >= dataTable.count"
+                        (click)="pageLast()"
+                        class="btn btn-sm btn-round btn-info"
+                        [title]="dataTable.translations.paginationEnd">
+                  <i class="fa fa-step-forward" aria-hidden="true"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>

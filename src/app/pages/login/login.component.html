@@ -1,0 +1,79 @@
+<div class="wrapper wrapper-full-page">
+  <nav class="navbar navbar-primary navbar-transparent navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://www.ru">
+          <img src="/assets/img/logo/logo600.png" width="300" alt="На сайт копании">
+        </a>
+      </div>
+      <div class="collapse navbar-collapse" id="menu-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="">
+            <a routerLink="/pages/register">
+              <i class="material-icons">person_add</i> Регистрация
+            </a>
+          </li>
+          <li class="hidden">
+            <a href="http://www.ru">
+              <i class="material-icons">home</i> На сайт компании
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="full-page login-page" filter-color="black">
+    <div class="content">
+      <div class="container">
+        <div class="row form-row">
+          <div class="col-md-6 col-md-offset-3">
+            <div class="card card-login card-hidden">
+              <h3 class="card-title text-center">Вход в платформу</h3>
+              <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+                    <div class="card-content">
+                      <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">face</i>
+                                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label" for="name">Имя пользователя</label>
+                          <input id="name" name="login" type="text" class="form-control" [(ngModel)]="user.login"
+                                 required>
+                        </div>
+                      </div>
+                      <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">lock_outline</i>
+                                        </span>
+                        <div class="form-group label-floating">
+                          <label class="control-label">Пароль</label>
+                          <input type="password" class="form-control" name="password" [(ngModel)]="user.password"
+                                 required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="footer text-center">
+                      <button type="submit" class="btn btn-rose btn-simple btn-wd btn-lg">
+                        <i class="material-icons">fingerprint</i> Войти в систему
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <romb-footer></romb-footer>
+      </div>
+    </div>
+    <div class="full-page-background"></div>
+  </div>
+</div>

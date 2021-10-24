@@ -1,0 +1,240 @@
+<!-- EDIT MODE -->
+<div class="edit-mode" *ngIf="editMode">
+  <div class="row">
+    <div class="col-md-12 mel-col">
+      <legend>{{textTitle}}</legend>
+      <a class="btn btn-success btn-raised btn-round btn-xs"
+         (click)="toggleEditMode(true)">{{autoSaveChanges ? labels.viewMode : labels.saveChanges}}</a>
+      <a class="btn btn-danger btn-raised btn-round btn-xs"
+         *ngIf="!autoSaveChanges"
+         (click)="toggleEditMode(false)">{{labels.cancelChanges}}</a>
+      <div class="checkbox" title="Сохранять каждое изменение значений?">
+        <label>
+          <input [(ngModel)]="autoSaveChanges"
+                 type="checkbox"
+                 name="autoSaveChanges">
+          {{labels.autoSaveChanges}}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <ng-container
+    *ngIf="mulItem.category===fieldCategory.array"
+    [ngTemplateOutlet]="array"
+    [ngTemplateOutletContext]="{item: mulItem, parent: null, labels: labels}">
+  </ng-container>
+  <ng-container
+    *ngIf="mulItem.category===fieldCategory.object"
+    [ngTemplateOutlet]="object"
+    [ngTemplateOutletContext]="{item: mulItem, parent: null, labels: labels}">
+  </ng-container>
+</div>
+
+<!-- VIEW MODE -->
+<div class="view-mode" *ngIf="!editMode">
+  <div class="row">
+    <div class="col-md-12 mel-col">
+      <legend>{{textTitle}}</legend>
+      <a class="btn btn-primary btn-raised btn-round btn-xs"
+         (click)="toggleEditMode()">{{labels.editMode}}</a>
+      <span [hidden]="!updating">
+        <fa name="refresh" [spin]="true" class="clickable"
+            style="margin: 0 16px; font-size: 18px; color: red;"></fa>
+      </span>
+      <p style="flex: 2;"></p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group label-floating">
+        <label class="control-label">{{textTitle}}</label>
+        <textarea
+          [ngModel]="getObjJSON()" name="viewValue"
+          (blur)="changeJSON($event)"
+          rows="{{textSize}}"
+          [readonly]="!editJSON"
+          type="text" class="form-control">
+          </textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OBJECT -->
+<ng-template #object let-item="item" let-parent="parent" let-labels="labels">
+  <ng-container
+    [ngTemplateOutlet]="header"
+    [ngTemplateOutletContext]="{item: item, parent: parent, labels: labels}">
+  </ng-container>
+
+  <div class="row mel-row" *ngIf="item.expanded">
+    <div class="col-md-12">
+      <ul class="key-value-list" *ngIf="item">
+        <li *ngFor="let obj of item.object"
+            id="elem-{{obj.id}}"
+            [class.key-value-item]="true"
+            [class.field]="obj.category===fieldCategory.field">
+          <ng-container
+            *ngIf="obj.category===fieldCategory.field"
+            [ngTemplateOutlet]="field"
+            [ngTemplateOutletContext]="{item: obj, parent: item, labels: labels}">
+          </ng-container>
+          <ng-container
+            *ngIf="obj.category===fieldCategory.array"
+            [ngTemplateOutlet]="array"
+            [ngTemplateOutletContext]="{item: obj, parent: item, labels: labels}">
+          </ng-container>
+          <ng-container
+            *ngIf="obj.category===fieldCategory.object"
+            [ngTemplateOutlet]="object"
+            [ngTemplateOutletContext]="{item: obj, parent: item, labels: labels}">
+          </ng-container>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ARRAY -->
+<ng-template #array let-item="item" let-parent="parent" let-labels="labels">
+  <ng-container
+    [ngTemplateOutlet]="header"
+    [ngTemplateOutletContext]="{item: item, parent: parent, labels: labels}">
+  </ng-container>
+
+  <div class="row mel-row" *ngIf="item.expanded">
+    <div class="col-md-12">
+      <ul class="key-value-list" *ngIf="item">
+        <li *ngFor="let elem of item.object"
+            id="elem-{{elem.id}}"
+            [class.key-value-item]="true"
+            [class.field]="elem.category===fieldCategory.field">
+          <ng-container
+            *ngIf="elem.category===fieldCategory.field"
+            [ngTemplateOutlet]="field"
+            [ngTemplateOutletContext]="{item: elem, parent: item, labels: labels}">
+          </ng-container>
+          <ng-container
+            *ngIf="elem.category===fieldCategory.array"
+            [ngTemplateOutlet]="array"
+            [ngTemplateOutletContext]="{item: elem, parent: item, labels: labels}">
+          </ng-container>
+          <ng-container
+            *ngIf="elem.category===fieldCategory.object"
+            [ngTemplateOutlet]="object"
+            [ngTemplateOutletContext]="{item: elem, parent: item, labels: labels}">
+          </ng-container>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>
+
+<!-- FIELD -->
+<ng-template #field let-item="item" let-parent="parent" let-labels="labels">
+  <!-- KEY NAME FIELD -->
+  <div class="form-group label-floating"
+       *ngIf="parent.category!==fieldCategory.array"
+       style="flex-basis: 30%;">
+    <label class="control-label">{{labels.key}}</label>
+    <input [(ngModel)]="item.name" name="itemName{{item.id}}"
+           [disabled]="fixedStructure||!canEditField"
+           (blur)="saveValuesChanges()"
+           pattern="[A-Za-z0-9].+" required
+           type="text" class="form-control">
+  </div>
+  <!-- VALUE STRING -->
+  <div class="form-group label-floating" style="flex-basis: 60%;"
+       *ngIf="getValueType(item.field)!=='boolean' && getValueType(item.field)!=='number'">
+    <label class="control-label">{{labels.value}} {{getValueType(item.field)}}</label>
+    <input [ngModel]="item.field" name="itemField{{item.id}}"
+           (blur)="changeFieldValue(item, $event)"
+           type="text" class="form-control">
+  </div>
+  <!-- VALUE NUMBER -->
+  <div class="form-group label-floating" style="flex-basis: 60%;"
+       *ngIf="getValueType(item.field)==='number'">
+    <label class="control-label">{{labels.value}} {{getValueType(item.field)}}</label>
+    <input [ngModel]="item.field" name="itemField{{item.id}}"
+           (blur)="changeFieldValue(item, $event)"
+           pattern="[0-9]+([,|\.][0-9]+)?"
+           type="number" class="form-control">
+  </div>
+  <!-- VALUE CHECKBOX -->
+  <div *ngIf="getValueType(item.field)==='boolean'" class="checkbox">
+    <label>
+      <input type="checkbox"
+             [(ngModel)]="item.field" name="itemField{{item.id}}"
+             (change)="changeActiveCheckBox(parent, item)">
+      {{labels.checkbox}}
+    </label>
+  </div>
+  <!-- REMOVE FIELD -->
+  <div *ngIf="!fixedStructure">
+    <button class="btn btn-fab btn-fab-mini btn-danger btn-simple"
+            [title]="labels.removeField"
+            (click)="removeItem(parent, item)">
+      <fa name="times-circle-o"></fa>
+    </button>
+  </div>
+</ng-template>
+
+<!-- HEADER -->
+<ng-template #header let-item="item" let-parent="parent" let-labels="labels">
+  <div class="row header-row">
+    <div class="col-md-12 mel-col">
+        <span (click)="item.expanded=!item.expanded"
+              class="text-rose">
+          <fa name="plus-square-o" *ngIf="!item.expanded" class="clickable"
+              style="margin: 0 16px; font-size: 18px; color: red;"></fa>
+          <fa name="minus-square-o" *ngIf="item.expanded" class="clickable"
+              style="margin: 0 16px; font-size: 18px; color: red;"></fa>
+        </span>
+      <h5 *ngIf="item && item.category===fieldCategory.array"
+          title="{{labels.array}}">{{getObjectName(item, true)}}</h5>
+      <h5 *ngIf="item && item.category===fieldCategory.object"
+          title="{{labels.object}}">{{getObjectName(item, false)}}</h5>
+      <div class="form-group label-floating"
+           *ngIf="parent && parent.category!==fieldCategory.array"
+           style="flex-basis: 30%;">
+        <label class="control-label">{{labels.key}}</label>
+        <input [(ngModel)]="item.name" name="itemName{{item.id}}"
+               [disabled]="fixedStructure"
+               pattern="[A-Za-z0-9].+" required
+               type="text" class="form-control">
+      </div>
+      <div *ngIf="!fixedStructure" class="add-block">
+        <h5>{{labels.addIn}}</h5>
+        <a *ngFor="let cat of fieldVals()"
+           class="text-info multi-element-link"
+           (click)="addField(item, cat)">{{cat}}</a>
+        <a *ngIf="parent"
+           style="margin: 0 4px; max-width: 24px;"
+           title="{{labels.removeObject}}"
+           (click)="removeItem(parent, item)">
+          <fa class="clickable" name="times-circle-o" style="margin: 0 4px; font-size: 18px; color: red;"></fa>
+        </a>
+        <a *ngIf="parent"
+           style="margin: 0 4px; max-width: 24px;"
+           title="{{labels.copyObject}}"
+           (click)="copyField(parent, item)">
+          <fa class="clickable" name="clone" style="margin: 0 4px; font-size: 18px; color: green;"></fa>
+        </a>
+        <a *ngIf="canGetUp(parent, item)"
+           style="margin: 0 4px; max-width: 24px;"
+           title="{{labels.getUpObject}}"
+           (click)="getUpObject(parent, item)">
+          <fa class="clickable" name="arrow-up" style="margin: 0 4px; font-size: 18px; color: cadetblue;"></fa>
+        </a>
+        <a *ngIf="canGetDown(parent, item)"
+           style="margin: 0 4px; max-width: 24px;"
+           title="{{labels.getDownObject}}"
+           (click)="getDownObject(parent, item)">
+          <fa class="clickable" name="arrow-down" style="margin: 0 4px; font-size: 18px; color: cadetblue;"></fa>
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,109 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        source="to-do"
+        [dtView]="dtView"
+        [item]="task"
+        (beforeAddNew)="beforeAddNew($event)"
+        (afterOpen)="afterOpen($event)"
+        (beforeSave)="beforeSave($event)"
+        (afterSave)="afterSave($event)"
+    >
+      <ng-template #dataTableHeaderFilterTemplate let-item="item">
+        <div style="display: flex; align-items: center; outline: none;">
+          <span>Показывать только</span>
+          <label style="display: inline-block; margin: 0 8px;">
+            <input
+                type="checkbox"
+                (change)="filterChange($event)"
+                name="taskFinished">Выполненные
+          </label>
+        </div>
+      </ng-template>
+      <ng-template #dataTableCardTemplate let-item="item">
+        <!--<p>Form value: {{ f.value | json }}</p>-->
+        <form #f="ngForm" class="dt-card-form">
+          <div class="row">
+            <div class="col-sm-4">
+              <mat-form-field class="example-full-width">
+                <input matInput readonly type="text"
+                       placeholder="Код задачи"
+                       [(ngModel)]="item.code" name="taskCode">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field class="example-full-width">
+                <input matInput type="text" id="taskName"
+                       placeholder="Краткое название задачи"
+                       [(ngModel)]="item.name" name="taskName">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Полное описание задачи</label>
+                <!--[ngModel]="item.text" name="taskText"-->
+                <textarea
+                    [(ngModel)]="item.text" name="taskText"
+                    rows="8"
+                    type="text" class="form-control">
+                    </textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Результат выполнения</label>
+                <input [(ngModel)]="item.result" name="taskResult"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"
+                         [(ngModel)]="item.finished"
+                         name="taskFinished">Задача выполнена
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group input-group date">
+                <span [owlDateTimeTrigger]="taskStarts" class="input-group-addon">
+                  <fa name="calendar" [border]=false [spin]=false></fa>
+                </span>
+                <input
+                    type="text" placeholder="Начало"
+                    [(ngModel)]="item.start" name="taskStarts"
+                    [owlDateTimeTrigger]="taskStarts" [owlDateTime]="taskStarts"
+                    class="form-control">
+                <owl-date-time [firstDayOfWeek]="1" #taskStarts></owl-date-time>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group input-group date">
+                <span [owlDateTimeTrigger]="taskEnds" class="input-group-addon">
+                  <fa name="calendar"></fa>
+                </span>
+                <input
+                    type="text" placeholder=" Завершена"
+                    [(ngModel)]="item.done" name="taskEnds"
+                    [owlDateTimeTrigger]="taskEnds" [owlDateTime]="taskEnds"
+                    [readonly]="dataTable.dtView.type === dtViewTypes.new"
+                    [disabled]="dataTable.dtView.type === dtViewTypes.new"
+                    class="form-control">
+                <owl-date-time [firstDayOfWeek]="1" #taskEnds></owl-date-time>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

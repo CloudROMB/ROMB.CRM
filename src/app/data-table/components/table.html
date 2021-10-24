@@ -1,0 +1,188 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card datatable-list">
+      <div class="card-content">
+        <div class="data-table-wrapper">
+          <!--<ng-container-->
+          <!--[ngTemplateOutlet]="dataTableHeader"-->
+          <!--[ngTemplateOutletContext]="{item: null}">-->
+          <!--</ng-container>-->
+
+          <romb-dt-header *ngIf="dtView.showHeader"
+                          [headerTemplate]="dataTableHeader">
+          </romb-dt-header>
+
+          <div class="data-table-box">
+            <table class="table table-condensed data-table table-bordered table-hover">
+              <thead>
+              <tr>
+                <!-- разворачиваемая колонка -->
+                <th [hidden]="!dtView.showExpandableRows" class="expand-column-header"></th>
+                <!-- чек-боксы -->
+                <th class="select-column-header" [hidden]="!dtView.showSelectColumn">
+                  <input [hidden]="!dtView.multiSelect" type="checkbox" [(ngModel)]="selectAllCheckbox"/>
+                  <fa [name]="'check-square'" [size]=1 [border]=false [inverse]=false [fw]=true></fa>
+                </th>
+                <!-- индекс строки -->
+                <th [hidden]="!dtView.showIndexColumn" class="index-column-header">
+                  <span [textContent]="dtView.indexColumnHeader"></span>
+                </th>
+                <!-- пользовательские колонки -->
+                <th *ngFor="let column of columns" #th
+                    [hidden]="!column.visible"
+                    (click)="headerClicked(column, $event)"
+                    [ngClass]="column.styleClass"
+                    [class.sortable]="column.sortable"
+                    [class.resizable]="column.resizable"
+                    class="column-header"
+                    [style.width]="column.width | px"
+                    [title]="column.header"
+                >
+                <span *ngIf="column.headerIcon">
+                  <fa [name]="column.headerIcon" [stack]="true"></fa>
+                </span>
+                  <span *ngIf="!column.headerIcon && !column.templateHeader" [textContent]="column.header">
+                </span>
+                  <span *ngIf="!column.headerIcon && column.templateHeader"
+                        [style.color]="'rgb('+column.headerColor+')'"
+                        [textContent]="column.header">
+                </span>
+                  <span class="fa fa-sort-alpha-down"></span>
+                  <span class="column-sort-icon" *ngIf="column.sortable">
+                  <span class="fa fa-sort column-sortable-icon"
+                        [hidden]="column.property === dtRequest.sortBy">
+                  </span>
+                  <span [hidden]="column.property !== dtRequest.sortBy">
+                      <fa name="sort-amount-asc" *ngIf="dtRequest.sortAsc"></fa>
+                      <fa name="sort-amount-desc" *ngIf="!dtRequest.sortAsc"></fa>
+                  </span>
+                </span>
+                  <span *ngIf="column.resizable"
+                        class="column-resize-handle"
+                        (mousedown)="resizeColumnStart($event, column, th)">
+                </span>
+                </th>
+              </tr>
+              </thead>
+
+              <!-- строки таблицы -->
+              <tbody class="dt-row-wrapper"
+                     *ngFor="let item of items; let index=index"
+                     romb-dt-row #row
+                     [dtView]="dtView"
+                     [dtRequest]="dtRequest"
+                     [columns]="columns"
+                     [item]="item"
+                     [index]="index"
+                     (cellClick)="cellClicked($event)"
+                     (rowClick)="rowClicked($event)"
+                     (rowDoubleClick)="rowDoubleClicked($event)"
+                     (selectedChange)="onRowSelectChanged($event)">
+              </tbody>
+
+              <!-- суррогатные строки -->
+              <tbody
+                  class="substitute-rows"
+                  *ngIf="dtView.showPagination && dtView.showSubstituteRows && substituteItems">
+              <tr *ngFor="let item of substituteItems, let index = index"
+                  [class.row-odd]="(index + items.length) % 2 === 0"
+                  [class.row-even]="(index + items.length) % 2 === 1"
+              >
+                <td [hidden]="!dtView.showExpandableRows"></td>
+                <td [hidden]="!dtView.showIndexColumn"></td>
+                <td [hidden]="!dtView.showSelectColumn"></td>
+                <td *ngFor="let col of columns" [hidden]="!col.visible">*</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <romb-dt-pagination *ngIf="dtView.showPagination"></romb-dt-pagination>
+
+          <div class="loading-cover" *ngIf="dtView.showReloading && reloading">
+            <div class="loader">
+              <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--</div>-->
+</div>
+
+<romb-contextmenu
+    menuClientClassName="dt-row-wrapper"
+    [items]="contextMenuItems"
+    [source]="source"
+    (selectMenuItem)="menuItemSelected($event)"
+></romb-contextmenu>
+
+<!--<div class="modal"-->
+<!--id="cardModal"-->
+<!--tabindex="-1"-->
+<!--role="dialog"-->
+<!--aria-hidden="true">-->
+<!--<div class="document-card-modal" [hidden]="dtView.type===dtViewTypes.list">-->
+<div class="document-card-modal" *ngIf="dtView.type!==dtViewTypes.list">
+  <div class="card document-card">
+    <div class="card-header card-header-icon"
+         *ngIf="dtView.type===dtViewTypes.new" data-background-color="rose">
+      <fa [name]="getCardHeaderIcon()" [stack]="true"></fa>
+    </div>
+    <div class="card-header card-header-icon"
+         *ngIf="dtView.type===dtViewTypes.view" data-background-color="purple">
+      <fa [name]="getCardHeaderIcon()" [stack]="true"></fa>
+    </div>
+    <div class="card-header card-header-icon"
+         *ngIf="dtView.type===dtViewTypes.edit" data-background-color="orange">
+      <fa [name]="getCardHeaderIcon()" [stack]="true"></fa>
+    </div>
+    <div class="dt-card-content-header">
+      <div class="col-header left">
+        <h4 class="card-title" [textContent]="getCardHeaderTitle()"></h4>
+      </div>
+      <div class="col-header right">
+        <p *ngIf="changed" class="text-danger card-changed">изменено</p>
+        <button class="btn btn-success btn-just-icon btn-round card-btn-close"
+                *ngIf="dtView.type!==dtViewTypes.view"
+                (click)="saveCard()"
+                title="Сохранить и закрыть (Ctrl+Enter)">
+          <fa name="save"></fa>
+        </button>
+        <button class="btn btn-danger btn-just-icon btn-round card-btn-close"
+                (click)="closeCard(true)"
+                title="Закрыть без сохранения (Escape)">
+          <fa name="close"></fa>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="item" class="card-content dt-card-content">
+      <div [ngTemplateOutlet]="dataTableCard"
+           [ngTemplateOutletContext]="{item: item}">
+      </div>
+    </div>
+
+    <div class="card-footer dt-card-footer">
+      <p class="card-id" *ngIf="item && item._id" title="">
+        <fa name="link"></fa>
+        <b>ID записи: </b>
+        <span *ngIf="!showIDInput" (click)="showIDInput=true">{{item._id}}</span>
+        <input *ngIf="showIDInput" type="text" readonly style="border-width: 0"
+               (click)="copyCardLink($event)" [value]="getCardLink(item._id)">
+      </p>
+      <p class="doc-author" *ngIf="item && item.author" [title]="shared.getObjJSON(item.author)">
+        <strong>Создал:</strong>
+        <span [textContent]="getRefObjectPresentation(item.author)"></span>
+        <span>{{item.stamp | date:'dd.MM.yyyy HH:mm:ss':'+03'}}</span>
+      </p>
+      <p class="doc-author" *ngIf="item && item.editor" [title]="shared.getObjJSON(item.editor)">
+        <strong>Изменил:</strong>
+        <span [textContent]="getRefObjectPresentation(item.editor)"></span>
+        <span>{{item.changed | date:'dd.MM.yyyy HH:mm:ss':'+03'}}</span>
+      </p>
+    </div>
+  </div>
+</div>

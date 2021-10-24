@@ -1,0 +1,133 @@
+<div class="col-md-12">
+  <div class="edit-mode" *ngIf="editMode">
+    <div class="row">
+      <p>{{labels.addCategory}}:</p>
+      <a *ngFor="let cat of fileVals()"
+         class="text-success multi-element-link"
+         (click)="addFileCategory(cat)">{{cat}}</a>
+
+      <a class="text-info multi-element-link"
+         (click)="editMode=!editMode">{{labels.viewMode}}</a>
+    </div>
+    <div class="row mel-row" *ngFor="let cat of filesList">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12" style="display: flex; align-items: baseline;">
+            <p class="h3">{{cat.category}}</p>
+            <a class="text-danger multi-element-link"
+               (click)="removeCategory(cat)">{{labels.removeCategory}}</a>
+            <a class="text-success multi-element-link"
+               (click)="addFile(cat)">{{labels.addFile}}</a>
+            <fa *ngIf="uploading" name="refresh" [spin]="true"
+                style="margin: 0 16px" title="{{labels.uploading}}"></fa>
+            <div class="form-group label-floating" style="display: block">
+              <input type="file" multiple class="form-control"
+                     accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.tif,.tiff,.png,.bmp"
+                     [name]="'addFile'+cat.id" [id]="'addFile'+cat.id"
+                     (change)="handleFileInput(cat, $event.target.files)">
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="cat.list">
+          <div class="row" *ngFor="let file of cat.list">
+            <div class="col-md-5">
+              <a [href]="getFileLink(file.generatedFileName)"
+                 class="text-info multi-element-link"
+                 target="_blank" [title]="labels.openFile">
+                {{file.fileName}}
+              </a>
+              <a class="preview-link text-info multi-element-link"
+                 (click)="showPreviewClicked(file)">{{labels.previewFile}}
+              </a>
+              <!--<a class="preview-link text-info multi-element-link"-->
+                 <!--data-toggle="modal" data-target="#previewModal"-->
+                 <!--(click)="setPreviewLink(file)">{{labels.previewFile}}-->
+              <!--</a>-->
+            </div>
+            <div class="col-md-6">
+              <div class="form-group label-floating">
+                <label class="control-label">{{labels.description}}</label>
+                <input [(ngModel)]="file.description" name="descriptionFile{{file.id}}"
+                       (change)="changeMultiValue($event)"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-default btn-raised btn-just-icon btn-round"
+                      (click)="removeFile(cat, file)">
+                <fa name="trash"></fa>
+              </button>
+              <a href=""></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="view-mode" *ngIf="!editMode">
+    <div class="row">
+      <a class="text-primary multi-element-link"
+         (click)="editMode = (!editMode)">{{labels.editMode}}</a>
+    </div>
+    <div class="row mel-row mel-row-text" *ngFor="let cat of filesList">
+      <div class="col-md-12">
+        <div class="row h5">
+          <div class="col-md-4">
+            <p>{{cat.category}}</p>
+          </div>
+        </div>
+        <div *ngIf="cat.list">
+          <div class="row" *ngFor="let file of cat.list">
+            <div class="col-md-4">
+              <a [href]="getFileLink(file.generatedFileName)"
+                 class="text-info multi-element-link"
+                 target="_blank" title="Просмотреть в новой закладке">
+                {{file.fileName}}
+              </a>
+            </div>
+            <div class="col-md-2">
+              <p>
+                {{file.length}} байт
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p [title]="file.contentType">
+                {{file.contentType | cutCell:20}}
+              </p>
+            </div>
+            <div class="col-md-4">
+              <p>
+                {{file.description}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="preview-modal" *ngIf="showPreview">
+  <button type="button" class="close" (click)="closePreviewClicked()">
+    <i class="material-icons">clear</i>
+  </button>
+  <div class="preview-frame" id="previewLinkBody">
+  </div>
+</div>
+
+<!--<div class="modal" id="previewModal"-->
+     <!--tabindex="-1" role="dialog"-->
+     <!--aria-hidden="true">-->
+  <!--<div class="modal-dialog modal-lg" role="document">-->
+    <!--<div class="modal-content">-->
+      <!--<div class="modal-body">-->
+        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">-->
+          <!--<i class="material-icons">clear</i>-->
+        <!--</button>-->
+        <!--<div class="preview-frame" id="previewLinkBody">-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->

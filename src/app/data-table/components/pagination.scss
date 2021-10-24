@@ -1,0 +1,154 @@
+.pagination-wrapper {
+  font-size: 12px !important;
+  width: auto;
+  max-width: 960px;
+
+  margin: 8px 0 0 0 !important;
+  padding: 0 !important;
+}
+
+.input-group-addon {
+  font-size: 12px !important;
+}
+
+.form-control {
+  font-size: 12px !important;
+  height: 28px;
+  line-height: 18px;
+}
+
+.btn {
+  font-size: 12px !important;
+  padding: 5px 16px;
+}
+
+.btn i {
+  font-size: 12px !important;
+}
+
+.pagination-toolbar {
+  float: right;
+}
+
+.btn-toolbar {
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  height: 100%;
+}
+
+.left-pagination {
+  padding-left: 8px;
+  max-width: 90px;
+}
+
+.center-pagination {
+  max-width: 120px;
+}
+
+.right-pagination {
+  text-align: right;
+  /*max-width: 160px;*/
+}
+
+.pagination-controls .left-control {
+  text-align: right;
+  max-width: 48px;
+}
+
+.pagination-controls .center-control {
+  text-align: center;
+  max-width: 96px;
+}
+
+.pagination-controls .right-control {
+  text-align: left;
+  max-width: 48px;
+}
+
+.pagination-range {
+  margin: 0 1rem 0 0;
+  /*margin-top: 16px;*/
+  /*margin-left: 3px;*/
+  /*display: inline-block;*/
+}
+
+.pagination-controllers {
+  float: right;
+}
+
+.pagination-limit {
+  margin-right: 1rem;
+  /*display: inline-table;*/
+  /*width: 150px;*/
+
+  display: flex;
+  align-items: baseline;
+  justify-content: space-around;
+}
+
+.pagination-limit input {
+  background-color: #f9f9f9;
+  max-width: 6rem;
+}
+
+.pagination-limit span {
+  padding: 0 1rem 0 0;
+  width: auto;
+}
+
+.pagination-limit .form-group {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+.pagination-pages {
+  display: inline-block;
+}
+
+.pagination-page {
+  /*max-width: 20rem;*/
+  /*max-width: 20rem;*/
+  /*display: inline-table;*/
+  display: flex;
+  align-items: baseline;
+  justify-content: space-around;
+}
+
+.pagination-page .form-group {
+  margin: 0;
+  padding: 0;
+}
+
+.pagination-page input {
+  max-width: 6rem;
+  background-color: #f9f9f9;
+}
+
+.pagination-page span {
+  padding: 0 1rem 0 1rem;
+  width: auto;
+}
+
+.pagination-box button {
+  outline: none !important;
+}
+
+.pagination-prevpage,
+.pagination-nextpage,
+.pagination-firstpage,
+.pagination-lastpage {
+  vertical-align: top;
+}
+
+.pagination-reload {
+  color: gray;
+  font-size: 12px;
+}
+
+.btn-group button {
+  /*width: 0;*/
+}

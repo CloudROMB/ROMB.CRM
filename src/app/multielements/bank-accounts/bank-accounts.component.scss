@@ -1,0 +1,22 @@
+.bank-accounts-container {
+  .row {
+    margin: 0 15px!important;
+  }
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  mat-panel-title {
+    font-size: 13px;
+  }
+
+  .form-group.is-focused label, mat-form-field.mat-focused label {
+    color: #4caf50;
+  }
+
+  button.btn-success > i, button.btn-danger > i {
+    margin-left: 6px;
+  }
+  .btn.btn-success:hover {
+    background-color: #3c8c3f;
+  }
+}

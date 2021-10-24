@@ -1,0 +1,64 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        [source]="source"
+        [itemStructure]="struct"
+        (afterOpen)="afterOpen($event)"
+        (beforeSave)="beforeSave($event)"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #f="ngForm" class="dt-card-form">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group label-floating">
+                <label class="control-label" for="bankName">Краткое наименование</label>
+                <input name="bankName" id="bankName"
+                       [(ngModel)]="item.name"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="checkbox">
+                <label [style.color]="(item.active)?'green':'red'">
+                  <input type="checkbox"
+                         [(ngModel)]="item.active"
+                         name="itemActive">Активность объявления <strong>{{dataTable.getActiveTitle()}}</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Текст объявления в формате HTML</label>
+                <textarea [(ngModel)]="item.text" name="textItem"
+                          rows="8"
+                          type="text" class="form-control">
+                </textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="attentionView" class="attention-preview"
+                   [innerHTML]="updateHTMLView(item) | safeHtml">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Комментарий</label>
+                <input [(ngModel)]="item.comment" name="commentItem"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

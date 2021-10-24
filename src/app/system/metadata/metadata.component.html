@@ -1,0 +1,179 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+      #mainList
+      source="metadata"
+      [itemStructure]="doc"
+      [dtView]="dtView"
+      (beforeAddNew)="beforeAddNew($event)"
+      (afterOpen)="afterOpen($event)"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <!-- закладки -->
+        <div class="nav-center">
+          <ul class="nav nav-pills nav-pills-info" role="tablist">
+            <li class="active">
+              <a href="#main-pan" role="tab" data-toggle="tab">
+                Основные
+              </a>
+            </li>
+            <li class="">
+              <a href="#props-pan" role="tab" data-toggle="tab">
+                Реквизиты
+              </a>
+            </li>
+            <li class="" [class.hidden]="item.code !== 'system'">
+              <a href="#menu-pan" role="tab" data-toggle="tab">
+                Меню
+              </a>
+            </li>
+            <li class="" [class.hidden]="item.code !== 'system'">
+              <a href="#credentials-pan" role="tab" data-toggle="tab">
+                Мандаты
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <form #f="ngForm" class="dt-card-form tab-form">
+          <!-- tab content -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="main-pan">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Наименование</label>
+                    <input
+                      [(ngModel)]="item.name" name="itemName"
+                      required
+                      type="text" class="form-control">
+                  </div>
+                </div>
+
+                <!-- type of collection -->
+                <div class="col-sm-4">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="Тип коллекции (для мандатов)"
+                      [compareWith]="mainList.compareMatSelectWithId"
+                      [(ngModel)]="item.type" name="collectionType">
+                      <mat-option
+                        *ngFor="let type of collectionTypes"
+                        [value]="type">{{type.view + ' (' + type.id + ')'}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="checkbox">
+                    <label>
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="item.system"
+                        name="itemSystem">Системная коллекция
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Код коллекции</label>
+                    <input
+                      [(ngModel)]="item.code" name="itemCode"
+                      (blur)="collectionCodeChanged($event, item)"
+                      type="text" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="checkbox">
+                    <label>
+                      <input
+                        [(ngModel)]="item.disableCredentials"
+                        [readonly]="item.system===true"
+                        [disabled]="item.system===true"
+                        type="checkbox" name="itemDisableCreds">Отключить проверку прав
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Описание</label>
+                    <input [(ngModel)]="item.descr" name="itemdescr"
+                           type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="props-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <romb-key-value
+                    textTitle="Поля метаданных"
+                    [textSize]="20"
+                    [editMode]="true"
+                    [mulValue]="item.props"
+                    [editJSON]="false"
+                    [canEditField]="false"
+                    (beforeAddField)="beforeAddMetadataField($event)"
+                    (multiChange)="changeCardProperty($event, 'props')">
+                  </romb-key-value>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group label-floating" hidden>
+                    <label class="control-label">Поля</label>
+                    <textarea
+                      [ngModel]="getObjJSON(item, 'props')" name="itemProps"
+                      (blur)="saveProps($event.target.value)"
+                      (keypress)="saveProps($event.target.value)"
+                      rows="4" type="text" class="form-control">
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="menu-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <romb-key-value
+                    textTitle="Главное меню"
+                    [textSize]="20"
+                    [mulValue]="item.mainMenu"
+                    [editMode]="true"
+                    [editJSON]="false"
+                    [canEditField]="false"
+                    (beforeAddField)="beforeAddMenuField($event)"
+                    (multiChange)="changeCardProperty($event, 'mainMenu')">
+                  </romb-key-value>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane" id="credentials-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <romb-key-value
+                    textTitle="Мандаты ролей"
+                    [textSize]="20"
+                    [mulValue]="item.credentials"
+                    [editMode]="true"
+                    [editJSON]="false"
+                    [canEditField]="false"
+                    (beforeAddField)="beforeAddCredential($event)"
+                    (multiChange)="changeCardProperty($event, 'credentials')">
+                  </romb-key-value>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

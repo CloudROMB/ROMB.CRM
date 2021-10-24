@@ -1,0 +1,52 @@
+.data-table-row {
+  -webkit-user-select: none;
+  /* user-select -- это нестандартное свойство */
+
+  -moz-user-select: none;
+  /* поэтому нужны префиксы */
+
+  -ms-user-select: none;
+
+  .clickable {
+    cursor: pointer;
+  }
+
+  .select-column {
+    text-align: center;
+  }
+
+  .row-expand-button {
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .data-column.left {
+    text-align: left;
+  }
+
+  .data-column.center {
+    text-align: center;
+  }
+
+  .data-column.right {
+    text-align: right;
+  }
+
+  //.row-expansion {
+  //  .col-expansion {
+  //    text-align: left;
+  //    padding-left: 2rem;
+  //    font-weight: 500;
+  //    color: #555;
+  //  }
+  //}
+}
+
+//.row-expansion {
+//  .col-expansion {
+//    text-align: left;
+//    padding-left: 2rem;
+//    font-weight: 500;
+//    color: #555;
+//  }
+//}

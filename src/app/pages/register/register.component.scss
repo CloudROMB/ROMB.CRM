@@ -1,0 +1,23 @@
+li a:hover {
+  //text-decoration: none;
+  color: #00b0ff;
+}
+
+.full-page-background {
+  background: #3663b7; /* Для старых браузров */
+
+  background: linear-gradient(to right, #5546b7, #b190f1);
+  //background-image: url(/assets/img/card-1.jpeg);
+  //background-image: url(/assets/img/register.jpeg);
+}
+
+.agreement-link {
+  outline: none;
+  &, &:visited, &:focus {
+    color: orangered;
+  }
+
+  &:hover, &:active {
+    color: darkred;
+  }
+}

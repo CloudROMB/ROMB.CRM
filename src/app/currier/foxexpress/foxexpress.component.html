@@ -1,0 +1,397 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="rose">
+            <i class="material-icons">assignment</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">Оформить заявку в службу FoxExpress</h4>
+            <div class="toolbar">
+              <!--        Here you can write extra buttons/actions for the toolbar              -->
+            </div>
+            <div class="space30"></div>
+            <div class="old-browser alert alert-danger" role="alert" hidden>
+              <p>Ваш интернет-браузер очень устарел.</p>
+              <p>Для отправки заявки необходимо обновить программу просмотра интернет-страниц.</p>
+            </div>
+            <div class="wait progress" hidden>
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+                   aria-valuenow="100"
+                   aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+            </div>
+            <div class="result-OK alert alert-info" role="alert" hidden>
+              <h3>Заказ <span id="order-number">№0</span> оформлен</h3>
+              <p>Копия заявки направлена по адресу Вашей электронной почты и нашему менеджеру.</p>
+              <p>Пожалуйста ожидайте звонка из курьерской службы «Фокс-Экспресс» для отправки документов.</p>
+              <p>Если у Вас возникли вопросы, свяжитесь с менеджером, курирующим Вашу организацию.</p>
+              <br>
+              <p><a href="/">Вернуться на главную страницу</a></p>
+            </div>
+            <div class="result-error alert alert-danger" role="alert" hidden>
+              <h3>Возникла ошибка при отправке курьерской заявки</h3>
+              <p class="result-message">Причина ошибки</p>
+              <p>Если у Вас возникли вопросы, свяжитесь с менеджером, курирующим Вашу организацию.</p>
+              <br>
+              <p><a href="/">Вернуться на главную страницу</a></p>
+            </div>
+
+            <div class="space30"></div>
+
+
+            <form method="post" action="#" id="sendOrder" class="container" #f="ngForm" (ngSubmit)="onSubmit(f)"
+                  novalidate>
+              <h5>Информация об отправителе</h5>
+              <!-- отправитель -->
+              <div class="form-group mb-2">
+                <input type="text" class="form-control" id="senderCompany" placeholder="Организация *" value=""
+                       required>
+                <div class="invalid-feedback">
+                  Укажите организацию отправителя
+                </div>
+              </div>
+              <div class="form-group mb-2">
+                <input type="text" class="form-control" id="senderPerson" placeholder="Контактное лицо *" value=""
+                       required>
+                <div class="invalid-feedback">
+                  Укажите контактное лицо отправителя
+                </div>
+              </div>
+
+              <div class="form-group mb-2" hidden>
+                <input type="text" class="form-control" id="senderCountry" placeholder="Страна *" value="Россия"
+                       data="f2cd6487-4422-11dc-9497-0015170f8c09" required>
+              </div>
+
+              <div class="form-row mb-0">
+                <div class="form-group col-md-6 mb-2">
+                  <input type="text" class="form-control form-param-city" id="senderCity"
+                         placeholder="Населенный пункт *"
+                         required data="">
+                  <div class="invalid-feedback">
+                    Укажите населенный пункт отправителя
+                  </div>
+                  <select class="form-select-city" id="senderCitySelect" size=10
+                          style='display:none;position:absolute;z-index:1999;'>
+                  </select>
+                </div>
+                <div class="form-group col-md-2 mb-2">
+                </div>
+                <div class="form-group col-md-4 mb-2">
+                  <input type="text" class="form-control" id="senderIndex" placeholder="Почтовый индекс" required>
+                </div>
+              </div>
+
+              <div class="form-group mb-2">
+                <input type="text" class="form-control form-param-address" id="senderAddress"
+                       placeholder="Улица, дом, корпус, офис/квартира *"
+                       value=""
+                       required>
+                <div class="invalid-feedback">
+                  Укажите адрес отправителя
+                </div>
+                <div id="senderAddressSuccess" class="alert alert-success" role="alert" style="padding: 0 1em;" hidden>
+                  Адрес указан верно
+                </div>
+                <div id="senderAddressError" class="alert alert-danger" role="alert" style="padding: 0 1em;" hidden>
+                  Такой адрес не найден
+                </div>
+              </div>
+              <div class="form-row mb-0">
+                <div class="form-group col-md-6 mb-2">
+                  <input type="tel" class="form-control" id="senderPhone" data-format="+7 (ddd) ddd-dddd"
+                         value="" aria-describedby="phoneHelp"
+                         placeholder="Телефонный номер +7 (999) 123-4567 *" required>
+                  <small id="phoneHelp" class="form-text text-muted">Телефон для связи с курьером</small>
+                  <div class="invalid-feedback">
+                    Укажите телефонный номер отправителя
+                  </div>
+                </div>
+              </div>
+              <div class="form-row mb-0">
+                <div class="form-group col-md-6">
+                  <input type="email" class="form-control" id="senderEmail" aria-describedby="emailHelp"
+                         value="" placeholder="E-mail *" required>
+                  <small id="emailHelp" class="form-text text-muted">Адрес электронной почты для уведомлений</small>
+                  <div class="invalid-feedback" mb-0>
+                    Укажите e-mail отправителя
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-0">
+                <input type="text" class="form-control" id="senderComment" placeholder="Комментарий для курьера"
+                       value="">
+              </div>
+
+              <!-- получатель -->
+              <div class="space30"></div>
+              <a class="text" data-toggle="collapse" href="#recInfo" aria-expanded="false"
+                 aria-controls="receiverContainer">
+                <p class="rec-header float-right">Информация о получателе</p>
+              </a>
+              <div class="collapse" id="recInfo">
+                <div class="form-group mb-2">
+                  <input type="text" class="form-control" id="recCompany" placeholder="Организация *"
+                         value="Ритейл-Финанс 1"
+                         required disabled>
+                  <div class="invalid-feedback">
+                    Укажите организацию получателя
+                  </div>
+                </div>
+                <div class="form-group mb-2">
+                  <input type="text" class="form-control" id="recPerson" placeholder="Контактное лицо *"
+                         value="Александр, Светлана, Дмитрий"
+                         required disabled>
+                  <div class="invalid-feedback">
+                    Укажите контактное лицо получателя
+                  </div>
+                </div>
+
+                <div class="form-group mb-2" hidden>
+                  <input type="text" class="form-control" id="recCountry" placeholder="Страна *" value="Россия"
+                         data="f2cd6487-4422-11dc-9497-0015170f8c09" required>
+                </div>
+
+                <div class="form-row mb-2">
+                  <div class="form-group col-md-6 mb-2">
+                    <input type="text" class="form-control form-param-city" id="recCity"
+                           placeholder="Населенный пункт *"
+                           value="Москва" data="cf862f56-442d-11dc-9497-0015170f8c09" required disabled>
+                    <div class="invalid-feedback">
+                      Укажите населенный пункт получателя
+                    </div>
+                    <select class="form-select-city" id="recCitySelect" size=10
+                            style='display:none;position:absolute;z-index:1999;'>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-2 mb-2">
+                  </div>
+                  <div class="form-group col-md-4 mb-2">
+                    <input type="text" class="form-control" id="recIndex" placeholder="Почтовый индекс *" value="115088"
+                           required
+                           disabled>
+                  </div>
+                </div>
+
+                <div class="form-group mb-2">
+                  <input type="text" class="form-control form-param-address" id="recAddress"
+                         placeholder="Улица, дом, корпус, офис/квартира *"
+                         value="Южнопортовая улица, дом 5, строение 1"
+                         required disabled>
+                  <div class="invalid-feedback">
+                    Укажите адрес получателя
+                  </div>
+                  <div id="recAddressSuccess" class="alert alert-success" role="alert" style="padding: 0 1em;" hidden>
+                    Адрес указан верно
+                  </div>
+                  <div id="recAddressError" class="alert alert-danger" role="alert" style="padding: 0 1em;" hidden>
+                    Такой адрес не найден
+                  </div>
+                </div>
+                <div class="form-row mb-2">
+                  <div class="form-group col-md-6">
+                    <input type="tel" class="form-control" id="recPhone" data-format="+7 (ddd) ddd-dddd"
+                           aria-describedby="recPhoneHelp" value=""
+                           placeholder="Телефонный номер" required disabled>
+                    <small id="recPhoneHelp" class="form-text text-muted">Телефон для связи с получателем</small>
+                    <div class="invalid-feedback">
+                      Укажите телефонный номер получателя
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row mb-2">
+                  <div class="form-group col-md-6 mb-2">
+                    <input type="email" class="form-control" id="recEmail" aria-describedby="emailHelp"
+                           placeholder="E-mail *" value="" required disabled>
+                  </div>
+                </div>
+                <div class="form-group mb-2">
+                  <input type="text" class="form-control" id="recComment" placeholder="Комментарий для курьера"
+                         value="предварительно позвонить для заказа пропуска" disabled>
+                </div>
+              </div>
+
+              <!-- Условия доставки -->
+              <div class="space30"></div>
+              <h5 class="form-header justify-content-center">Условия доставки</h5>
+              <div class="row mb-0">
+                <div class="col-md-6 mb-2">
+                  <mat-datepicker-toggle matSuffix [for]="resultPicker">
+                  </mat-datepicker-toggle>
+                  <mat-form-field>
+                    <input matInput
+                           [matDatepicker]="resultPicker"
+                           placeholder="Pick a day"
+                           id="deliveryDate" value="" required
+                    >
+                  </mat-form-field>
+                  <mat-datepicker
+                      #resultPicker
+                      [startView]="'month'">
+                  </mat-datepicker>
+
+                  <!--<div class="input-group date" data-provide="datepicker">-->
+                  <!--<div class="input-group-addon">Дата забора</div>-->
+                  <!--<input type="text" class="form-control" id="deliveryDate" value="" required>-->
+                  <!--<div class="input-group-addon">-->
+                  <!--<i class="material-icons">date_range</i>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                </div>
+                <div class="col-md-6 mb-2" data-toggle="tooltip" data-placement="top"
+                     title="Время «С» должно быть раньше времени «ПО»">
+                  <div class="input-group">
+                    <div class="input-group-addon">Время забора</div>
+                    <select class="form-control custom-select" id="deliveryTimeFrom" required>
+                      <option selected="selected" value="20">10:00</option>
+                      <option value="21">10:30</option>
+                      <option value="22">11:00</option>
+                      <option value="23">11:30</option>
+                      <option value="24">12:00</option>
+                      <option value="25">12:30</option>
+                      <option value="26">13:00</option>
+                      <option value="27">13:30</option>
+                      <option value="28">14:00</option>
+                      <option value="29">14:30</option>
+                      <option value="30">15:00</option>
+                      <option value="31">15:30</option>
+                      <option value="32">16:00</option>
+                      <option value="33">16:30</option>
+                    </select>
+                    <div class="input-group-addon">—</div>
+                    <select class="form-control custom-select" id="deliveryTimeTill" required>
+                      <option value="34" selected>17:00</option>
+                      <option value="33">16:30</option>
+                      <option value="32">16:00</option>
+                      <option value="31">15:30</option>
+                      <option value="30">15:00</option>
+                      <option value="29">14:30</option>
+                      <option value="28">14:00</option>
+                      <option value="27">13:30</option>
+                      <option value="26">13:00</option>
+                      <option value="25">12:30</option>
+                      <option value="24">12:00</option>
+                      <option value="23">11:30</option>
+                      <option value="22">11:00</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-group mb-2">
+                <span class="input-group-addon" id="deliveryTarifLabel">Тариф</span>
+                <select class="form-control custom-select" id="deliveryTarif" aria-describedby="deliveryTarifLabel"
+                        disabled
+                        required>
+                  <option value="5883b0fb-0e34-11e3-b3a0-f5ed137aca63">Стандарт</option>
+                </select>
+              </div>
+
+              <div class="input-group mb-2">
+                <span class="input-group-addon" id="deliveryPaySide">Плательщик</span>
+                <select class="form-control custom-select" id="deliveryPayer" aria-describedby="deliveryPayKindLabel"
+                        disabled
+                        required>
+                  <option value="">Выберите плательщика...</option>
+                  <option value="0">Заказчик</option>
+                  <option value="1">Отправитель</option>
+                  <option value="2" selected>Получатель</option>
+                </select>
+                <div class="invalid-feedback">
+                  Укажите способ оплаты отправления
+                </div>
+              </div>
+
+              <div class="input-group mb-2">
+                <span class="input-group-addon" id="deliveryPayKindLabel">Способ оплаты</span>
+                <select class="form-control custom-select" id="deliveryPayKind" aria-describedby="deliveryPayKindLabel"
+                        disabled
+                        required>
+                  <option value="">Выберите вариант оплаты...</option>
+                  <option value="0">Наличными курьеру при отправке</option>
+                  <option value="1" selected>Безналичный расчет по счету</option>
+                </select>
+                <div class="invalid-feedback">
+                  Укажите способ оплаты отправления
+                </div>
+              </div>
+              <div class="alert alert-warning text-center " role="alert" style="color: darkred">
+                При ежемесячных взаиморасчетах у партнера удерживается плата <strong>350 руб.</strong> за каждую
+                курьерскую отправку
+              </div>
+
+              <!-- СВЕДЕНИЯ О ГРУЗЕ -->
+              <div class="space30"></div>
+              <h5>Сведения о грузе</h5>
+
+              <div class="row mb-2">
+                <div class="col-md-6 mb-2">
+                  <div class="input-group">
+                    <div class="input-group-addon">Вид груза</div>
+                    <select class="form-control custom-select" id="cargoKind" required>
+                      <option value="81dd8a13-8235-494f-84fd-9c04c51d50ec" selected>Документы</option>
+                      <option value="4aab1fc6-fc2b-473a-8728-58bcd4ff79ba">Груз</option>
+                      <option value="855bb5aa-a334-11e5-999f-00155d353505" style="display: none;">Конверт</option>
+                      <option value="f132d9fa-a944-4c11-9001-f4dfdd13b4a7" style="display: none;">Негабаритный груз
+                      </option>
+                      <option value="dd80f922-a010-422a-b26a-0a65a6f894ce" style="display: none;">Опасный груз</option>
+                      <option value="d542bc30-a334-11e5-999f-00155d353505" style="display: none;">Пакет</option>
+                      <option value="d50e2bca-8272-11e2-ae17-bb52668c552d" style="display: none;">Паспорт</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                  <div class="input-group">
+                    <div class="input-group-addon">Число мест</div>
+                    <input type="number" class="form-control" id="cargoNumber" value="1" min="1" max="10" required
+                           disabled>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-0">
+                <div class="col-md-3 mb-2">
+                  <div class="input-group">
+                    <div class="input-group-addon">Вес, кг.</div>
+                    <input type="number" class="form-control" id="cargoWeight" value="0.1" min="0.1" max="10" required>
+                  </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                  <div class="input-group" data-toggle="tooltip" data-placement="top" title="Объемный вес, кг.">
+                    <div class="input-group-addon">V вес, кг.</div>
+                    <input type="text" class="form-control" id="cargoVolume" value="0.0" min="0.0" max="10/0" required
+                           disabled>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <div class="input-group" data-toggle="tooltip" data-placement="top"
+                       title="По умолчанию указан размер конверта А4">
+                    <div class="input-group-addon">Габариты, см.</div>
+                    <input type="text" class="form-control" id="cargoLength" value="29.7" min="10" max="100" required>
+                    <div class="input-group-addon">*</div>
+                    <input type="text" class="form-control" id="cargoWidth" value="21" min="10" max="100" required>
+                    <div class="input-group-addon">*</div>
+                    <input type="text" class="form-control" id="cargoHeight" value="0.5" min="0.1" max="10" required>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="cargoDescription" placeholder="Описание груза"
+                       value="">
+              </div>
+
+              <div class="space30"></div>
+              <div class="row justify-content-md-center">
+                <div class="col-md-8">
+                  <button class="btn btn-primary btn-block" id="sendRequest" type="submit">Отправить заявку</button>
+                </div>
+              </div>
+            </form>
+            <div class="space70"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

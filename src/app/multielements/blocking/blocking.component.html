@@ -1,0 +1,12 @@
+  <ng-container *ngIf="!item.active; else elseTemplate">
+    <button class="btn btn-md btn-success"
+      (click)="onPartnerBlock(item, false)">
+      Снять блокировку<i class="fa fa-check-circle" aria-hidden="true"></i>
+    </button>
+  </ng-container>
+  <ng-template #elseTemplate>
+      <button class="btn btn-md btn-danger"
+      (click)="onPartnerBlock(item, true)">
+      Заблокировать<i class="fa fa fa-ban" aria-hidden="true"></i>
+    </button>
+  </ng-template>

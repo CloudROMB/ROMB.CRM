@@ -1,0 +1,106 @@
+<div class="document-card-modal">
+  <div class="card document-card">
+    <div class="card-header card-header-icon"
+         data-background-color="rose">
+         <i class="material-icons">person_add</i>
+    </div>
+    <div class="dt-card-content-header">
+      <div class="col-header left">
+        <h4 class="card-title">Регистрация пользователя</h4>
+      </div>
+      <div class="col-header right">        
+        <button
+            class="btn btn-danger btn-just-icon btn-round card-btn-close"
+            (click)="close()"
+            title="Закрыть окно (Esc)">
+          <fa name="close"></fa>
+        </button>
+      </div>
+    </div>
+    <div class="card-content dt-card-content">
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">            
+            <input name="itemName" class="form-control" id="itemName" placeholder=""
+                [value]="item.FIO.value || 'ФИО (пусто)'" readonly>
+          </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">            
+              <input name="itemDepartment" class="form-control" id="itemDepartment" placeholder=""
+              [value]="getItemDepartmentValue(item)" readonly>
+            </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="itemShortName">Короткое имя</label>
+            <input name="itemShortName" class="form-control" id="itemShortName" placeholder=""
+                [(ngModel)]="item.name">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="itemUserName">Имя пользователя при авторизации (логин)</label>
+            <input name="itemUserName" class="form-control" id="itemUserName" placeholder="" autocomplete="off"
+                [(ngModel)]="item.login">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="itemPasswd">Пароль<a class="btn btn-sm btn-warning" (click)="generatePasswd()">сгенерировать</a></label>
+            <input name="itemPasswd" class="form-control" id="itemPasswd" placeholder="" autocomplete="off"
+                [(ngModel)]="item.password">
+          </div>
+        </div>        
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+              <mat-form-field>
+                <mat-select multiple
+                    id="itemRoles" placeholder="Роль пользователя для доступа к функциям CRM"
+                    [compareWith]="compareRolesWith"
+                    panelClass="roles-select-panel"
+                    [formControl]="rolesControl"
+                    (change)="roleChange($event)"
+                    [(ngModel)]="item.roles" name="rolesItem">
+                  <mat-select-trigger *ngIf="rolesControl.value">
+                    <span *ngFor="let role of rolesControl.value"
+                          class="mat-select-trigger-chips"
+                          data-background-color="rose">
+                      {{role.code}}
+                  </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let role of allRoles" [value]="role">
+                  {{role.name + ' (' + role.code + ')'}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>        
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+           <div class="form-group">
+            <label for="itemComment">Комментарий</label>
+            <input name="itemComment" class="form-control" id="itemComment"
+              [(ngModel)]="item.comment">
+          </div>
+        </div>        
+      </div>
+      <div class="row">
+        <div class="text-center submit-div col-md-12">
+          <button type="submit" class="btn btn-success btn-round btn-wd btn-md">
+            <i class="material-icons">person_add</i>&nbsp;Создать учетную запись
+          </button>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>

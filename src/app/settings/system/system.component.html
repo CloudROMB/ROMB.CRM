@@ -1,0 +1,74 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="nav-center">
+              <ul class="nav nav-tabs nav-tabs-info" role="tablist">
+                <!--                    color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"                -->
+                <li class="active">
+                  <a href="#tab-interface" role="tab" data-toggle="tab">
+                    <i class="material-icons">info</i> Интерфейсы
+                  </a>
+                </li>
+                <li *ngIf="checkCredential('admin')">
+                  <a href="#tab-admin" role="tab" data-toggle="tab">
+                    <i class="material-icons">location_on</i> Администратор
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab-interface">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h4 class="card-title">Настройка интерфейсов CRM</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="checkCredential('admin')"
+                   class="tab-pane" id="tab-admin">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">GitHub.com</h4>
+                  </div>
+                  <div class="card-content">
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <a href="https://api.www.ru/ext/git/pull/api-prod"
+                           class="btn btn-info btn-info"
+                           target="_blank">Обновление API платформы из репозитория</a>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <a href="https://api.www.ru/ext/git/pull/front-test"
+                           class="btn btn-warning btn-fill"
+                           target="_blank">Обновление <b>тестовой</b> CRM из репозитория</a>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <a href="https://api.www.ru/ext/git/pull/front-prod"
+                           class="btn btn-success btn-fill"
+                           target="_blank">Обновление CRM из репозитория</a>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

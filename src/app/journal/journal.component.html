@@ -1,0 +1,1373 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite #mainList source="reestr" [itemStructure]="docStructure" [dtView]="dtView"
+      [dtRequest]="dtReqParams" (selectMenuItem)="selectMenuItem($event)" (addNewClick)="addNewClick($event)"
+      (editClick)="editClick($event)" (afterOpen)="afterOpen($event)" (afterReloadCard)="afterReloadCard($event)"
+      (beforeSave)="beforeSave($event)" (rowsRebuilded)="rowsRebuilded($event)" (cellClick)="cellClicked($event)">
+      <ng-template #dataTableHeaderFilterTemplate let-item="item">
+        <div style="display: flex; align-items: baseline; outline: none;"
+          title="Показать только документы, в которых вы ответственный сотрудник, либо создали документ, либо редактировали">
+          <div class="form-group label-floating" style="margin: 0; padding: 0; flex: 1;">
+            <label style="display: inline-block; margin: 0 8px;">
+              <input type="checkbox" (change)="myDocumentsFilterChange($event)" name="taskFinished">Мои документы
+            </label>
+          </div>
+          <mat-form-field class="form-select" style="flex: 1;">
+            <mat-select [value]="orderStatuses[0]" [compareWith]="mainList.compareMatSelectWithId"
+              (change)="creditOrderFilterChange($event)">
+              <mat-option *ngFor="let status of orderStatuses" [style.display]="(status.visible===false)?'none':'block'"
+                [value]="status">{{status.descr}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </ng-template>
+      <ng-template #dataTableCardTemplate let-item="item">
+        <div class="row" style="height: inherit;">
+          <div class="col-sm-12" style="height: inherit;">
+            <div class="nav-center">
+              <div class="row" style="display: flex; align-items: center;">
+                <div class="col-sm-12">
+                  <ul class="nav nav-pills nav-pills-info" role="tablist" (click)="onNavbarClick($event)">
+                    <li class="active" id="order-pan-header">
+                      <a href="#order-pan" role="tab" data-toggle="tab">
+                        1 Заявка от ТТ
+                      </a>
+                    </li>
+                    <li id="bank-pan-header" #bankPan>
+                      <a href="#bank-pan" role="tab" data-toggle="tab"
+                        [textContent]="item.primaryFilesChecked ? '3 кредитная заявка' : '2 контроль документов'">
+                      </a>
+                    </li>
+                    <li id="customer-pan-header">
+                      <a href="#customer-pan" role="tab" data-toggle="tab">
+                        Клиент
+                      </a>
+                    </li>
+                    <li id="files-pan-header">
+                      <a href="#files-pan" role="tab" data-toggle="tab">
+                        Файлы
+                      </a>
+                    </li>
+                    <li id="payment-pan-header" *ngIf="checkCredential('journal_credit_order_payment_pan_view')">
+                      <a href="#payment-pan" role="tab" data-toggle="tab">
+                        Оплата
+                      </a>
+                    </li>
+                    <li id="partner-pan-header">
+                      <a href="#partner-pan" role="tab" data-toggle="tab">
+                        Партнёр
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <form #f="ngForm" class="dt-card-form tab-form-short" [hidden]="!(item && item._id)">
+              <div class="tab-content">
+                <div class="tab-pane active" id="order-pan">
+                  <!-- <romb-print-forms [item]="item"></romb-print-forms> -->
+                  <div class="row">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6><b>Данные партнёра</b></h6>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <label>Торговая точка</label>
+                              <romb-ref-select #refDepartment *ngIf="item" [rcDisabled]="" source="departments"
+                                [listCriteria]="departmentParent" label="" [dtReqParams]="departmentDTReqParams"
+                                [rcValue]="item.department" (selected)="departmentSelected(item)"
+                                (valueCleared)="departmentSelected(item)"
+                                (openModalSelect)="mainList.openExernalModalSelect($event)"
+                                (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+                              </romb-ref-select>
+                            </div>
+                          </div>
+                          <h6><b>Данные покупателя</b></h6>
+                          <div class="row">
+                            <div class="col-md-8">
+                              <div class="form-group">
+                                <label for="fullNameItem">ФИО покупателя</label>
+                                <input name="fullNameItem" class="form-control" id="fullNameItem" placeholder=""
+                                  [(ngModel)]="item.customer.value">
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="phoneItem">Контактный телефон</label>
+                                <input name="phoneItem" class="form-control" id="phoneItem" placeholder=""
+                                  [textMask]="{mask: telMaskInput}" [(ngModel)]="item.customer.phone"
+                                  (focus)="onTelInputFocus($event)">
+                              </div>
+                            </div>
+                          </div>
+                          <h6><b>Условия кредита</b></h6>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="orderPurchaseSumm">Стоимость товара</label>
+                                <input name="orderPurchaseSumm" class="form-control" id="orderPurchaseSumm"
+                                  [textMask]="{mask: currencyMask}" [(ngModel)]="item.orderPurchaseSumm">
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="orderInitialFee">Первоначальный взнос</label>
+                                <input name="orderInitialFee" class="form-control" id="orderInitialFee"
+                                  [textMask]="{mask: currencyMask}" [(ngModel)]="item.orderInitialFee">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <mat-form-field class="form-select">
+                                <label for="orderPeriodItem">Срок кредита</label>
+                                <mat-select *ngIf="item" [value]="0" [(ngModel)]="item.orderPeriod"
+                                  name="orderPeriodItem" id="orderPeriodItem">
+                                  <mat-option [value]=3>3 месяца</mat-option>
+                                  <mat-option [value]=4>4 месяца</mat-option>
+                                  <mat-option [value]=5>5 месяцев</mat-option>
+                                  <mat-option [value]=6>6 месяцев</mat-option>
+                                  <mat-option [value]=7>7 месяцев</mat-option>
+                                  <mat-option [value]=8>8 месяцев</mat-option>
+                                  <mat-option [value]=9>9 месяцев</mat-option>
+                                  <mat-option [value]=10>10 месяцев</mat-option>
+                                  <mat-option [value]=11>11 месяцев</mat-option>
+                                  <mat-option [value]=12>12 месяцев</mat-option>
+                                  <mat-option [value]=13>1 год 1 месяц</mat-option>
+                                  <mat-option [value]=14>1 год 2 месяца</mat-option>
+                                  <mat-option [value]=15>1 год 3 месяца</mat-option>
+                                  <mat-option [value]=16>1 год 4 месяца</mat-option>
+                                  <mat-option [value]=17>1 год 5 месяцев</mat-option>
+                                  <mat-option [value]=18>1 год 6 месяцев</mat-option>
+                                  <mat-option [value]=19>1 год 7 месяцев</mat-option>
+                                  <mat-option [value]=20>1 год 8 месяцев</mat-option>
+                                  <mat-option [value]=21>1 год 9 месяцев</mat-option>
+                                  <mat-option [value]=22>1 год 10 месяцев</mat-option>
+                                  <mat-option [value]=23>1 год 11 месяцев</mat-option>
+                                  <mat-option [value]=24>2 года</mat-option>
+                                  <mat-option [value]=25>2 года 1 месяц</mat-option>
+                                  <mat-option [value]=26>2 года 2 месяца</mat-option>
+                                  <mat-option [value]=27>2 года 3 месяца</mat-option>
+                                  <mat-option [value]=28>2 года 4 месяца</mat-option>
+                                  <mat-option [value]=29>2 года 5 месяцев</mat-option>
+                                  <mat-option [value]=30>2 года 6 месяцев</mat-option>
+                                  <mat-option [value]=31>2 года 7 месяцев</mat-option>
+                                  <mat-option [value]=32>2 года 8 месяцев</mat-option>
+                                  <mat-option [value]=33>2 года 9 месяцев</mat-option>
+                                  <mat-option [value]=34>2 года 10 месяцев</mat-option>
+                                  <mat-option [value]=35>2 года 11 месяцев</mat-option>
+                                  <mat-option [value]=36>3 ГОДА</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                              <mat-form-field class="form-select">
+                                <label for="orderCreditTypeItem">Тип кредита</label>
+                                <mat-select *ngIf="item" [value]="0" [(ngModel)]="item.orderCreditType"
+                                  name="orderCreditTypeItem" id="orderCreditTypeItem">
+                                  <mat-option [value]=1>КРЕДИТ</mat-option>
+                                  <mat-option [value]=2>РАССРОЧКА</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group" child="textarea">
+                                <label for="orderGoodsItem">Наименование товаров и услуг</label>
+                                <textarea class="form-control" rows="2" [(ngModel)]="item.orderGoods"
+                                  name="orderGoodsItem" id="orderGoodsItem">НАИМЕНОВАНИЕ И КОЛИЧЕСТВО ТОВАРОВ</textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="form-group" child="textarea">
+                                <label for="orderCommentItem">Комментарий</label>
+                                <textarea class="form-control" rows="2" [(ngModel)]="item.comment"
+                                  name="orderCommentItem"
+                                  id="orderCommentItem">НАИМЕНОВАНИЕ И КОЛИЧЕСТВО ТОВАРОВ</textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" style="text-align: left; align-self: normal;">
+
+                        </div>
+                      </div>
+                      <mat-divider></mat-divider>
+                      <div class="row">
+                        <div *ngIf=" department && department.comment" class="col-md-12">
+                          <span class="text-danger"><b>ВНИМАНИЕ!!!</b></span>
+                          <div><b>{{department.comment}}</b></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Закладка партнера (Была изначально скрыта)-->
+                <!-- <div class="tab-pane" id="partner-pan">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="form-group label-floating is-focused"
+                           style="display: flex; align-items: baseline;">
+                        <label class="control-label">Партнер (выбор)</label>
+                        <input [ngModel]="dataTable.getRefObjectPresentation(item.partner)" name="partnerItem"
+                               readonly
+                               type="text" class="form-control">
+                        <button class="btn btn-primary btn-just-icon select-reference"
+                                style="margin: 0; padding: 8px;"
+                                (click)="dataTable.needSelectItemClicked('partners');">
+                          <fa name="hand-pointer-o"></fa>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group label-floating is-focused"
+                           style="display: flex; align-items: baseline;">
+                        <label class="control-label">Точка продаж (выбор)</label>
+                        <input [ngModel]="dataTable.getRefObjectPresentation(item.department)" name="departmentItem"
+                               readonly
+                               type="text" class="form-control">
+                        <button class="btn btn-primary btn-just-icon select-reference"
+                                style="margin: 0; padding: 8px;"
+                                (click)="dataTable.needSelectItemClicked('departments');">
+                          <fa name="hand-pointer-o"></fa>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+                <!-- закладка клиента -->
+                <div class="tab-pane" id="customer-pan">
+                  <div class="row">
+                    <div class="col-sm-10">
+                      <div class="form-group label-floating">
+                        <label class="control-label">ФИО клиента</label>
+                        <input [(ngModel)]="item.customer.fullName" name="custFullNameItem" daData
+                          [suggType]="dataTable.suggType.NAME" [val]="item.customer" (daSelect)="selectCustomer($event)"
+                          type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Пол</label>
+                        <input [ngModel]="shared.getGender(item.customer)" name="custGenderItem" disabled readonly
+                          type="text" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Паспорт серия и номер</label>
+                        <input [(ngModel)]="item.customer.passportNumber" name="passportNumberItem" type="text"
+                          class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Кем выдан паспорт</label>
+
+                        <input [(ngModel)]="item.customer.passportOrgan" name="passportOrganItem" type="text"
+                          class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Код подразделения</label>
+                        <input [(ngModel)]="item.customer.passportDepartment" name="passportDepartmentItem" type="text"
+                          class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Телефон</label>
+                        <input [(ngModel)]="item.customer.phone" name="phoneItem" [textMask]="{mask: telMaskInput}"
+                          required autocomplete="off" type="tel" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group label-floating">
+                        <label class="control-label" for="passportAddressItem">Адрес регистрации</label>
+                        <input daData [suggType]="dataTable.suggType.ADDRESS" (daSelect)="selectCustomerAddress($event)"
+                          [(ngModel)]="item.customer.passportAddress" name="passportAddressItem"
+                          id="passportAddressItem" type="text" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- закладка файлов -->
+                <div class="tab-pane" id="files-pan">
+                  <romb-fresh-files [filesList]="item.files" [allowEdit]="!(item.checkScansStatus===true)"
+                    [editMode]="isCardInEditMode()" [showHeaders]="isCardInEditMode()" [dangerComments]="true"
+                    (keyStateChanged)="dataTable.changeKeyState($event)" (previewOpened)="dataTable.showPreview()"
+                    (previewClosed)="dataTable.closePreview()" (multiChange)="changeFiles(item, $event)">
+                  </romb-fresh-files>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <mat-checkbox (change)="isPrimaryFilesChecked(item)" [(ngModel)]="item.primaryFilesChecked"
+                        [ngModelOptions]="{standalone: true}"></mat-checkbox>
+                    </div>
+                  </div>
+                  <div class="row card-block alert-danger">
+                    <div class="col-sm-4">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" [disabled]="!checkCredential('credit_order_status_checked')"
+                            [(ngModel)]="item.checkScansStatus" name="checkScansStatusItem">
+                          Сканы документов корректные
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-8">
+                      <mat-form-field class="">
+                        <input matInput type="text"
+                          placeholder="{{(item.filesComment)?'Есть ошибки! ':''}}(комментарий проверки приложенных файлов)"
+                          [style.color]="'red'" [(ngModel)]="item.filesComment" name="filesCommentItem">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- закладка оплаты -->
+                <div *ngIf="checkCredential('journal_credit_order_payment_pan_view')" class="tab-pane" id="payment-pan">
+                  <div class="card-block">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <mat-form-field class="form-select">
+                          <mat-select placeholder="Статус оплаты" [compareWith]="compareStatusesWith"
+                            [(ngModel)]="item.paymentStatus" name="paymentStatusItem">
+                            <mat-option *ngFor="let status of paymentStatuses" [value]="status">
+                              {{status.name + ' (' + status.id + ')'}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="">
+                          <input matInput type="text" placeholder="Комментарий оплаты" [(ngModel)]="item.paymentComment"
+                            name="paymentCommentItem">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field class="">
+                          <input matInput type="number" style="color: red;" step="1000" min="0" max="3000000"
+                            placeholder="Итого: Сумма выплаты партнеру ({{item.paymentSumm | currency:' ':'':'':'ru'}} руб.)"
+                            (blur)="changePaymentDate(item)" [(ngModel)]="item.paymentSumm" name="paymentSummItem">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field>
+                          <mat-datepicker-toggle matSuffix [for]="paymentDateItem">
+                          </mat-datepicker-toggle>
+                          <input matInput readonly [(ngModel)]="item.paymentDate" name="paymentDateItem"
+                            [matDatepicker]="paymentDateItem" (click)="paymentDateItem.open()"
+                            placeholder="Дата оплаты">
+                          <button mat-button *ngIf="item.paymentDate" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="item.paymentDate=null">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <mat-datepicker #paymentDateItem></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- закладка партнёр-->
+                <div class="tab-pane" id="partner-pan">
+                  <div *ngIf="partner" class="row">
+                    <div class="col-md-12">
+                      <mat-card>
+                        <mat-card-title>
+                          <h5><strong>Сотрудники</strong></h5>
+                        </mat-card-title>
+                        <mat-card-content>
+                          <div rombEmployees [mainList]="mainList" [contactList]="partner.contacts">
+                          </div>
+                        </mat-card-content>
+                      </mat-card>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="item" class="tab-pane" id="bank-pan">
+                  <div class="row">
+                    <div class="container">
+                      <div class="row" style="min-width: 100%;">
+                        <div class="col-md-6">
+                          <romb-image-preview-scroll [files]="item.files" [height]="485"></romb-image-preview-scroll>
+                        </div>
+                        <div class="col-md-6">
+                          <ng-container *ngIf="item.primaryFilesChecked; else filesCheckTpl">
+                            <div class="row bank-order-row" #bankOrderRows>
+                              <div class="container">
+                                <div class="block1">
+                                  <h4>Блок 1</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                </div>
+                                <a (click)="scrollToBlock('block1')">К началу блока 1</a>
+                                <div class="block2">
+                                  <h4>Блок 2</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                </div>
+                                <a (click)="scrollToBlock('block2')">К началу блока 2</a>
+                                <div class="block3">
+                                  <h4>Блок 3</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                </div>
+                                <a (click)="scrollToBlock('block3')">К началу блока 3</a>
+                                <div class="block4">
+                                  <h4>Блок 4</h4>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <mat-form-field><input matInput placeholder="Поле"></mat-form-field>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                          <ng-template #filesCheckTpl>
+                            <romb-files-control [(files)]="item.files" [documentId]="item._id"
+                              (filesChange)="onFileChange($event)" (filesChangeError)="onFileChangeFail()">
+                            </romb-files-control>
+                            <!-- <h3>Проверьте первичные документы</h3>
+                              <div class="row primary-check-row">
+                              <div class="container">
+                                <div class="text-danger check-info"><b>Отметьте ниже если первичные документы <u>корректны</u></b></div>
+                                <div class="row">
+                                    <mat-checkbox
+                                    (change)="onPrimaryFilesCheckChange($event, item)"
+                                    >Первичные документы корректны</mat-checkbox>
+                                </div>
+                                <div class="text-danger comment-info"><b>Если какой-либо документ не корректен, укажите это в комментарии ниже</b></div>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <form #filesCheckCommentForm="ngForm" (ngSubmit)="onSubmitFileCheckLog(filesCheckCommentForm)">                                      
+                                      <div class="row">
+                                        <div class="col-md-9">
+                                            <mat-form-field>
+                                            <label for="commentItem" class="control-label">Комментарий</label>
+                                            <input matInput ngModel
+                                                name="filesCheckCommentItem" id="filesCheckComment">
+                                            </mat-form-field>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-3">
+                                          <button type="submit" class="btn btn-sm btn-success">добавить комментарий</button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12">                                  
+                                    <mat-accordion>
+                                      <mat-expansion-panel (opened)="onFileCheckLogsOpen()">
+                                        <mat-expansion-panel-header>
+                                          <mat-panel-title>
+                                              История проверки первичных документов
+                                          </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <mat-list *ngIf="filesCheckLogs" role="list">                                          
+                                          <div class="list-header">
+                                          <mat-list-item role="listitem">
+                                            <div class="col-md-6"><b>Комментарий</b></div>
+                                            <div class="col-md-3"><b>Дата</b></div>
+                                            <div class="col-md-3"><b>Сотрудник</b></div>
+                                          </mat-list-item>
+                                          </div>
+                                          <ng-container *ngFor="let logItem of filesCheckLogs">
+                                            <mat-list-item role="listitem">
+                                              <div class="col-md-6">
+                                                {{ logItem.description }}
+                                              </div>
+                                              <div class="col-md-3">
+                                                {{ logItem.stamp | date: 'dd.MM.yyyy HH:mm' }}
+                                              </div>
+                                              <div class="col-md-3">
+                                                {{ logItem.author.name || 'неизвестно' }}
+                                              </div>
+                                            </mat-list-item>
+                                            <mat-divider></mat-divider>
+                                          </ng-container>
+                                        </mat-list>
+                                      </mat-expansion-panel>
+                                    </mat-accordion>
+                                  </div>
+                                </div>
+                              </div>
+                            </div> -->
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- закладка банк -->
+                <!-- <div class="tab-pane" id="bank-pan">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field>
+                        <mat-datepicker-toggle matSuffix [for]="contractDateItem">
+                        </mat-datepicker-toggle>
+                        <input matInput readonly
+                               [(ngModel)]="item.contractDate" name="contractDateItem"
+                               [matDatepicker]="contractDateItem"
+                               (click)="contractDateItem.open()"
+                               placeholder="Дата договора">
+                        <mat-datepicker
+                            #contractDateItem
+                            touchUi="true"
+                            disabled="false"
+                            [startView]="'month'">
+                        </mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Номер договора</label>
+                        <input
+                            type="text" autocomplete="off"
+                            [(ngModel)]="item.contractNumber" name="contractNumberItem"
+                            class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Сумма договора ({{item.creditSumm | currency:' ':'':'':'ru'}}
+                          руб.)</label>
+                        <input class="form-control" type="number" autocomplete="off"
+                               [(ngModel)]="item.creditSumm" name="creditSummItem"
+                               min="3000" max="3000000" step="1000">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <romb-ref-select
+                          source="banks"
+                          label="Банк"
+                          [rcValue]="item.bank"
+                          (openModalSelect)="mainList.openExernalModalSelect($event)"
+                          (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+                      </romb-ref-select>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group label-floating">
+                        <label class="control-label">Кредитный продукт</label>
+                        <input [(ngModel)]="item.creditProduct" name="creditProductItem"
+                               autocomplete="off"
+                               type="text" class="form-control">
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <mat-form-field class="form-select">
+                        <mat-select
+                            disabled
+                            placeholder="Тип кредита"
+                            [(ngModel)]="item.creditType"
+                            name="creditTypeItem">
+                          <mat-option [value]=0>— выберите тип кредита —</mat-option>
+                          <mat-option [value]=1>КРЕДИТ</mat-option>
+                          <mat-option [value]=2>РАССРОЧКА</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div> -->
+
+                <!-- direct contract or credit partner -->
+                <!-- <div class="row">
+                  <div class="col-sm-4"
+                       [hidden]="item.directContract!==true">
+                    <div class="checkbox">
+                      <label>
+                        <input
+                            type="checkbox" [(ngModel)]="item.directContract"
+                            name="directContractItem">Прямой договор
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" [hidden]="item.directContract===true">
+                    <romb-ref-select
+                        source="partners"
+                        label="На кого оформлен? Пусто — прямой договор"
+                        [dtReqParams]="organizationDTReqParams"
+                        [rcValue]="item.organization"
+                        (valueCleared)="changeDirectContract(item)"
+                        (openModalSelect)="mainList.openExernalModalSelect($event)"
+                        (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+                    </romb-ref-select>
+                  </div>
+                </div> -->
+
+                <!-- delivery status -->
+                <!-- <div class="card-block">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field class="form-select">
+                        <mat-select
+                            placeholder="Статус доставки КД"
+                            [disabled]="!checkCredential('credit_order_delivery_status_change')"
+                            [compareWith]="compareStatusesWith"
+                            [ngModel]="item.deliveryStatus" name="deliveryStatusItem">
+
+                          <mat-option
+                              *ngFor="let status of deliveryStatuses"
+                              [value]="status">{{status.name + ' (' + status.id + ')'}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div> -->
+
+                <!-- Статусы приложенных файлов -->
+                <!-- <div class="row">
+                  <div class="col-sm-6">
+                    <div class="checkbox">
+                      <label>
+                        <input
+                            type="checkbox"
+                            [disabled]="true"
+                            [(ngModel)]="item.hasContractBlank" name="hasContractBlankItem">
+                        Приложены бланки документов для подписания
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="checkbox">
+                      <label>
+                        <input
+                            type="checkbox"
+                            [disabled]="true"
+                            [(ngModel)]="item.hasSignedScans" name="hasSignedScansItem">
+                        Приложены подписанные сканы документов
+                      </label>
+                    </div>
+                  </div>
+                </div> -->
+
+                <!-- Статусы проверки документов -->
+                <!-- <div class="row"> -->
+                <!-- статус подписания договора-->
+                <!-- <div class="col-sm-6">
+                  <div class="checkbox">
+                    <label>
+                      <input
+                          type="checkbox"
+                          [disabled]="!checkCredential('credit_order_status_signed')"
+                          [(ngModel)]="item.signStatus" name="signStatusItem">
+                      Договор подписан
+                    </label>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="checkbox">
+                    <label>
+                      <input
+                          type="checkbox"
+                          [disabled]="!checkCredential('credit_order_status_archive')"
+                          [(ngModel)]="item.archive" name="archiveItem">
+                      Документ в архиве
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+
+              </div>
+
+              <!-- блок под закладками -->
+              <!-- <div class="row card-under-form">
+                <div class="col-sm-12"> -->
+              <!-- Список товаров -->
+              <!-- <div *ngIf="item.orderGoods && item.orderGoods.trim()">
+                <div class="row card-block alert-info">
+                  <div class="col-sm-12">
+                    <button type="button" class="btn btn-default btn-xs card-block-collapse"
+                            data-toggle="collapse"
+                            data-target="#itemOrderGoods">Показать/скрыть товары&nbsp;
+                      <span class="fa fa-sort column-sortable-icon"></span>
+                    </button>
+                    <div id="itemOrderGoods" class="form-group label-floating collapse">
+                      <label class="control-label">Перечень товаров</label>
+                      <textarea
+                          [ngModel]="item.orderGoods" name="orderGoodsItem"
+                          rows="3" readonly
+                          type="text" class="form-control">
+                    </textarea>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Текст почты -->
+              <!-- <div *ngIf="item.mailText && item.mailText.trim()">
+                <div class="row card-block alert-info">
+                  <div class="col-sm-12">
+                    <button type="button" class="btn btn-default btn-xs card-block-collapse" data-toggle="collapse"
+                            data-target="#mailText">Показать/скрыть текст письма&nbsp;
+                      <span class="fa fa-sort column-sortable-icon"></span>
+                    </button>
+                    <div id="mailText" class="form-group label-floating collapse">
+                      <label class="control-label">Текст письма</label>
+                      <textarea [ngModel]="item.mailText" name="itemMailText"
+                                style="background-color: lightblue;"
+                                rows="6" readonly
+                                type="text" class="form-control">
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Переписка и лог действий по заявке -->
+              <!-- <div class="row card-block">
+                <div class="col-sm-12">
+                  <button type="button" class="btn btn-default btn-xs card-block-collapse"
+                          *ngIf="item.mailText"
+                          data-toggle="collapse"
+                          data-target="#logBlock">Показать переписку и журнал&nbsp;
+                    <span class="fa fa-sort column-sortable-icon"></span>
+                  </button>
+                  <div id="logBlock" class="collapse">
+                    <div class="form-group label-floating">
+                      <label class="control-label">Переписка и журнал заявки</label>
+                      <textarea type="text" class="form-control"
+                                [(ngModel)]="item.mailText" name="itemMailText1"
+                                rows="6">
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+            </form>
+
+            <!-- панель управления заявками внизу формы карточки -->
+            <div class="row dt-card-manage-panel">
+
+              <!-- Печатные формы пока не нужны! -->
+              <div class="col-sm-6">
+                <div class="pull-left dropup">
+                  <!-- <a #printBlanks
+                     class="btn btn-default btn-sm btn-round dropdown-toggle"
+                     data-toggle="dropdown"
+                     style="margin-top: 20px;"
+                     title="Печать документов">
+                    Печать документов
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu clickable">
+                    <li *ngFor="let print of printForms"
+                        [hidden]="print.visible===false">
+                      <a (click)="printForm(print.id)"
+                         [title]="print.descr">
+                        {{print.name}}
+                      </a>
+                    </li>
+                  </ul> -->
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="pull-right dropup">
+                  <a #changeStatusReturnLink class="btn btn-danger btn-sm btn-round" style="margin-top: 20px;"
+                    (click)="setReturnStatus(item)"
+                    title="Установить статус «Клиент обратился за возврат товара/услуги»">
+                    Оформить возврат
+                  </a>
+                  <a #changeStatusRejectionLink class="btn btn-warning btn-sm btn-round dropdown-toggle"
+                    data-toggle="dropdown" style="margin-top: 20px;" title="Установить статус «Отказ выдачи кредита»">
+                    Отказ
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li *ngFor="let rejStatus of rejectionStatuses" [hidden]="rejStatus.visible===false">
+                      <a (click)="setRejectionStatus(item, rejStatus.id)">
+                        {{rejStatus.descr}}
+                      </a>
+                    </li>
+                  </ul>
+                  <a #changeOrderStatusLink class="btn btn-success btn-sm btn-round" style="margin-top: 20px;"
+                    (click)="shiftOrderStatus(item)" title="Взять в работу">
+                    Взять в работу
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRINT FORMS -->
+        <!-- <div class="print-forms hidden"> -->
+        <!-- Анкета -->
+        <!-- <div id="anketa" class="container">
+          <h2>{{getPrintForm('anketa').name}}</h2>
+          <p>{{getPrintForm('anketa').descr}}</p>
+          <p>{{getPrintForm('anketa').id}}</p>
+        </div> -->
+        <!-- Копия паспорта -->
+        <!-- <div id="passport" class="container">
+          <h2>{{getPrintForm('passport').name}}</h2>
+          <p>{{getPrintForm('passport').descr}}</p>
+          <p>{{getPrintForm('passport').id}}</p>
+        </div> -->
+        <!-- </div> -->
+      </ng-template>
+    </romb-datatable-lite>
+    <!-- end content-->
+
+    <!--<div class="card-content">-->
+    <!--<b>Комментарий:</b> {{((dataTable && dataTable.selectedRow &&-->
+    <!--dataTable.selectedRow.item)?dataTable.selectedRow.item.comment:'')}}-->
+    <!--</div>-->
+  </div>
+</div>
+
+<!-- ИНФОРМАЦИЯ О ЗАЯВКЕ -->
+<!-- Шаблон для партнеров -->
+
+<div class="document-card-modal" [style.display]="orderVisible===false?'none':'flex'">
+  <div class="card document-card">
+    <div class="card-header card-header-icon" data-background-color="rose">
+      <fa name="file-text"></fa>
+    </div>
+    <div class="dt-card-content-header">
+      <div class="col-header left">
+        <h4 class="card-title">Кредитная заявка {{docItem ? '№' + docItem.code : ''}}</h4>
+      </div>
+      <div *ngIf="docItem" class="col-header right">
+        <button class="btn btn-info btn-just-icon btn-round card-btn-close" (click)="updateOrderView(docItem)"
+          title="Обновить данные (Alt+R)">
+          <fa name="refresh"></fa>
+        </button>
+        <button class="btn btn-danger btn-just-icon btn-round card-btn-close" (click)="closeOrderView()"
+          title="Закрыть окно (Esc)">
+          <fa name="close"></fa>
+        </button>
+      </div>
+    </div>
+
+    <div class="loader" *ngIf="!docItem">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="15" fill="none" stroke-width="4" stroke-miterlimit="10" />
+      </svg>
+    </div>
+    <div *ngIf="docItem" class="card-content dt-card-content">
+      <div class="nav-center">
+        <div class="row" style="display: flex; align-items: center; height: inherit;">
+          <div class="col-sm-12" style="height: inherit;">
+            <ul class="nav nav-pills nav-pills-info" role="tablist" id="orderViewPans">
+              <li>
+                <a href="#view-order-pan" id="view-order-pan-header" role="tab" data-toggle="tab"
+                  aria-controls="view-order-pan" aria-selected="false">
+                  Заявка
+                </a>
+              </li>
+              <li>
+                <a href="#view-customer-pan" id="view-customer-pan-header" role="tab" data-toggle="tab"
+                  aria-controls="view-customer-pan" aria-selected="false">
+                  Покупатель
+                </a>
+              </li>
+              <li>
+                <a href="#view-files-pan" id="view-files-pan-header" role="tab" data-toggle="tab"
+                  aria-controls="view-files-pan" aria-selected="false">
+                  Файлы
+                </a>
+              </li>
+              <li>
+                <a href="#view-sign-pan" id="view-sign-pan-header" role="tab" data-toggle="tab" class="hidden"
+                  aria-controls="view-sign-pan" aria-selected="false">
+                  Подписание
+                </a>
+              </li>
+              <li class="" *ngIf="checkCredential('journal_credit_order_payment_pan_view')">
+                <a href="#view-payment-pan" id="view-payment-pan-header" role="tab" data-toggle="tab"
+                  aria-controls="view-payment-pan" aria-selected="false">
+                  Оплата
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="dt-card-form tab-form">
+        <div class="tab-content">
+          <!-- ORDER PAN -->
+          <div class="tab-pane" id="view-order-pan">
+            <div class="row">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6><b>Данные партнёра</b></h6>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label>Торговая точка</label>
+                        <romb-ref-select #refDepartment *ngIf="docItem" [rcDisabled]="" source="departments"
+                          [listCriteria]="departmentParent" label="" [dtReqParams]="departmentDTReqParams"
+                          [rcValue]="docItem.department" (selected)="departmentSelected(docItem)"
+                          (valueCleared)="departmentSelected(docItem)"
+                          (openModalSelect)="mainList.openExernalModalSelect($event)"
+                          (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+                        </romb-ref-select>
+                      </div>
+                    </div>
+                    <h6><b>Данные покупателя</b></h6>
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label for="fullNameItem">ФИО покупателя</label>
+                          <input name="fullNameItem" class="form-control" id="fullNameItem" placeholder=""
+                            [(ngModel)]="docItem.customer.value">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="phoneItem">Контактный телефон</label>
+                          <input name="phoneItem" class="form-control" id="phoneItem" placeholder=""
+                            [textMask]="{mask: telMaskInput}" [(ngModel)]="docItem.customer.phone"
+                            (focus)="onTelInputFocus($event)">
+                        </div>
+                      </div>
+                    </div>
+                    <h6><b>Условия кредита</b></h6>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="orderPurchaseSumm">Стоимость товара</label>
+                          <input name="orderPurchaseSumm" class="form-control" id="orderPurchaseSumm"
+                            [textMask]="{mask: currencyMask}" [(ngModel)]="docItem.orderPurchaseSumm">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="orderInitialFee">Первоначальный взнос</label>
+                          <input name="orderInitialFee" class="form-control" id="orderInitialFee"
+                            [textMask]="{mask: currencyMask}" [(ngModel)]="docItem.orderInitialFee">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <mat-form-field *ngIf="docItem" class="form-select">
+                          <label for="orderPeriodItem">Срок кредита</label>
+                          <mat-select [value]="0" [(ngModel)]="docItem.orderPeriod" name="orderPeriodItem"
+                            id="orderPeriodItem">
+                            <mat-option [value]=3>3 месяца</mat-option>
+                            <mat-option [value]=4>4 месяца</mat-option>
+                            <mat-option [value]=5>5 месяцев</mat-option>
+                            <mat-option [value]=6>6 месяцев</mat-option>
+                            <mat-option [value]=7>7 месяцев</mat-option>
+                            <mat-option [value]=8>8 месяцев</mat-option>
+                            <mat-option [value]=9>9 месяцев</mat-option>
+                            <mat-option [value]=10>10 месяцев</mat-option>
+                            <mat-option [value]=11>11 месяцев</mat-option>
+                            <mat-option [value]=12>12 месяцев</mat-option>
+                            <mat-option [value]=13>1 год 1 месяц</mat-option>
+                            <mat-option [value]=14>1 год 2 месяца</mat-option>
+                            <mat-option [value]=15>1 год 3 месяца</mat-option>
+                            <mat-option [value]=16>1 год 4 месяца</mat-option>
+                            <mat-option [value]=17>1 год 5 месяцев</mat-option>
+                            <mat-option [value]=18>1 год 6 месяцев</mat-option>
+                            <mat-option [value]=19>1 год 7 месяцев</mat-option>
+                            <mat-option [value]=20>1 год 8 месяцев</mat-option>
+                            <mat-option [value]=21>1 год 9 месяцев</mat-option>
+                            <mat-option [value]=22>1 год 10 месяцев</mat-option>
+                            <mat-option [value]=23>1 год 11 месяцев</mat-option>
+                            <mat-option [value]=24>2 года</mat-option>
+                            <mat-option [value]=25>2 года 1 месяц</mat-option>
+                            <mat-option [value]=26>2 года 2 месяца</mat-option>
+                            <mat-option [value]=27>2 года 3 месяца</mat-option>
+                            <mat-option [value]=28>2 года 4 месяца</mat-option>
+                            <mat-option [value]=29>2 года 5 месяцев</mat-option>
+                            <mat-option [value]=30>2 года 6 месяцев</mat-option>
+                            <mat-option [value]=31>2 года 7 месяцев</mat-option>
+                            <mat-option [value]=32>2 года 8 месяцев</mat-option>
+                            <mat-option [value]=33>2 года 9 месяцев</mat-option>
+                            <mat-option [value]=34>2 года 10 месяцев</mat-option>
+                            <mat-option [value]=35>2 года 11 месяцев</mat-option>
+                            <mat-option [value]=36>3 ГОДА</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field *ngIf="docItem" class="form-select">
+                          <label for="orderCreditTypeItem">Тип кредита</label>
+                          <mat-select [value]="0" [(ngModel)]="docItem.orderCreditType"
+                            name="orderCreditTypeItem" id="orderCreditTypeItem">
+                            <mat-option [value]=1>КРЕДИТ</mat-option>
+                            <mat-option [value]=2>РАССРОЧКА</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group" child="textarea">
+                          <label for="orderGoodsItem">Наименование товаров и услуг</label>
+                          <textarea class="form-control" rows="2" [(ngModel)]="docItem.orderGoods" name="orderGoodsItem"
+                            id="orderGoodsItem">НАИМЕНОВАНИЕ И КОЛИЧЕСТВО ТОВАРОВ</textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group" child="textarea">
+                          <label for="orderCommentItem">Комментарий</label>
+                          <textarea class="form-control" rows="2" [(ngModel)]="docItem.comment" name="orderCommentItem"
+                            id="orderCommentItem">НАИМЕНОВАНИЕ И КОЛИЧЕСТВО ТОВАРОВ</textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6" style="text-align: left; align-self: normal;">
+                                        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--ORDER PAN END-->
+
+          <!-- CUSTOMER PAN -->
+          <div class="tab-pane" id="view-customer-pan">
+            <div class="row">
+              <div class="col-sm-10">
+                <div class="form-group label-floating">
+                  <label class="control-label">ФИО клиента</label>
+                  <input [ngModel]="mainList.getRefObjectPresentation(docItem.customer)" name="viewcustFullNameItem"
+                    readonly type="text" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group label-floating">
+                  <label class="control-label">Пол</label>
+                  <input [ngModel]="shared.getGender(docItem.customer)" name="viewcustGenderItem" readonly type="text"
+                    class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group label-floating">
+                  <label class="control-label">Паспорт серия и номер</label>
+                  <input [(ngModel)]="docItem.customer.passport" name="passportItem" type="text" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group label-floating">
+                  <label class="control-label">Кем выдан паспорт</label>
+                  <input [(ngModel)]="docItem.customer.passportOrgan" name="passportOrganItem" type="text"
+                    class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group label-floating">
+                  <label class="control-label">Код подразделения</label>
+                  <input [(ngModel)]="docItem.customer.passportDepartment" name="passportDepartmentItem" type="text"
+                    class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group label-floating">
+                  <label class="control-label">Телефон</label>
+                  <input name="passportAddressItem" readonly [value]="docItem.customer.phone"
+                    [textMask]="{mask: telMaskInput}" type="tel" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group label-floating">
+                  <label class="control-label">Адрес регистрации</label>
+                  <input name="passportAddressItem" readonly [value]="docItem.customer.passportAddress" type="text"
+                    class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CUSTOMER PAN END -->
+
+          <!-- FILES PAN -->
+          <div class="tab-pane" id="view-files-pan">
+            <div>
+              <romb-fresh-files [filesList]="docItem.files" [dangerComments]="true" [showSaveButton]="true"
+                [showHeaders]="false" [allowEdit]="!(docItem.checkScansStatus===true)" [editMode]="true"
+                (needSaveChanges)="filesSaveChangesCkicked(docItem, $event)"
+                (keyStateChanged)="dataTable.changeKeyState($event)" (previewOpened)="dataTable.showPreview()"
+                (previewClosed)="dataTable.closePreview()">
+              </romb-fresh-files>
+
+              <div class="row alert-danger">
+                <div class="col-sm-4">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" disabled="true" [ngModel]="docItem.checkScansStatus"
+                        name="checkScansStatusItemView">
+                      Сканы документов корректные
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-sm-8">
+                  <mat-form-field class="">
+                    <input matInput type="text" readonly
+                      placeholder="{{(docItem.filesComment)?'Есть ошибки! ':''}}(комментарий проверки приложенных файлов)"
+                      [style.color]="'red'" [ngModel]="docItem.filesComment" name="filesCommentItemView">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- FILES PAN END -->
+
+          <!-- SIGN PAN -->
+          <div class="tab-pane" id="view-sign-pan">
+            <h3 class="text-center">Договор подписан?</h3>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-content text-center">
+                    <a class="btn btn-success btn-fill btn-lg" (click)="setSignStatus(docItem, true, true)">
+                      ДОГОВОР ПОДПИСАН
+                    </a>
+                    <p class="text-center">&nbsp;</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-content text-center">
+                    <a class="btn btn-danger btn-fill btn-lg" (click)="setSignStatus(docItem, false, true)">
+                      &nbsp;ДОГОВОР НЕ ПОДПИСАН
+                    </a>
+                    <p class="text-center">аннуляция</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- SIGN PAN END -->
+
+          <!-- PAYMENT PAN -->
+          <div *ngIf="checkCredential('journal_credit_order_payment_pan_view')" class="tab-pane" id="view-payment-pan">
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field class="form-select">
+                  <mat-select disabled placeholder="Статус оплаты" [compareWith]="compareStatusesWith"
+                    [ngModel]="docItem.paymentStatus" name="viewPaymentStatusItem">
+                    <mat-option *ngFor="let status of paymentStatuses" [value]="status">
+                      {{status.name + ' (' + status.id + ')'}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="">
+                  <input matInput type="number" disabled
+                    placeholder="Сумма оплаты ({{docItem.paymentSumm | currency:' ':'':'':'ru'}} руб.)"
+                    [ngModel]="docItem.paymentSumm" name="viewPaymentSumm">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput disabled [ngModel]="docItem.paymentDate | date:'shortDate':'':'ru'"
+                    name="viewPaymentDate" placeholder="Дата оплаты">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <!-- PAYMENT PAN END -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

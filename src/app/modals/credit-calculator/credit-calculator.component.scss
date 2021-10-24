@@ -1,0 +1,43 @@
+.form-group {
+    &.is-focused label {
+        color: #4caf50;
+    }
+    label {
+        color:#333333;
+    }    
+}
+
+.row.credit-term-row {
+    margin-top: 18px;
+}
+
+button.btn.btn-danger.btn-calculate {
+    margin: 10px 0 25px;
+    & i {
+        padding-right: 20px;
+    }
+    &:hover {
+        background-color: #ed1b0c;
+    }
+}
+
+.mat-divider {
+    border-top-color: rgba(0, 0, 0, 0.30);
+}
+
+mat-select {
+    padding-top: 30px;
+}
+mat-list.mat-list .mat-list-item {
+    font-weight: bold;
+    font-size: 14px;
+    height: 30px;
+}
+
+::ng-deep mat-form-field.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    color:#333333 !important;
+    font-size: 18px !important;
+}
+.row {
+    margin: 0 10px;
+}

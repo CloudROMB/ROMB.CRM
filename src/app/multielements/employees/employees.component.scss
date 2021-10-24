@@ -1,0 +1,89 @@
+// .edit-mode, .view-mode {
+//   font-size: 12px;
+// }
+
+// .mel-row {
+//   border-style: dotted;
+//   border-width: 1px;
+//   border-color: #AAA;
+//   border-radius: 8px;
+//   margin-top: 8px;
+//   margin-bottom: 8px;
+
+//   .row, .h1, .h2, .h3, .h4, .h5, p {
+//     margin: 0;
+//     font-size: 12px;
+//   }
+
+//   &.mel-row-text {
+//     font-size: 12px;
+
+//     .row, .h1, .h2, .h3, .h4, .h5, p {
+//       margin: 0;
+//       font-size: 12px;
+//     }
+//   }
+
+//   .links-row {
+//     padding: 8px;
+//   }
+
+//   .form-group {
+//     font-size: 14px;
+
+//     .form-control {
+//       font-size: 14px;
+//     }
+//   }
+// }
+
+// .mel-remove-link {
+//   color: red;
+// }
+
+// .mel-add-link {
+//   color: green;
+// }
+
+// .multi-element-link {
+//   border-bottom-style: dashed;
+//   border-bottom-width: 1px;
+//   font-size: 12px;
+//   margin-right: 16px;
+//   margin-left: 0;
+//   cursor: pointer;
+// }
+
+// .padding0 {
+//   padding: 0 !important;
+// }
+
+// .margin0 {
+//   margin: 0 !important;
+// }
+
+.contact-type {
+  font-weight: 500;
+}
+
+.mat-list .mat-list-item {
+  font-size: 13px;
+}
+
+.mat-divider {
+  position: relative;
+}
+
+mat-expansion-panel.mat-expansion-panel {
+  mat-expansion-panel-header.mat-expansion-panel-header { 
+    mat-panel-title.mat-expansion-panel-header-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }&.mat-expanded { 
+    mat-panel-title.mat-expansion-panel-header-title {
+      white-space: pre-wrap!important;
+    }
+  }
+}

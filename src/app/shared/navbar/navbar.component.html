@@ -1,0 +1,77 @@
+<nav #navbar class="navbar navbar-transparent navbar-absolute">
+  <div class="container-fluid">
+    <div class="navbar-minimize">
+      <button class="btn btn-round btn-white btn-fill btn-just-icon"
+              id="minimizeSidebar" (click)="sidebarMinMax()">
+        <i class="material-icons visible-on-sidebar-regular">more_vert</i>
+        <i class="material-icons visible-on-sidebar-mini">view_list</i>
+      </button>
+    </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" (click)="sidebarOpenClose()">
+        <span class="sr-only">Меню</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{getPath()}}"> {{getTitle()}} </a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <div (window:resize)="onResize($event)">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a class="" data-toggle="tooltip" data-placement="bottom" title="Кредитный калькулятор"
+               (click)="showCreditCalculator()">
+              <i class="fa fa-calculator" style="cursor: pointer;"></i>
+              <p class="hidden-lg hidden-md">Кредитный калькулятор</p>
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="getDashboardRoute()" class="" data-toggle="tooltip" data-placement="bottom"
+               title="Панель управления">
+              <i class="material-icons">dashboard</i>
+              <p class="hidden-lg hidden-md">Панель управления</p>
+            </a>
+          </li>
+          <li class="dropdown" title="Уведомления">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="material-icons">notifications</i>
+              <span class="notification">{{getEventsCount()}}</span>
+              <p class="hidden-lg hidden-md">
+                Уведомления
+                <b class="caret"></b>
+              </p>
+            </a>
+            <ul class="dropdown-menu">
+              <li *ngFor="let item of events; index as i">
+                <a href="{{item.link}}">{{item.message}}</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a (click)="logOut()" title="Выйти из системы" data-toggle="tooltip" data-placement="left">
+              <fa name="sign-out"></fa>
+            </a>
+          </li>
+          <li class="separator hidden-lg hidden-md"></li>
+        </ul>
+
+        <!-- TO-DO: Поиск в системе пока не реализован -->
+        <!--<form class="navbar-form navbar-right" role="search">-->
+        <!--<div class="form-group form-search is-empty">-->
+        <!--<input type="text" class="form-control" placeholder="Поиск">-->
+        <!--<span class="material-input"></span>-->
+        <!--</div>-->
+        <!--<button type="submit" class="btn btn-white btn-round btn-just-icon"-->
+        <!--data-toggle="tooltip" data-placement="bottom" title="Поиск в системе">-->
+        <!--<i class="material-icons">search</i>-->
+        <!--<div class="ripple-container"></div>-->
+        <!--</button>-->
+        <!--</form>-->
+      </div>
+    </div>
+  </div>
+</nav>
+
+<romb-credit-calculator *ngIf="calcIsOpen" (close)="closeCreditCalculator()">
+</romb-credit-calculator>

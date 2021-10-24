@@ -1,0 +1,140 @@
+<div class="mel-component">
+  <div class="edit-mode" *ngIf="editMode">
+    <div class="row mel-header-row">
+      <a class="btn btn-info btn-raised btn-round btn-xs"
+         (click)="editMode=!editMode">{{labels.viewMode}}</a>
+      <a class="btn btn-success btn-raised btn-round btn-xs"
+         (click)="addBank()">{{labels.addBank}}</a>
+    </div>
+    <div class="row mel-row" *ngFor="let bank of banks">
+      <div class="col-md-12">
+
+        <div class="row mel-header-row">
+          <div class="col-md-12" style="display: flex; align-items: baseline;">
+            <p class="h3">{{bank.name}}</p>
+            <a class="text-danger multi-element-link"
+               (click)="removeBank(bank)">{{labels.removeBank}}</a>
+            <a class="text-success multi-element-link"
+               (click)="addProduct(bank)">{{labels.addProduct}}</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group label-floating" style="flex: auto">
+              <label class="control-label">{{labels.name}}</label>
+              <input [(ngModel)]="bank.name" name="nameItem{{bank.id}}"
+                     type="text" class="form-control">
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" [(ngModel)]="bank.active" name="bankEnabledItem{{bank.id}}">
+                {{labels.bankEnabled}}
+              </label>
+            </div>
+          </div>
+
+          <!--<div class="col-md-4">-->
+          <!--<div class="form-group label-floating" style="flex: auto">-->
+          <!--<label class="control-label">{{labels.description}}</label>-->
+          <!--<input [(ngModel)]="bank.descr" name="descriptionItem{{bank.id}}"-->
+          <!--type="text" class="form-control">-->
+          <!--</div>-->
+          <!--</div>-->
+        </div>
+
+        <div *ngIf="bank.products">
+          <div class="row" *ngFor="let product of bank.products">
+            <div class="col-md-4">
+              <div class="form-group label-floating">
+                <label class="control-label">{{labels.productName}}</label>
+                <input [(ngModel)]="product.name" name="productName{{product.id}}"
+                       (change)="changeMultiValue($event)"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group label-floating">
+                <label class="control-label">{{labels.productDescr}}</label>
+                <input [(ngModel)]="product.descr" name="productDescription{{product.id}}"
+                       (change)="changeMultiValue($event)"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group label-floating">
+                <label class="control-label">{{labels.productRate}}</label>
+                <input [(ngModel)]="product.rate" name="productRate{{product.id}}"
+                       (change)="changeMultiValue($event)"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4" style="display: flex; align-items: center; justify-content: space-between;">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"
+                         [(ngModel)]="product.active" name="productEnabled{{product.id}}">
+                  {{labels.productEnabled}}
+                </label>
+              </div>
+              <button class="btn btn-default btn-raised btn-just-icon btn-round"
+                      (click)="removeProduct(bank, product)">
+                <fa name="trash"></fa>
+              </button>
+              <a href=""></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row links-row" *ngIf="bank.products && bank.products.length">
+          <div class="col-md-12">
+            <a class="text-success multi-element-link"
+               (click)="addProduct(bank)">{{labels.addProduct}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="view-mode" *ngIf="!editMode">
+    <div class="row">
+      <a class="btn btn-primary btn-raised btn-round btn-xs"
+         (click)="editMode = (!editMode)">{{labels.editMode}}</a>
+    </div>
+    <div class="row mel-row mel-row-text" *ngFor="let bank of banks">
+      <div class="col-md-12">
+        <div class="row h5">
+          <div class="col-md-4">
+            <p [style.color]="!bank.active?'red':null">{{bank.name}} {{!bank.active?'(выключен)':''}}</p>
+          </div>
+          <div class="col-md-4">
+            <p>{{bank.descr}}</p>
+          </div>
+        </div>
+        <div *ngIf="bank.products">
+          <div class="row" *ngFor="let product of bank.products">
+            <div class="col-md-4">
+              <p>{{product.name}}</p>
+            </div>
+            <div class="col-md-2">
+              <p>
+                {{product.descr}}
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p [title]="product.active">
+                {{product.active}}
+              </p>
+            </div>
+            <div class="col-md-4">
+              <p>
+                {{product.rate}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

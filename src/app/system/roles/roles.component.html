@@ -1,0 +1,130 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        source="roles"
+        [itemStructure]="user"
+        (afterOpen)="afterOpen($event)"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <!-- закладки -->
+        <div class="nav-center">
+          <ul class="nav nav-pills nav-pills-info" role="tablist">
+            <li class="active">
+              <a href="#main-pan" role="tab" data-toggle="tab">
+                Основные
+              </a>
+            </li>
+            <li class="">
+              <a href="#menu-pan" role="tab" data-toggle="tab">
+                Главное меню
+              </a>
+            </li>
+            <li class="">
+              <a href="#props-pan" role="tab" data-toggle="tab">
+                Мандаты
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <form #form="ngForm" class="dt-card-form tab-form">
+          <!-- tab content -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="main-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Кодификатор</label>
+                    <input [(ngModel)]="item.code" name="itemCode"
+                           type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Название роли</label>
+                    <input #name [(ngModel)]="item.name" name="itemName"
+                           type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-8">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Комментарий</label>
+                    <input [(ngModel)]="item.comment" name="itemComment"
+                           type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="checkbox">
+                    <label [style.color]="(item.active)?'green':'red'">
+                      <input type="checkbox"
+                             [(ngModel)]="item.active"
+                             name="itemActive">Роль <strong>{{dataTable.getActiveTitle()}}</strong>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="menu-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <romb-key-value #menuStructure
+                      textTitle="Главное меню"
+                      [textSize]="20"
+                      [isArray]="true"
+                      [mulValue]="mainMenuStructure"
+                      (saveStructureClicked)="updateMainMenu($event, item)">
+                  </romb-key-value>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group label-floating">
+                    <label class="control-label">mainMenu</label>
+                    <textarea
+                        [ngModel]="getObjJSON(item.mainMenu)" name="mainMenuItem"
+                        rows="10"
+                        type="text" class="form-control">
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="props-pan">
+              <div class="row">
+                <div class="col-sm-12">
+                  <romb-key-value #credStructure
+                      textTitle="Мандаты роли"
+                      [textSize]="20"
+                      [isArray]="true"
+                      [mulValue]="credentialsStructure"
+                      (saveStructureClicked)="updateCredentials($event, item)">
+                  </romb-key-value>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group label-floating">
+                    <label class="control-label">credentials</label>
+                    <textarea
+                        [ngModel]="getObjJSON(item.credentials)" name="credentialsItem"
+                        rows="10"
+                        type="text" class="form-control">
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

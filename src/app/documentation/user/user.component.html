@@ -1,0 +1,32 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        source="documentation"
+        [dtRequest]="dtRequest"
+        (beforeAddNew)="beforeAddNew($event)"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #f="ngForm" class="dt-card-form">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Название курса</label>
+                <input [(ngModel)]="item.name" name="nameItem"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating" hidden>
+                <label class="control-label">Тип документации</label>
+                <input [(ngModel)]="item.type" name="typeItem"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

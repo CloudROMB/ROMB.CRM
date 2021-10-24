@@ -1,0 +1,266 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="card form-card">
+      <div class="card-header card-header-icon" data-background-color="rose">
+        <i class="material-icons">assignment</i>
+      </div>
+      <div class="card-content">
+        <h4 class="card-title">АНКЕТА — <b>{{ order.partner.name }}</b></h4>
+        <form #orderForm="ngForm" (ngSubmit)="onSubmit(orderForm)"
+              class="order-form">
+          <div class="row">
+            <div class="col-md-7 col-sm-12 col-xs-12 credit-application-container">
+              <h6 class="partner-info-header"><b>1. Данные партнёра</b></h6>
+              <!-- <romb-combolist
+                  source="departments"
+                  label="АДРЕС ТОРГОВОЙ ТОЧКИ"
+                  [defaultDisplayField]="defaultDisplayField"
+                  [listCriteria]="departmentParent"
+                  [cblValue]="order.department"
+                  formElementName="departmentItem"
+                  displayFieldName="address"
+                  >
+              </romb-combolist> -->
+              <romb-combo-list
+                [(clValue)]="order.department"
+                [viewValues]="['address']"
+                source="departments"
+                [filter]="false"
+                [criteria]="departmentParent"
+              ></romb-combo-list>
+              <!-- <romb-ref-select
+                  source="departments"
+                  label="АДРЕС ТОРГОВОЙ ТОЧКИ"
+                  [listCriteria]="departmentParent"
+                  [rcValue]="order.department"
+                  [customColsHide]="customColsHide"
+                  formElementName="departmentItem">
+              </romb-ref-select> -->
+              <h6><b>2. Данные покупателя</b></h6>
+              <div class="row">
+                <div class="col-md-8 col-sm-8 col-xs-8">
+                  <div class="form-group">
+                    <label class="control-label">ФИО ПОКУПАТЕЛЯ</label>
+                    <input daData [suggType]="suggType.NAME" type="text"
+                          [(ngModel)]="order.customer.fullName" name="fullNameItem"
+                          (daSelect)="selectFIO($event)" autocomplete="off"
+                          class="form-control" id="fullNameItem">
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-4">
+                  <div class="form-group">
+                    <label class="control-label">ТЕЛЕФОН</label>
+                    <input [(ngModel)]="order.phone" name="phoneItem" id="phoneItem"
+                          [textMask]="{mask: telMaskInput, guide: true, showMask: true}"
+                          (focus)="onTelInputFocus($event)"
+                          autocomplete="off"
+                          class="form-control">
+                  </div>
+                </div>
+                <!-- <div class="col-md-4 col-sm-4 col-xs-4">1
+                  <div class="form-group">
+                    <label class="control-label">ТЕЛЕФОН</label>
+                    <input [(ngModel)]="order.phone" name="phoneItem" id="phoneItem"
+                          [textMask]="{mask: telMaskInput}"
+                          (ngModelChange)="onPhoneInputChange()"
+                          required autocomplete="off"
+                          type="tel" class="form-control">
+                  </div>
+                </div> -->
+              </div>
+              <h6><b>3. Условия кредита</b></h6>
+              <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <div class="form-group">
+                    <label for="orderSummItem" class="control-label">СТОИМОСТЬ ТОВАРА</label>
+                    <input [(ngModel)]="order.purchaseSumm" name="orderSummItem" id="orderSummItem" min="0" max="3000000"
+                      (focus)="$event.target.select()" class="form-control"
+                      [textMask]="{mask: currencyMask}">
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <div class="form-group">
+                    <label for="orderInitialFeeItem" class="control-label">ПЕРВОНАЧАЛЬНЫЙ ВЗНОС</label>
+                    <input [(ngModel)]="order.orderFee" name="orderInitialFeeItem" id="orderInitialFeeItem" min="0" max="1000000"
+                      (focus)="$event.target.select()" class="form-control"
+                      [textMask]="{mask: currencyMask}">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <mat-form-field class="form-select">
+                      <mat-select
+                          [value]="0"
+                          [(ngModel)]="order.creditType" name="creditTypeItem" id="creditTypeItem">
+                        <mat-option [value]=0>— выберите тип кредита —</mat-option>
+                        <mat-option [value]=1>КРЕДИТ</mat-option>
+                        <mat-option [value]=2>РАССРОЧКА</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <mat-form-field class="form-select">
+                    <mat-select [value]="0"
+                                [(ngModel)]="order.orderPeriod" name="orderPeriodItem" id="orderPeriodItem">
+                      <mat-option [value]=0>— выберите период —</mat-option>
+                      <mat-option [value]=3>3 месяца</mat-option>
+                      <mat-option [value]=4>4 месяца</mat-option>
+                      <mat-option [value]=5>5 месяцев</mat-option>
+                      <mat-option [value]=6>6 месяцев</mat-option>
+                      <mat-option [value]=7>7 месяцев</mat-option>
+                      <mat-option [value]=8>8 месяцев</mat-option>
+                      <mat-option [value]=9>9 месяцев</mat-option>
+                      <mat-option [value]=10>10 месяцев</mat-option>
+                      <mat-option [value]=11>11 месяцев</mat-option>
+                      <mat-option [value]=12>12 месяцев</mat-option>
+                      <mat-option [value]=13>1 год 1 месяц</mat-option>
+                      <mat-option [value]=14>1 год 2 месяца</mat-option>
+                      <mat-option [value]=15>1 год 3 месяца</mat-option>
+                      <mat-option [value]=16>1 год 4 месяца</mat-option>
+                      <mat-option [value]=17>1 год 5 месяцев</mat-option>
+                      <mat-option [value]=18>1 год 6 месяцев</mat-option>
+                      <mat-option [value]=19>1 год 7 месяцев</mat-option>
+                      <mat-option [value]=20>1 год 8 месяцев</mat-option>
+                      <mat-option [value]=21>1 год 9 месяцев</mat-option>
+                      <mat-option [value]=22>1 год 10 месяцев</mat-option>
+                      <mat-option [value]=23>1 год 11 месяцев</mat-option>
+                      <mat-option [value]=24>2 ГОДА</mat-option>
+                      <mat-option [value]=25>2 года 1 месяц</mat-option>
+                      <mat-option [value]=26>2 года 2 месяца</mat-option>
+                      <mat-option [value]=27>2 года 3 месяца</mat-option>
+                      <mat-option [value]=28>2 года 4 месяца</mat-option>
+                      <mat-option [value]=29>2 года 5 месяцев</mat-option>
+                      <mat-option [value]=30>2 года 6 месяцев</mat-option>
+                      <mat-option [value]=31>2 года 7 месяцев</mat-option>
+                      <mat-option [value]=32>2 года 8 месяцев</mat-option>
+                      <mat-option [value]=33>2 года 9 месяцев</mat-option>
+                      <mat-option [value]=34>2 года 10 месяцев</mat-option>
+                      <mat-option [value]=35>2 года 11 месяцев</mat-option>
+                      <mat-option [value]=36>3 ГОДА</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group" child="textarea">
+                      <label class="control-label">НАИМЕНОВАНИЕ ТОВАРОВ/УСЛУГ</label>
+                      <textarea class="form-control" rows="3" cols="3"
+                                [(ngModel)]="order.orderGoods" name="orderGoodsItem" id="orderGoodsItem"
+                      >НАИМЕНОВАНИЕ И КОЛИЧЕСТВО ТОВАРОВ</textarea>
+                    </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="form-group" child="textarea">
+                    <label for="commentItem" class="control-label">Комментарий</label>
+                    <textarea class="form-control" rows="3" cols="3"
+                        [(ngModel)]="order.comment" id="commentItem" name="commentItem"
+                      >У матросов нет вопросов
+                    </textarea>
+                  </div>
+                </div>
+                </div>
+              <div class="row">
+                <div class="col-xs-12">
+                    <h6><b>4. Прикрепите документы</b></h6>
+                    <romb-fresh-files
+                    [showHeaders]="false"
+                    [showTitle]="false"
+                    [filesList]="order.files"
+                    [fileCheck]="false"
+                    [fileCategory]="primaryFilesCategory"
+                    (multiChange)="changeFiles(order, $event)">
+                  </romb-fresh-files>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-5 hidden-xs hidden-sm instruction-container">
+              <div class="row instruction-head">
+                <div class="col-md-2">
+                  <img src="../assets/img/icons/scanpass.gif" alt="">
+                </div>
+                <div class="col-md-10">
+                    <b>СКАН/ФОТО ПАСПОРТА<br>
+                    ПОКУПАТЕЛЯ</b>
+                </div>
+              </div>
+
+              <div class="row instruction-note">
+                <div class="col-md-12">
+                    <b>стр. 2-3 (с фотографией);</b><br>
+                    <b>стр. 5 (прописка);</b>
+                </div>
+              </div>
+              <div class="row instruction-text">
+                  <div class="col-md-12">
+                      Для повышения одобряемости, прикрепите второй документ удостоверяющий личность:
+                    СНИЛС, пенсионное удостоверение, водительские права, загран. паспорт
+                  </div>
+              </div>
+              <div style="border-bottom: 2px solid black"></div>
+              <div class="row instruction-head">
+                <div class="col-md-2">
+                  <img src="../assets/img/icons/camera25.gif" alt="">
+                </div>
+                  <div class="col-md-10">
+                    <b>ФОТОГРАФИРОВАНИЕ<br>
+                      ПОКУПАТЕЛЯ</b>
+                  </div>
+                </div>
+
+                <div class="row instruction-note">
+                  <div class="col-md-12">
+                      <b>Некоторые Банки в обязательном порядке требуют фотографию покупателя!</b><br>
+                      <b>В других Банках ее наличие, значительно увеличивает одобряемость!</b>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 instruction-text">
+                        Старайтесь фотографировать покупателя на однородном фоне.
+                        Если заявка подается с мобильного телефона или планшета,
+                        фоторежим активируется автоматически при нажатии на кнопку "Прикрепить файл"
+                    </div>
+                </div>
+                <div class="row concent-header">
+                    <div class="col-md-12">
+                      <a href="../assets/doc/consent.pdf" target="_blank">
+                        <img src="../assets/img/icons/PDF.png">
+                      </a>
+                    </div>
+                </div>
+                <div class="row concent-note">
+                    <div class="col-md-12">
+                      <b>Согласие на обработку персональных данных</b>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="row agreement-container">
+            <div class="col-xs-12">
+              <a href="http://www.ru/page-70.html"
+                 class="text-info"
+                 target="_blank">Положение об обработке персональных данных</a>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="agreementItem"
+                         [(ngModel)]="order.agreement" name="agreementItem"
+                  >С политикой конфиденциальности и положением об обработке персональных данных ознакомлен и
+                  согласен
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="text-center" style="margin-top: 0px;">
+            <button type="submit" class="btn btn-rose btn-round btn-wd btn-md">
+              <fa name="file-text-o"></fa>&nbsp;Отправить кредитную заявку в контактный центр
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

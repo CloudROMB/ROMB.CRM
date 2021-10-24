@@ -1,0 +1,165 @@
+<div class="main-content">
+  <div class="container" style="padding-top: 30px">
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="blue">
+            <i class="material-icons">equalizer</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Принято заявок</p>
+            <h3 class="card-title">271</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Сегодня
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="green">
+            <i class="material-icons">monetization_on</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Кредитов в рублях</p>
+            <h3 class="card-title">150 000</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Оформлено за последние 24 часа
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="red">
+            <i class="material-icons">warning</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Возвраты</p>
+            <h3 class="card-title">7</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">update</i> Сегодня
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header" data-background-color="orange">
+            <i class="material-icons">equalizer</i>
+          </div>
+          <div class="card-content">
+            <p class="category">Не отправлено в Банк</p>
+            <h3 class="card-title">3</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons text-danger">warning</i>
+              <a>Заявок за прошедшую смену</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header" data-background-color="green" data-header-animation="true">
+            <div class="ct-chart" id="dailySalesChart"></div>
+          </div>
+          <div class="card-content">
+            <div class="card-actions">
+              <button type="button" class="btn btn-danger btn-simple fix-broken-card">
+                <i class="material-icons">build</i> Починить!
+              </button>
+              <button type="button" class="btn btn-info btn-simple" matTooltip="Обновить"
+                      [matTooltipPosition]="'below'">
+                <i class="material-icons">refresh</i>
+              </button>
+              <button type="button" class="btn btn-default btn-simple" matTooltip="Изменить период"
+                      [matTooltipPosition]="'below'">
+                <i class="material-icons">edit</i>
+              </button>
+            </div>
+            <h4 class="card-title">Недельные продажи</h4>
+            <p class="category">
+              <span class="text-success"><i class="fa fa-long-arrow-up"></i> 17% </span> рост в сегодняшних продажах
+            </p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">info_outline</i> в рублях
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header" data-background-color="orange" data-header-animation="true">
+            <div class="ct-chart" id="completedTasksChart"></div>
+          </div>
+          <div class="card-content">
+            <div class="card-actions">
+              <button type="button" class="btn btn-danger btn-simple fix-broken-card">
+                <i class="material-icons">build</i> Fix Header!
+              </button>
+              <button type="button" class="btn btn-info btn-simple" matTooltip="Обновить"
+                      [matTooltipPosition]="'below'">
+                <i class="material-icons">refresh</i>
+              </button>
+              <button type="button" class="btn btn-default btn-simple" matTooltip="Изменить период"
+                      [matTooltipPosition]="'below'">
+                <i class="material-icons">edit</i>
+              </button>
+            </div>
+            <h4 class="card-title">Недельные звонки</h4>
+            <p class="category">
+              <span class="text-danger"><i class="fa fa-long-arrow-down"></i> 51% </span> снижение количества звонков
+            </p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> campaign sent 2 days ago
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header" data-background-color="red" data-header-animation="true">
+            <div class="ct-chart" id="websiteViewsChart"></div>
+          </div>
+          <div class="card-content">
+            <div class="card-actions">
+              <button type="button" class="btn btn-danger btn-simple fix-broken-card">
+                <i class="material-icons">build</i> Fix Header!
+              </button>
+              <button type="button" class="btn btn-info btn-simple" matTooltip="Обновить"
+                      [matTooltipPosition]="'below'">
+                <i class="material-icons">refresh</i>
+              </button>
+              <button type="button" class="btn btn-default btn-simple" matTooltip="Изменить период"
+                      [matTooltipPosition]="'below'">
+                <i class="material-icons">edit</i>
+              </button>
+            </div>
+            <h4 class="card-title">Динамика обращений</h4>
+            <p class="category">
+              <span class="text-success"><i class="fa fa-long-arrow-up"></i> 24% </span> рост обращений</p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> количество обращений за неделю
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

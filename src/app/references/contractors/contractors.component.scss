@@ -1,0 +1,107 @@
+#card-pan {
+  .row {
+    margin: 0 15px;
+    // border-bottom: 1px solid black;
+    button.btn-success > i, button.btn-danger > i {
+      margin-left: 6px;
+    }
+  }
+
+  .header-row .label {
+    border-radius: 3px;
+    font-size: 13px;
+  }
+
+  label, /deep/ .form-group>label {
+    font-size: 11px;
+    margin: 0;
+    color: #333333;
+    display: inline-table;
+    >.btn-sm {
+      font-size: 9px;
+      margin: 2px 1px;;
+      padding: 2px 10px 1px;
+    }    
+  }
+
+  div.form-group {
+    margin: 0;
+    padding-top: 5px;
+  }
+
+  .form-group.is-focused label, mat-form-field.mat-focused label, /deep/ .form-group.is-focused label {
+    color: #4caf50;
+  }
+
+  .mat-input-wrapper {
+    margin-bottom: 10px;
+  }
+
+  input {
+    padding-top: 6px;
+  }
+
+  .bank-accounts-row {
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    mat-panel-title {
+      font-size: 13px;
+    }
+  }
+  .mat input{
+    margin-top: 9px;
+  }
+}
+
+#contacts-pan {
+  .row {
+    margin: 0 15px;
+
+    &.head-contacts-row {
+      margin-bottom: 40px;
+    }
+    
+    h5 {
+      font-size: 15px;
+    }
+    
+    label {
+      font-size: 14px;
+      margin: 0;
+      color: #333333;
+    }
+
+    &.contacts-row {
+      margin-top: 20px;
+    }
+
+    label + span {
+      padding-left: 20px;
+    }
+  }
+
+  .contact-type {
+    font-weight: 500;
+  }
+
+  .mat-list-item span {
+    font-size: 13px;
+  }
+}
+
+.btn.btn-success:hover {
+  background-color: #3c8c3f;
+}
+
+.btn.btn-danger:hover {
+  background-color: #ed1b0c;
+}
+
+.btn.btn-warning:hover {
+  background-color: #cc7a00;
+}
+
+mat-input-infix {
+  padding-bottom: 2px;
+}

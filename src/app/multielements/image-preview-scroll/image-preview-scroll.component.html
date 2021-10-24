@@ -1,0 +1,55 @@
+
+  <div (contextmenu)="onRightClick($event)" *ngIf="files">
+    <div class="row">
+      <div class="col-md-7">
+        <h4 class="text-center" [textContent]="getImageDescription()"><b>{{ selectedImage.description || 'Нет описания' }}</b></h4>
+      </div>
+      <div class="col-md-5 text-right">
+        <span *ngIf="selectedImage.generatedFileName"
+          class="image-buttons-span">
+            <i class="material-icons"
+              (click)="onPrintImage()">
+                print</i>
+          <i class="material-icons"
+            (click)="onRotateImage('left')"
+          >rotate_left</i>
+          <i class="material-icons"
+            (click)="onRotateImage('right')"
+          >rotate_right</i>    
+        </span>
+      </div>
+    </div>
+    <div class="row"
+      [style.max-height]="height + 'px'"
+    >
+      <div class="pre-scrollable" #selectedImageContainer
+        [style.max-height]="height + 'px'"
+        [style.min-height]="height + 'px'"
+        (mousedown)="initScroll($event)">
+        <img #selectedImageEl
+        [style.height]="height + 'px'"
+        [src]="generateFileLink(selectedImage.generatedFileName)" alt=""
+        (click)="changeZoom($event)">
+      </div>
+    </div>  
+    <div class="row thumbs-row">
+      <div class="col-md-1 text-right">
+        <i class="material-icons"
+          (click)="onThumbsScroll('left')">keyboard_arrow_left</i>
+      </div>
+      <div #thumbs class="col-md-10 thumbs">
+        <ng-container *ngFor="let cat of files">
+          <ng-container *ngFor="let file of cat.list">
+            <span *ngIf="file.isImage" class="file-thumb">
+              <img [src]="generateFileLink(file.generatedFileName)"
+                  alt="" (click)="onSelectImage(file)">
+              </span>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="col-md-1 text-left">
+        <i class="material-icons"
+          (click)="onThumbsScroll('right')">keyboard_arrow_right</i>
+      </div>
+    </div>
+  </div>

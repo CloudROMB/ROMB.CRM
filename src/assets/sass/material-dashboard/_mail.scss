@@ -1,0 +1,10 @@
+.show-quotes-link {
+  color: #00bcd4;
+  border-bottom-style: dotted;
+  border-bottom-width: 1px;
+  cursor: pointer;
+
+  &:hover {
+    color: red;
+  }
+}

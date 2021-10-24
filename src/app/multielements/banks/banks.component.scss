@@ -1,0 +1,70 @@
+.mel-row {
+  border-style: dotted;
+  border-width: 1px;
+  border-color: #AAA;
+  border-radius: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+
+  &.contact-row-text {
+    font-size: 12px;
+
+    .row {
+      margin: 0;
+      font-size: 12px;
+    }
+  }
+
+  .links-row {
+    padding: 8px;
+  }
+
+  .form-group {
+    font-size: 12px;
+
+    //margin: 0;
+
+    .form-control {
+      font-size: 12px;
+    }
+  }
+}
+
+.mel-remove-link {
+  color: red;
+}
+
+.mel-add-link {
+  color: green;
+}
+
+.multi-element-link {
+  border-bottom-style: dashed;
+  border-bottom-width: 1px;
+  font-size: 12px;
+  margin-right: 16px;
+  margin-left: 16px;
+  cursor: pointer;
+}
+
+.padding0 {
+  padding: 0 !important;
+}
+
+.margin0 {
+  margin: 0 !important;
+}
+
+.fileinput .thumbnail {
+  display: inline-block;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+  max-width: 250px;
+
+  &.img-circle{
+    border-radius: 50%;
+    max-width: 100px;
+  }
+}

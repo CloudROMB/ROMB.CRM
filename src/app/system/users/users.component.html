@@ -1,0 +1,146 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        #mainList
+        [source]="source"
+        [itemStructure]="doc"
+        (beforeSave)="beforeSave($event)"
+        (editClick)="editClick($event)"
+        (afterOpen)="afterOpen($event)">
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #form="ngForm" class="dt-card-form">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group label-floating">
+                <label class="control-label">Логин для входа в CRM</label>
+                <input [(ngModel)]="item.login" name="loginItem"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group label-floating">
+                <label class="control-label">
+                  {{item.passHash?'Пароль *** указан. Для изменения введите новый здесь':
+                  'Введите пароль (min 8 символов)'}}</label>
+                <input [(ngModel)]="item.password" name="itemPass"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group bmd-form-group label-floating">
+                <div class="input-group">
+                  <label class="control-label">ФИО пользователя</label>
+                  <input [ngModel]="getFullName()" name="itemFIO"
+                         daData [suggType]="dataTable.suggType.NAME"
+                         (daSelect)="selectUserName($event)"
+                         type="text" class="form-control">
+                  <span class="input-group-btn" style="padding: 0; width: fit-content;">
+                    <button type="button" class="btn btn-just-icon btn-default"
+                            style="margin: 0; padding: 7px;">
+                      {{getGender()}}
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group label-floating">
+                <label class="control-label">Краткое имя, отображаемое в CRM</label>
+                <input [(ngModel)]="item.name" name="nameItem"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field>
+                <mat-select multiple
+                            placeholder="Роль пользователя для доступа к функциям CRM"
+                            [compareWith]="compareRolesWith"
+                            [formControl]="rolesControl"
+                            (change)="roleChange($event)"
+                            [(ngModel)]="item.roles" name="rolesItem">
+                  <mat-select-trigger *ngIf="rolesControl.value">
+                    <span *ngFor="let role of rolesControl.value"
+                          class="mat-select-trigger-chips"
+                          data-background-color="rose">
+                      {{role.code}}
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let role of allRoles" [value]="role">
+                    {{role.name + ' (' + role.code + ')'}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <div class="checkbox">
+                <label [style.color]="(item.active)?'green':'red'"
+                       title="Установите галочку, чтобы активировать пользователя">
+                  <input type="checkbox" [(ngModel)]="item.active"
+                         name="itemActive">Пользователь <strong>{{getActiveTitle()}}</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="checkCredential('admin')">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Хэш пароля</label>
+                <input [(ngModel)]="item.passHash" name="itemHash"
+                       readonly
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- COMPANY -->
+            <div class="col-sm-6">
+              <romb-ref-select #rspartner
+                               source="partners"
+                               label="Выберите компанию пользователя"
+                               [rcValue]="item.partner"
+                               (valueCleared)="changePartner($event)"
+                               (selected)="changePartner(item, $event)"
+              >
+              </romb-ref-select>
+            </div>
+
+            <!-- DEPARTMENT -->
+            <div class="col-sm-6">
+              <romb-ref-select #rsdepartment
+                               source="departments"
+                               label="Выберите точку продаж / подразделение"
+                               [listCriteria]="departmentParent"
+                               [rcValue]="item.department"
+                               (selected)="selectDepartment(item, $event)"
+                               (closeModalSelect)="mainList.closeExernalModalSelect($event)"
+              >
+              </romb-ref-select>
+            </div>
+          </div>
+
+          <!-- COMMENT -->
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Комментарий</label>
+                <input [(ngModel)]="item.comment" name="itemComment"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

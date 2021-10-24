@@ -1,0 +1,109 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-right: 0;
+  margin-left: 0;
+
+  .form-control {
+    padding: 0;
+    font-size: 13px;
+    height: 20px;
+    &[name=orderGoodsItem], &[name=commentItem] {
+      height: 40px;
+    }
+  }
+
+
+  // .form-control[name=orderGoodsItem] {
+  //   height: 40px;
+  // }
+
+  .input-group {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .form-datepicker {
+    width: auto;
+  }
+
+  .form-select {
+    width: 100%;
+  }
+  h6 {
+    margin: 2px 0;
+  }
+  h6.partner-info-header {
+    margin-bottom: 15px;
+  }
+}
+
+mat-form-field.mat-form-field, .form-group {
+  border: 3px solid #dcdcdc;
+  border-radius: 10px;
+  margin: 5px 0;
+  padding: 5px;
+  &:hover {
+    border-color: #e3ff00;
+  }
+}
+
+.form-group label.control-label {
+  margin: 3px;
+}
+
+.credit-application-container {
+  margin: 0 15px!important;
+  padding: 8px 20px!important;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.agreement-container {
+  padding-top: 15px;
+}
+
+.agreement-container .text-info {
+  font-size: 12px;
+}
+
+.agreement-container .checkbox {
+  margin: 1px 0;
+}
+
+.agreement-container .checkbox label {
+  font-size: 12px;
+  color: #454545;
+}
+
+.matselect-placeholder::mat-select-placeholder {
+  font-size: 10px;
+}
+
+.instruction-container .instruction-head img {
+  width: 50px;
+  height: auto;
+}
+
+.instruction-container .instruction-note {
+  font-size: 13px;
+}
+
+.instruction-container .instruction-text, .instruction-container .concent-note {
+  font-size: 12px;
+}
+
+.instruction-container .row {
+  margin: 15px 5px;
+}
+
+.instruction-container .row.concent-header {
+  margin-top: 30px;
+}
+
+.instruction-container .concent-header img {
+  width: 40px;
+  height: auto;
+}

@@ -1,0 +1,104 @@
+<tr class="data-table-row"
+    [style.background-color]="getRowColor()"
+    [class.row-odd]="index % 2===0"
+    [class.row-even]="index % 2===1"
+    [class.selected]="selected"
+    [class.row-selected]="selected"
+    [class.clickable]="dtView.selectOnRowClick"
+    (dblclick)="rowDoubleClicked($event)"
+    (click)="rowClicked($event)"
+    (contextmenu)="rowClicked($event)"
+>
+  <!-- расширяемый ряд -->
+  <td [hidden]="!dtView.showExpandableRows"
+      (click)="expanded = !expanded; $event.stopPropagation()"
+      class="row-expand-button"
+  >
+    <fa name="caret-right" *ngIf="!expanded"></fa>
+    <fa name="caret-down" *ngIf="expanded"></fa>
+  </td>
+
+  <!-- чекбоксы -->
+  <td [hidden]="!dtView.showSelectColumn" class="select-column">
+    <input type="checkbox" [(ngModel)]="selected"/>
+  </td>
+
+  <!-- индексы -->
+  <td [hidden]="!dtView.showIndexColumn"
+      class="index-column"
+      [textContent]="displayIndex">
+  </td>
+
+  <!-- колонки метаданных -->
+  <td *ngFor="let col of columns"
+      [title]="getColumnTooltip(item, col)"
+      [hidden]="!col.visible"
+      (click)="cellClicked(item[col.property], col, $event)"
+      [ngClass]="getCellClassObject(col)"
+      [class]="getCellClass(col)"
+      [align]="col.align"
+      [style.background-color]="getCellColor(col)"
+  >
+    <div *ngIf="col.templateCell===false"
+         [textContent]="item[col.property]"></div>
+    <div *ngIf="col.templateCell !== false">
+      <!-- OBJECT -->
+      <!--<span *ngIf="col && col.type===cellsTypes.object"-->
+            <!--[textContent]="getObjectPresentation(col, item)"-->
+      <!--&gt;</span>-->
+
+      <!-- REFERENCE -->
+      <span *ngIf="col && col.type===cellsTypes.reference"
+            [textContent]="getReferencePresentation(col, item[col.property])"
+      ></span>
+
+      <!-- STRING -->
+      <span
+          *ngIf="col.cutSize && col.type && col.type===cellsTypes.string"
+          [textContent]="item[col.property] | cutCell:col.cutSize"
+      ></span>
+      <span
+          *ngIf="(!col.cutSize && (!col.type || col.type===cellsTypes.string))"
+          [textContent]="item[col.property]"
+      ></span>
+
+      <!-- DATE -->
+      <span *ngIf="col.type===cellsTypes.date">{{item[col.property] | date:'dd.MM.yyyy':'+03'}}</span>
+      <span *ngIf="col.type===cellsTypes.dateTime">{{item[col.property] | date:'dd.MM.yyyy HH:mm':'+03'}}</span>
+
+      <!-- HTML -->
+      <span
+          *ngIf="(col.type===cellsTypes.html)"
+          [innerHtml]="item[col.property] | safeHtml"></span>
+
+      <!-- BOOLEAN -->
+      <fa name="check"
+          [spin]="false"
+          *ngIf="col.type===cellsTypes.boolean && item[col.property]===true"
+      ></fa>
+      <fa name="times-circle"
+          [spin]="false"
+          [inverse]=""
+          *ngIf="col.type===cellsTypes.boolean && item[col.property]===false"
+          style="color: lightgrey;"
+      ></fa>
+
+      <!-- ICON -->
+      <fa [name]="col.trueIcon"
+          *ngIf="col.type===cellsTypes.icon && col.trueIcon && item[col.property]===true"></fa>
+      <fa name="check"
+          *ngIf="col.type===cellsTypes.icon && !col.trueIcon && item[col.property]===true"></fa>
+
+      <fa [name]="col.falseIcon"
+          *ngIf="col.type===cellsTypes.icon && col.falseIcon && item[col.property]===false"></fa>
+      <fa name="times-circle"
+          *ngIf="col.type===cellsTypes.icon && !col.falseIcon && item[col.property]===false"></fa>
+    </div>
+  </td>
+</tr>
+
+<tr *ngIf="expanded && canExpandRow()" class="row-expansion">
+  <td [attr.colspan]="columnCount()" class="col-expansion">
+    <div [textContent]="getTooltip(true)"></div>
+  </td>
+</tr>

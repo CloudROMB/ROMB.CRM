@@ -1,0 +1,96 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "FRESHCREDIT.CRM"
+  },
+  "apps": [
+    {
+      "root": "src",
+      "outDir": "dist",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
+      "index": "index.html",
+      "main": "main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "romb",
+      "styles": [
+        "../node_modules/font-awesome/scss/font-awesome.scss",
+        "../node_modules/roboto-fontface/css/roboto/roboto-fontface.css",
+        "../node_modules/material-design-icons/iconfont/material-icons.css",
+        "../node_modules/suggestions-jquery/dist/css/suggestions.css",
+        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "../node_modules/sweetalert2/dist/sweetalert2.css",
+        "../node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
+        "../node_modules/ng-pick-datetime/assets/style/picker.min.css",
+        "./assets/sass/material-dashboard.scss"
+      ],
+      "scripts": [
+        "../node_modules/hammerjs/hammer.min.js",
+        "../node_modules/jquery/dist/jquery.js",
+        "../node_modules/suggestions-jquery/dist/js/jquery.suggestions.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.js",
+        "../node_modules/bootstrap-material-design/dist/js/ripples.min.js",
+        "../node_modules/bootstrap-material-design/dist/js/material.min.js",
+        "../node_modules/arrive/src/arrive.js",
+        "../node_modules/moment/moment.js",
+        "../node_modules/chartist/dist/chartist.js",
+        "../node_modules/chartist-plugin-zoom/dist/chartist-plugin-zoom.js",
+        "../node_modules/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
+        "../node_modules/bootstrap-notify/bootstrap-notify.js",
+        "../node_modules/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js",
+        "../node_modules/nouislider/distribute/nouislider.min.js",
+        "../node_modules/bootstrap-select/dist/js/bootstrap-select.js",
+        "../node_modules/datatables/media/js/jquery.dataTables.js",
+        "../node_modules/datatables.net-bs/js/dataTables.bootstrap.js",
+        "../node_modules/datatables.net-responsive/js/dataTables.responsive.js",
+        "../node_modules/fullcalendar/dist/fullcalendar.js",
+        "../node_modules/fullcalendar/dist/locale/ru.js",
+        "../node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.js",
+        "../node_modules/jasny-bootstrap/dist/js/jasny-bootstrap.min.js",
+        "../node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js",
+        "../node_modules/jvectormap/jquery-jvectormap.min.js",
+        "../node_modules/jvectormap/lib/jquery-mousewheel.js",
+        "../node_modules/jvectormap/tests/assets/jquery-jvectormap-map.js",
+        "../node_modules/jvectormap/tests/assets/jquery-jvectormap-world-mill-en.js",
+        "../node_modules/sweetalert2/dist/sweetalert2.js",
+        "../node_modules/jquery-validation/dist/jquery.validate.min.js"
+      ],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    }
+  ],
+  "e2e": {
+    "protractor": {
+      "config": "./protractor.conf.js"
+    }
+  },
+  "lint": [
+    {
+      "project": "src/tsconfig.app.json"
+    },
+    {
+      "project": "src/tsconfig.spec.json"
+    },
+    {
+      "project": "e2e/tsconfig.e2e.json"
+    }
+  ],
+  "test": {
+    "karma": {
+      "config": "./karma.conf.js"
+    }
+  },
+  "defaults": {
+    "styleExt": "scss",
+    "component": {
+    }
+  }
+}

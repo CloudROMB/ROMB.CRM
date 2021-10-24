@@ -1,0 +1,45 @@
+.check-valid {
+  height: 66px;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    fa {
+      flex: 1;
+      font-size: 32px;
+      text-align: center;
+      color: #555555;
+    }
+  }
+}
+
+.form-group.multiselect {
+  margin-top: 8px;
+}
+.input-group.multiselect {
+  display: flex;
+  align-items: baseline;
+
+  label {
+    margin-right: 12px;
+  }
+
+  angular2-multiselect {
+    width: 100%;
+
+    .c-token {
+      background-color: #000;
+    }
+
+    .c-btn {
+      padding: 4px;
+    }
+
+    label:before {
+      color: #000;
+    }
+  }
+}

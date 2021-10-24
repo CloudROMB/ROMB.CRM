@@ -1,0 +1,136 @@
+<div class="logo" (click)="sidebarMinMax()">
+  <div class="logo-normal">
+    <a href="javascript:void(0)" class="simple-text">
+      FreshCredit</a>
+  </div>
+
+  <div class="logo-img">
+    <img src="/assets/img/logo/logo.png"/>
+  </div>
+</div>
+
+<div class="sidebar-wrapper">
+
+  <div class="user">
+    <div class="photo">
+      <img src="/assets/img/faces/v_kapyushone_bez_lica.jpg"/>
+    </div>
+    <div class="info">
+      <a data-toggle="collapse"
+         href="#collapseExample"
+         class="collapsed">
+          <span *ngIf="user && user.name; else elseBlock"
+                [title]="user.name">
+              {{user.name | cutCell:18}}
+              <b class="caret"></b>
+          </span>
+        <ng-template #elseBlock>Пользователь
+          <b class="caret"></b>
+        </ng-template>
+      </a>
+      <div class="collapse" id="collapseExample">
+        <ul class="nav">
+          <li style="display: block;">
+            <a routerLink="/settings/userpage">
+              <i class="material-icons">person</i>
+              <span class="sidebar-normal">Мой профиль</span>
+            </a>
+          </li>
+          <li style="display: block;">
+            <a routerLink="/settings/system">
+              <i class="material-icons">settings_applications</i>
+              <span class="sidebar-normal">Настройки системы</span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" (click)="logOut()">
+              <i class="material-icons">exit_to_app</i>
+              <span class="sidebar-normal">Выйти из CRM</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isMobileMenu()">
+    <form class="navbar-form navbar-right" role="search">
+      <div class="form-group form-search is-empty">
+        <input class="form-control" placeholder="Поиск" type="text">
+        <span class="material-input"></span>
+        <span class="material-input"></span>
+      </div>
+      <button class="btn btn-white btn-round btn-just-icon" type="submit">
+        <i class="material-icons">search</i>
+        <div class="ripple-container"></div>
+      </button>
+    </form>
+    <ul class="nav nav-mobile-menu">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          <i class="material-icons">notifications</i>
+          <p class="hidden-lg hidden-md">Событий ({{events.length}})
+
+            <b class="caret"></b>
+          </p>
+          <div class="ripple-container"></div>
+        </a>
+        <ul class="dropdown-menu">
+          <li *ngFor="let item of events; index as i">
+            <a href="{{item.link}}">{{item.message}}</a>
+          </li>
+        </ul>
+      </li>
+      <li class="separator hidden-lg hidden-md"></li>
+    </ul>
+  </div>
+  <div class="nav-container">
+    <div class="loader" *ngIf="!(menuItems && menuItems.length > 0)">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="15" fill="none" stroke-width="4" stroke-miterlimit="10"/>
+      </svg>
+    </div>
+    <ul class="nav">
+      <li routerLinkActive="active" *ngFor="let menuitem of menuItems">
+        <!--If is a single link-->
+        <a [routerLink]="[menuitem.path]"
+           *ngIf="menuitem.type === 'link'"
+           [title]="menuitem.descr || ''">
+          <i *ngIf="menuitem.icontype"
+             class="material-icons">{{menuitem.icontype}}</i>
+          <fa *ngIf="menuitem.faicon"
+              [name]="menuitem.faicon"></fa>
+          <p>{{menuitem.title}}</p>
+        </a>
+
+        <!--If it have a submenu-->
+        <a *ngIf="menuitem.type==='sub'"
+           data-toggle="collapse" href="#{{menuitem.collapse}}"
+           [title]="menuitem.descr || ''" (click)="updatePS($event)">
+          <i *ngIf="menuitem.icontype"
+             class="material-icons">{{menuitem.icontype}}</i>
+          <fa *ngIf="menuitem.faicon"
+              [name]="menuitem.faicon"></fa>
+          <p>{{menuitem.title}}<b class="caret"></b></p>
+        </a>
+
+        <!--Display the submenu items-->
+        <div id="{{menuitem.collapse}}" class="collapse" *ngIf="menuitem.type === 'sub'">
+          <ul class="nav">
+            <li routerLinkActive="active" class="sub-menu"
+                *ngFor="let childitem of menuitem.children">
+              <a [routerLink]="[menuitem.path, childitem.path]"
+                 [title]="childitem.descr || ''">
+                <i *ngIf="childitem.icontype"
+                   class="material-icons">{{childitem.icontype}}</i>
+                <fa *ngIf="childitem.faicon"
+                    [name]="childitem.faicon"></fa>
+                <span class="sidebar-normal">{{childitem.title}}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+</div>

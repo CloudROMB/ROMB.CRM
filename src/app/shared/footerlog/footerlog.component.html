@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-content">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseLog"
+                 aria-expanded="false"
+                 aria-controls="collapseLog">
+                <h4 class="panel-title">
+                  Журнал событий
+                  <i class="material-icons">keyboard_arrow_down</i>
+                </h4>
+              </a>
+            </div>
+            <div id="collapseLog" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="content table-responsive">
+                      <table class="table" id="footerlog">
+                        <thead class="text-primary">
+                        <tr>
+                          <th *ngFor="let cell of log.headerRow">{{ cell }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let row of log.dataRows">
+                          <!--<td (click)="leftPage({{row[6]}})">{{row[0]}}</td>-->
+                          <td (click)="leftPage(row[6])">{{row[0]}}</td>
+                          <td>{{row[1]}}</td>
+                          <td>{{row[2]}}<br>{{row[3]}}</td>
+                          <td class="text-primary"><a target="_self" routerLink="{{row[6]}}"> {{row[4]}}<br>{{row[5]}}</a></td>
+                        </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

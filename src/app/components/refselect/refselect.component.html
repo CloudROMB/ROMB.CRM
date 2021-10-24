@@ -1,0 +1,69 @@
+<mat-form-field>
+  <input matInput type="text" readonly
+         [id]="formElementName"
+         [title]="rcTitle"
+         [disabled]="rcDisabled"
+         [name]="formElementName"
+         [ngModel]="getRefObjectPresentation(rcValue)"
+         placeholder="{{label}}">
+  <!--<button mat-mini-fab matSuffix aria-label="Очистить значение"-->
+  <!--title="Очистить значение"-->
+  <!--color="warn">-->
+  <!--<mat-icon>close</mat-icon>-->
+  <!--</button>-->
+  <!--<button mat-mini-fab matSuffix aria-label="Выбрать из справочника"-->
+  <!--title="Выбрать из справочника"-->
+  <!--color="primary">-->
+  <!--<mat-icon>touch_app</mat-icon>-->
+  <!--</button>-->
+  <!--<mat-icon matSuffix color="warn" *ngIf="getRefObjectPresentation(rcValue)"-->
+  <mat-icon matSuffix color="warn"
+            title="Очистить значение"
+            [class.hidden]="rcDisabled"
+            (click)="clearValue($event)">
+    <fa name="close"></fa>
+  </mat-icon>
+  <mat-icon matSuffix color="primary"
+            title="Выбрать из справочника"
+            [class.hidden]="rcDisabled"
+            (click)="openModalDataTable($event)">
+    <fa name="hand-pointer-o"></fa>
+  </mat-icon>
+</mat-form-field>
+
+<!--<div class="form-group label-floating" style="display: flex; align-items: baseline;">-->
+<!--<label class="control-label">{{label}}</label>-->
+<!--<input [name]="formElementName"-->
+<!--[id]="formElementName"-->
+<!--[title]="rcTitle"-->
+<!--[disabled]="rcDisabled"-->
+<!--[ngModel]="getRefObjectPresentation(rcValue)"-->
+<!--readonly-->
+<!--type="text" class="form-control">-->
+<!--<button type="button" class="btn btn-default btn-just-icon select-reference"-->
+<!--title="Очистить значение"-->
+<!--[class.hidden]="rcDisabled"-->
+<!--(click)="clearValue($event)">-->
+<!--<fa name="close"></fa>-->
+<!--</button>-->
+<!--<button type="button" class="btn btn-info btn-just-icon select-reference"-->
+<!--title="Выбрать из справочника"-->
+<!--[class.hidden]="rcDisabled"-->
+<!--(click)="openModalDataTable($event)">-->
+<!--<fa name="hand-pointer-o"></fa>-->
+<!--</button>-->
+<!--</div>-->
+
+<div #listModal class="document-list-modal" [style.display]="visibleModal?'flex':'none'">
+  <romb-datatable-lite
+      [source]="source"
+      [dtView]="dtView"
+      [customColsHide]="customColsHide"
+      [dtRequest]="dtReqParams"
+      [selectMode]="true"
+      [keyState]="dtKeysFocus.none"
+      [contextMenuItems]="contextMenuModal"
+      (selectItemClick)="refElementSelected($event)"
+      (cancelSelectClick)="refElementCancelSelect()">
+  </romb-datatable-lite>
+</div>

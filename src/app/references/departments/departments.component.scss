@@ -1,0 +1,11 @@
+.main-content {
+    mat-card-title.mat-card-title{
+        font-size: 18px;
+    }
+    .mat-list-item span {
+        font-size: 14px;
+        &.item-title{
+            margin-right: 10px;
+        }
+    }
+}        

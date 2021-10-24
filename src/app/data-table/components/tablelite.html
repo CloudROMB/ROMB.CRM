@@ -1,0 +1,250 @@
+<div class="datatable-wrapper">
+  <div class="card datatable-list">
+    <div class="card-content">
+      <div class="data-table-wrapper"
+           *ngIf="dtView">
+        <romb-dt-header *ngIf="dtView && dtView.showHeader"
+                        [headerTemplate]="dataTableHeader">
+        </romb-dt-header>
+
+        <div class="data-table-box">
+          <table class="table table-condensed data-table table-bordered table-hover">
+            <thead>
+            <tr class="dt-header-row">
+              <!-- разворачиваемая колонка -->
+              <th class="expand-column-header"
+                  [hidden]="!dtView.showExpandableRows"
+                  title="Развернуть/свернуть комментарии строк"
+                  (click)="togleExpandRows()">
+                <span class="fa fa-sort column-sortable-icon"></span>
+              </th>
+
+              <!-- чек-боксы -->
+              <th class="select-column-header" [hidden]="!dtView.showSelectColumn">
+                <input [hidden]="!dtView.multiSelect" type="checkbox" [(ngModel)]="selectAllCheckbox"/>
+                <fa name="check-square"></fa>
+              </th>
+
+              <!-- индекс строки -->
+              <th [hidden]="!dtView.showIndexColumn" class="index-column-header">
+                <span [textContent]="checkEmptyValue(dtView.indexColumnHeader)"></span>
+              </th>
+
+              <!-- пользовательские колонки -->
+              <th *ngFor="let column of columns" #th
+                  [hidden]="!isColumnVisible(column)"
+                  (click)="headerClicked(column, $event)"
+                  [ngClass]="column.styleClass"
+                  [class.sortable]="column.sortable"
+                  [class.resizable]="column.resizable"
+                  class="column-header"
+                  [style.width]="column.width | px"
+                  [title]="column.header"
+              >
+                <span *ngIf="column.headerIcon">
+                  <fa [name]="column.headerIcon" [stack]="true"></fa>
+                </span>
+                <span
+                    *ngIf="!column.headerIcon && !column.templateHeader"
+                    [textContent]="checkEmptyValue(column.header)">
+                </span>
+                <span *ngIf="!column.headerIcon && column.templateHeader"
+                      [style.color]="'rgb('+column.headerColor+')'"
+                      [textContent]="checkEmptyValue(column.header)">
+                  </span>
+                <span class="fa fa-sort-alpha-down"></span>
+                <span class="column-sort-icon" *ngIf="column.sortable">
+                  <span class="fa fa-sort column-sortable-icon"
+                        [hidden]="column.property === dtRequest.sortBy">
+                  </span>
+                  <span [hidden]="column.property !== dtRequest.sortBy">
+                      <fa name="sort-amount-asc" class="text-info" *ngIf="dtRequest.sortAsc"></fa>
+                      <fa name="sort-amount-desc" class="text-danger" *ngIf="!dtRequest.sortAsc"></fa>
+                  </span>
+                </span>
+                <span
+                    *ngIf="column.resizable"
+                    class="column-resize-handle"
+                    (mousedown)="resizeColumnStart($event, column, th)">
+                </span>
+              </th>
+            </tr>
+            </thead>
+
+            <!-- строки таблицы -->
+            <tbody class="dt-row-wrapper" *ngFor="let row of rows; let idx=index">
+            <tr class="data-table-row"
+                [title]="row.title"
+                [style.background-color]="row.rowColor"
+                [class.row-odd]="idx % 2===0"
+                [class.row-even]="idx % 2===1"
+                [class.selected]="row.selected"
+                [class.row-selected]="row.selected"
+                [class.clickable]="dtView.selectOnRowClick"
+                (click)="rowClicked(row, $event)"
+                (dblclick)="rowDoubleClicked(row, $event)"
+                (contextmenu)="rowClicked(row, $event)">
+
+              <!-- расширяемый ряд -->
+              <td [hidden]="!dtView.showExpandableRows"
+                  (click)="expandedRowClicked(row)"
+                  class="row-expand-button dt-cell">
+                <fa name="caret-right" *ngIf="!row.expanded"></fa>
+                <fa name="caret-down" *ngIf="row.expanded"></fa>
+              </td>
+
+              <!-- чекбоксы -->
+              <td [hidden]="!dtView.showSelectColumn"
+                  class="select-column dt-cell">
+                <input type="checkbox" [ngModel]="row.selected"/>
+              </td>
+
+              <!-- индексы -->
+              <td [hidden]="!dtView.showIndexColumn"
+                  class="index-column dt-cell"
+                  [textContent]="checkEmptyValue(row.showIndex)">
+              </td>
+
+              <!-- колонки метаданных -->
+              <!--<td *ngFor="let col of row.columns"-->
+              <!--[hidden]="!col.visible"-->
+              <!--[ngClass]="col.ngClass"-->
+              <!--[class]="col.class"-->
+              <!--[align]="col.align"-->
+              <!--[style.color]="col.color"-->
+              <!--[style.background-color]="col.backColor"-->
+              <!--(click)="cellClicked(row, col, $event)">-->
+              <!--&lt;!&ndash;<div [innerHTML]="col.value | safeHtml"></div>&ndash;&gt;-->
+              <!--<div [innerHTML]="col.value"></div>-->
+              <!--&lt;!&ndash;<div [textContent]="checkEmptyValue(col.value)"></div>&ndash;&gt;-->
+              <!--&lt;!&ndash;<fa *ngIf="col.icon" [name]="col.icon" [spin]="false"></fa>&ndash;&gt;-->
+              <!--</td>-->
+              <td
+                  *ngFor="let col of row.columns"
+                  [title]="col.title"
+                  [hidden]="!isColumnVisible(col)"
+                  [ngClass]="checkEmptyProperty(col.ngClass)"
+                  [class]="checkEmptyProperty(col.class)+' dt-cell'"
+                  [style.color]="checkEmptyProperty(col.color)"
+                  [style.background-color]="checkEmptyProperty(col.backColor)"
+                  [style.textAlign]="checkEmptyProperty(col.align)"
+                  (click)="cellClicked(row, col, $event)"
+                  (dblclick)="cellDoubleClicked(row, col, $event)"
+              >
+                <div [innerHTML]="checkEmptyValue(col.value)"></div>
+              </td>
+            </tr>
+
+            <tr *ngIf="row.expanded" class="data-table-row row-expansion">
+              <td [attr.colspan]="columnCount"
+                  class="col-expansion"
+                  [textContent]="getTooltip(row)">
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <romb-dt-pagination *ngIf="dtView && dtView.showPagination"></romb-dt-pagination>
+
+        <div class="loading-cover dt-loading-cover"
+             *ngIf="dtView && dtView.showReloading && reloading">
+          <div class="loader dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+              <circle class="path" cx="50" cy="50" r="15" fill="none"
+                      stroke-width="4" stroke-miterlimit="10"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<romb-contextmenu
+    menuClientClassName="dt-row-wrapper"
+    [items]="contextMenuItems"
+    [source]="source"
+    (selectMenuItem)="menuItemSelected($event)"
+></romb-contextmenu>
+
+<!--<div class="document-card-modal" *ngIf="dtView.type!==dtViewTypes.list">-->
+<div class="document-card-modal"
+     *ngIf="dtView"
+     [style.display]="dtView && dtView.type===dtViewTypes.list?'none':'flex'">
+  <div class="card document-card">
+    <div class="card-header card-header-icon"
+         *ngIf="dtView && dtView.type===dtViewTypes.new" data-background-color="rose">
+      <fa [name]="getCardHeaderIcon()" [stack]="true"></fa>
+    </div>
+    <div class="card-header card-header-icon"
+         *ngIf="dtView.type===dtViewTypes.view" data-background-color="purple">
+      <fa [name]="getCardHeaderIcon()" [stack]="true"></fa>
+    </div>
+    <div class="card-header card-header-icon"
+         *ngIf="dtView.type===dtViewTypes.edit" data-background-color="orange">
+      <fa [name]="getCardHeaderIcon()" [stack]="true"></fa>
+    </div>
+    <div class="dt-card-content-header">
+      <div class="col-header left">
+        <h4 class="card-title" [textContent]="getCardHeaderTitle()"></h4>
+      </div>
+      <div class="col-header right">
+        <p *ngIf="changed" class="text-danger card-changed">изменено</p>
+        <button class="btn btn-info btn-just-icon btn-round card-btn-close"
+                *ngIf="item && item._id"
+                (click)="updateItemInfo(item._id)"
+                title="Обновить карточку (Alt+R)">
+          <fa name="refresh"></fa>
+        </button>
+        <button class="btn btn-success btn-just-icon btn-round card-btn-close"
+                *ngIf="dtView.type!==dtViewTypes.view"
+                (click)="saveCard()"
+                title="Сохранить и закрыть (Ctrl+Enter)">
+          <fa name="save"></fa>
+        </button>
+        <button class="btn btn-danger btn-just-icon btn-round card-btn-close"
+                (click)="closeCard(true)"
+                title="Закрыть без сохранения (Escape)">
+          <fa name="close"></fa>
+        </button>
+      </div>
+    </div>
+    <!-- <div class="loader dt-loader" *ngIf="!(newItem || (item && item._id))">
+      <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="15" fill="none" stroke-width="4" stroke-miterlimit="50"/>
+      </svg>
+    </div> -->
+    <div class="card-content dt-card-content">
+      <div
+          *ngIf="item"
+          [ngTemplateOutlet]="dataTableCard"
+          [ngTemplateOutletContext]="{item: item}">
+      </div>
+    </div>
+
+    <div class="card-footer dt-card-footer">
+      <p class="card-id" *ngIf="item && item._id" title="Скопировать ссылку на карточку"
+         (click)="showIDInput=true">
+        <fa name="link"></fa>
+        <b>ID записи: </b>
+        <span *ngIf="!showIDInput"
+              [textContent]="checkEmptyValue(item._id)"></span>
+        <input *ngIf="showIDInput" type="text"
+               readonly style="border-width: 0"
+               (click)="copyCardLink($event)"
+               [value]="getCardLink(item._id)">
+      </p>
+      <p class="doc-author" *ngIf="item && item.author" [title]="shared.getObjJSON(item.author)">
+        <strong>Создал:</strong>
+        <span [textContent]="getRefObjectPresentation(item.author)"></span>
+        <span [textContent]="checkEmptyValue(item.stamp | date:'dd.MM.yyyy HH:mm:ss':'+03')"></span>
+      </p>
+      <p class="doc-author" *ngIf="item && item.editor" [title]="shared.getObjJSON(item.editor)">
+        <strong>Изменил:</strong>
+        <span [textContent]="getRefObjectPresentation(item.editor)"></span>
+        <span [textContent]="checkEmptyValue(item.changed | date:'dd.MM.yyyy HH:mm:ss':'+03')"></span>
+      </p>
+    </div>
+  </div>
+</div>

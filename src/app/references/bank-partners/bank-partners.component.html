@@ -1,0 +1,94 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+        #mainList
+        [source]="source"
+        (afterOpen)="afterOpen($event)"
+        (beforeSave)="beforeSave($event)"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form action="#" class="dt-card-form">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="form-group label-floating">
+                <label class="control-label" for="bankName">Название банка (подсказка)</label>
+
+                <input name="bankName" id="bankName"
+                       daData [suggType]="dataTable.suggType.BANK"
+                       (daSelect)="selectBank($event)"
+                       [(ngModel)]="item.name"
+                       type="text" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group label-floating">
+                <label class="control-label" for="bikBank">БИК (подсказка)</label>
+                <input name="bikBank" id="bikBank"
+                       daData [suggType]="dataTable.suggType.BANK"
+                       (daSelect)="selectBank($event)"
+                       [(ngModel)]="item.bik"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <input
+                    matInput
+                    [(ngModel)]="item.ordersEmail" name="ordersEmailItem"
+                    placeholder="E-mail для отправки заявок в банк"
+                    type="email">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- standard field CHECKBOX -->
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label [style.color]="(item.applyOrders)?'green':'red'">
+                  <input type="checkbox"
+                         [(ngModel)]="item.applyOrders" name="applyOrdersItem">
+                  Работает
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label [style.color]="(item.active)?'green':'red'">
+                  <input type="checkbox"
+                         [(ngModel)]="item.active" name="activeItem">
+                  Банк включен (<strong>{{mainList.getActiveTitle()}}</strong>)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group label-floating">
+                <label class="control-label">Комментарий</label>
+                <input [(ngModel)]="item.comment" name="commentItem"
+                       type="text" class="form-control">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <romb-key-value
+                  textTitle="Полные реквизиты банка"
+                  [textSize]="8"
+                  [mulValue]="item.bank"
+                  [editJSON]="false"
+                  (multiChange)="dataTable.changeCardProperty($event, 'credentials')">
+              </romb-key-value>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

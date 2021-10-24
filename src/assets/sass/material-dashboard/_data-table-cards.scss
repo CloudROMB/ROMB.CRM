@@ -1,0 +1,300 @@
+.document-card-modal {
+  margin: 0;
+  padding: 24px 16px 16px 16px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1033;
+  overflow: hidden;
+  display: flex;
+
+  .document-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+
+    .dt-card-content-header {
+      padding: 10px 10px 0 0;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      flex-direction: row;
+
+      .col-header.left {
+        flex: auto;
+        text-align: left;
+
+        .card-title {
+          padding: 0 !important;
+        }
+
+        .card-id {
+          font-size: 10px !important;
+          cursor: pointer;
+          display: flex;
+          align-items: baseline;
+
+          &:hover {
+            color: dodgerblue;
+          }
+
+          * {
+            margin: 0 8px;
+          }
+
+          input {
+            font-size: 10px;
+            padding: 0;
+            margin: 0 8px;
+            flex: auto;
+          }
+
+          .form-group {
+            font-size: 10px;
+            padding: 0;
+            margin: 0;
+
+            input {
+              font-size: 10px;
+              padding: 0;
+              margin: 0 8px;
+              flex: auto;
+            }
+          }
+        }
+      }
+
+      .col-header.right {
+        flex: 1;
+        text-align: right;
+
+        .card-changed {
+          display: inline;
+          margin-right: 16px;
+          border-width: 1px;
+          border-style: dotted;
+          padding: 4px;
+          border-radius: 8px;
+        }
+
+        .card-btn-save {
+          margin-right: 2rem;
+          margin-top: 0;
+        }
+
+        .card-btn-close {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .dt-card-content {
+      display: inline-block;
+      width: 100%;
+      height: calc(100vh - 140px);
+      margin: 0;
+      padding: 0 10px;
+      overflow: hidden;
+
+      //display: inline-block;
+      //width: 100%;
+      //height: 100%;
+      //padding: 0 10px;
+
+
+      .form-group label, .mat-form-field-label {
+        color: steelblue;
+      }
+
+      & .dt-card-form {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        & .card-under-form [class*="col-"] {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        &.tab-form {
+          height: calc(100% - 64px);
+        }
+        &.tab-form-short {
+          height: calc(100% - 128px);
+        }
+
+        .nav.nav-pills {
+          margin: 0;
+
+          .tab-content {
+            max-width: 0;
+          }
+        }
+
+        .card-block {
+          display: block;
+          border-style: dashed;
+          border-width: 1px;
+          //border-color: blueviolet;
+          border-color: cadetblue;
+          //background-color: aliceblue;
+          background-color: #FCFCFC;
+          border-radius: 8px;
+          margin-top: 8px;
+          margin-bottom: 8px;
+          padding: 8px 0 0 0;
+
+          & [class*="col-"] {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+
+          .card-block-collapse {
+            margin-top: 0;
+            margin-bottom: 16px;
+            //padding: 0 0 8px 0;
+          }
+
+          &.alert-danger {
+            background-color: #ffe5e5;
+          }
+
+          &.alert-info {
+            background-color: lightblue;
+          }
+
+          &.alert-success {
+            background-color: lightgreen;
+          }
+
+          .row, .h1, .h2, .h3, .h4, .h5, p {
+            margin: 0;
+          }
+
+          .links-row {
+            padding: 8px;
+          }
+
+          .form-group {
+            font-size: 14px;
+            margin: 0;
+            margin-top: 4px;
+
+            .form-control {
+              font-size: 14px;
+            }
+          }
+        }
+
+        .row {
+          display: flex;
+          flex-direction: row;
+          align-items: baseline;
+          margin-right: 0;
+          margin-left: 0;
+
+          .form-control {
+            padding: 0;
+          }
+
+          .input-group {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+          }
+
+          .form-datepicker {
+            width: auto;
+          }
+
+          .form-select {
+            width: 100%;
+          }
+        }
+
+        .suggestions-addon {
+          display: none;
+        }
+      }
+      & .dt-card-manage-panel {
+        height: 64px;
+      }
+    }
+
+    .dt-card-footer {
+      display: flex;
+      align-items: baseline;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 4px 10px 0;
+      margin: 0 !important;
+      //margin: 0 8px 0 !important;
+      color: #AAA;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+      }
+
+      & > p {
+        text-align: left;
+        font-size: 10px !important;
+        margin: 0;
+        flex: 1;
+        box-sizing: border-box;
+        display: flex;
+        //flex-basis: 30%;
+
+        * {
+          margin: 0 2px;
+        }
+
+        input {
+          flex: auto;
+        }
+
+        .form-group {
+          font-size: 10px !important;
+          padding: 0;
+          margin: 0;
+
+          input {
+            font-size: 10px !important;
+            padding: 0;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.document-list-modal {
+  margin: 0;
+  padding: 24px 16px 16px 16px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  //display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1035;
+  overflow: hidden;
+
+  &.hidden {
+    //display: none;
+  }
+
+  .datatable-wrapper {
+    max-width: 1920px;
+    //padding: 16px;
+  }
+}

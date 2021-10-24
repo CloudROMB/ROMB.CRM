@@ -1,0 +1,23 @@
+<div class="dropup chat-widget">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Сообщения">
+    <button class="btn btn-just-icon btn-round"
+            [ngClass]="connectedClass()">
+      <i class="material-icons">message</i>
+    </button>
+    <span class="notification">{{items.length}}</span>
+  </a>
+  <ul class="dropdown-menu">
+    <li *ngFor="let item of items; index as i">
+      <a *ngIf="item.link" [routerLink]="item.link">
+        <span><b>{{item.sender}}</b></span>
+        <br>
+        {{item.message}}</a>
+    </li>
+    <li role="separator" class="divider"></li>
+    <li>
+      <a (click)="sendMessage($event)"
+         class="new-message"
+      >Написать сообщение</a>
+    </li>
+  </ul>
+</div>

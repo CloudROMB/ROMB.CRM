@@ -1,0 +1,70 @@
+.file-thumb img {
+  height: 70px;
+  width: auto;
+  padding: 5px;
+  cursor: pointer;
+}
+.pre-scrollable {
+    overflow: auto;
+    img {
+      cursor: zoom-in;
+      cursor : -o-zoom-in; 
+      cursor : -moz-zoom-in; 
+      cursor : -webkit-zoom-in;
+      width: auto;
+      &.scrolling{
+        cursor: grab; 
+        cursor : -o-grab; 
+        cursor : -moz-grab; 
+        cursor : -webkit-grab;
+      }
+    }
+}
+.container {
+  width: 100%;
+}
+
+.row.thumbs-row {
+
+  .thumbs {
+    position: relative;
+    display: inline-flex;
+    overflow-x: hidden;
+    bottom: 3px;
+    padding-top: 15px;
+    scroll-behavior: smooth;
+  }
+
+  .col-md-1 {
+    align-self: center;
+    opacity: 0.9;
+    padding: 2px;
+  }
+
+  i {
+    font-size: 40px;
+    cursor: pointer;
+    &:hover {
+      font-weight: bold;      
+    }
+  }
+}
+
+span.image-buttons-span {
+  i {
+    margin:0 6px;
+    &:active {
+      box-shadow: 0px 0px 1px 4px rgba(79, 79, 79, 0.4);
+      border-radius: 3px;
+    }
+  }
+}
+i {
+  cursor: pointer;
+  vertical-align: sub;
+  transition: all 0.2s ease-out;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+}

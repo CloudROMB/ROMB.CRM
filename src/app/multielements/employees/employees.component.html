@@ -1,0 +1,175 @@
+<div class="edit-mode" *ngIf="editMode && mode === 'advanced'">
+  <div class="row">
+    <a class="btn btn-info btn-raised btn-round btn-xs"
+       (click)="editMode=!editMode">{{contactsLabels.viewMode}}</a>
+    <a href="javascript:void(0)" class="btn btn-success btn-raised btn-round btn-xs"
+       (click)="addPerson()">{{contactsLabels.addPerson}}</a>
+  </div>
+  <div class="row mel-row" *ngFor="let person of contactList">
+    <div class="col-md-12">
+      <div class="row links-row">
+        <div class="col-md-12 padding0">
+          <!-- <a *ngIf="!person.company" class="text-info multi-element-link"
+             (click)="addCompany(person)">{{contactsLabels.addCompany}}</a>
+          <a *ngIf="person.company" class="text-danger multi-element-link"
+             (click)="removeCompany(person)">{{contactsLabels.removeCompany}}</a> -->
+          <a *ngIf="!person.comment" class="text-info multi-element-link"
+             (click)="addComment(person)">{{contactsLabels.addComment}}</a>
+          <a *ngIf="person.comment" class="text-danger multi-element-link"
+             (click)="removeComment(person)">{{contactsLabels.removeComment}}</a>
+          <a class="btn btn-danger btn-raised btn-round btn-xs"
+             (click)="removePerson(person)">{{contactsLabels.removePerson}}</a>
+          <a class="btn btn-success btn-raised btn-round btn-xs"
+            (click)="createRegisterPersonModal(person)">{{contactsLabels.registerPerson}}</a>
+        </div>
+      </div>
+
+      <div class="row" id="row-{{person.id}}">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">{{contactsLabels.name}} (подсказка)</label>
+            <input [(ngModel)]="person.name" name="nameItem{{person.id}}"
+                   (change)="changeMultiValue($event)"
+                   daData [suggType]="suggType.NAME"
+                   (daSelect)="selectName($event, person)"
+                   type="text" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="control-label">{{contactsLabels.position}}</label>
+            <input [(ngModel)]="person.position" name="positionItem{{person.id}}"
+                   (change)="changeMultiValue($event)"
+                   type="text" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- <div class="col-md-6">
+          <div class="form-group label-floating">
+            <label class="control-label">{{contactsLabels.company}}</label>
+            <input [(ngModel)]="person.company" name="companyItem{{person.id}}"
+                   (change)="changeMultiValue($event)"
+                   type="text" class="form-control">
+          </div>
+        </div> -->
+        <div class="col-md-6">
+            <romb-ref-select
+              source="departments"
+              label="Выберите ТТ"
+              [rcValue]="person.department"
+              [listCriteria]="departmentParent"
+              [customColsHide]="customColsHide"
+              (selected)="selectDepartment($event)"
+              (openModalSelect)="mainList.openExernalModalSelect($event)"
+              (closeModalSelect)="mainList.closeExernalModalSelect($event)">
+          </romb-ref-select>
+          <!-- <div class="form-group label-floating">ТТ
+            <label class="control-label">{{contactsLabels.department}}</label>
+            <input [(ngModel)]="person.department" name="departmentItem{{person.id}}"
+                   (change)="changeMultiValue($event)"
+                   type="text" class="form-control">
+          </div> -->
+        </div>
+      </div>
+      <div class="row" *ngIf="person.comment">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="control-label">{{contactsLabels.comment}}</label>
+            <input [(ngModel)]="person.comment" name="commentItem{{person.id}}"
+                   (change)="changeMultiValue($event)"
+                   type="text" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="row links-row">
+        <div class="col-md-12 padding0">
+          <a class="text-success multi-element-link"
+             (click)="addContact(person, contactType.phone)">{{contactsLabels.addPhone}}</a>
+          <a class="text-success multi-element-link"
+             (click)="addContact(person, contactType.email)">{{contactsLabels.addEmail}}</a>
+          <a class="text-success multi-element-link"
+             (click)="addContact(person, contactType.web)">{{contactsLabels.addWeb}}</a>
+          <a class="text-success multi-element-link"
+             (click)="addContact(person, contactType.skype)">{{contactsLabels.addSkype}}</a>
+        </div>
+      </div>
+
+      <div *ngIf="person.contacts">
+        <div class="row" *ngFor="let contact of person.contacts">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="control-label">{{contact.type}}</label>
+              <input [(ngModel)]="contact.value" name="valueItem{{contact.id}}"
+                     (change)="changeMultiValue($event)"
+                     [type]="getInputType(contact.type)" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <label class="control-label">{{contactsLabels.comment}}</label>
+              <input [(ngModel)]="contact.comment" name="commentContactItem{{contact.id}}"
+                     (change)="changeMultiValue($event)"
+                     type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-default btn-raised btn-just-icon btn-round"
+                    [title]="contactsLabels.removeContact"
+                    (click)="removeContact(person, contact)">
+              <fa name="trash"></fa>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="contactList && contactList.length">
+    <a class="btn btn-info btn-raised btn-round btn-xs"
+       (click)="editMode=!editMode">{{contactsLabels.viewMode}}</a>
+    <a href="javascript:void(0)" class="btn btn-success btn-raised btn-round btn-xs"
+       (click)="addPerson()">{{contactsLabels.addPerson}}</a>
+  </div>
+</div>
+<div class="view-mode" *ngIf="!editMode">
+  <div class="row">
+    <a *ngIf="mode === 'advanced'"
+       class="btn btn-primary btn-raised btn-round btn-xs"
+       (click)="editMode=!editMode">{{contactsLabels.editMode}}</a>
+  </div>
+  <mat-accordion>    
+    <mat-expansion-panel *ngFor="let person of contactList;">
+      <mat-expansion-panel-header [expandedHeight]="getExpansionHeadHeigth(person)">
+        <div class="col-md-3">
+          <mat-panel-title [textContent]="person.position || 'Должность'"
+            [matTooltip]="person.position || 'Должность'">            
+          </mat-panel-title>
+        </div>
+        <div class="col-md-9">
+          <mat-panel-description>
+            <div class="col-md-6"
+            [textContent]="person.name || 'ФИО (пусто)'">
+            </div>
+            <div class="col-md-6"
+              [textContent]="person.department && person.department.name || 'TT (пусто)'">
+            </div>
+          </mat-panel-description>
+        </div>
+      </mat-expansion-panel-header>      
+      <mat-list *ngFor="let contact of person.contacts">
+        <mat-list-item>
+          <div class="col-md-4 contact-type">{{ contact.type }}</div>
+          <div class="col-md-4">{{ contact.value }}</div>
+          <div class="col-md-4">{{ contact.comment }}</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>                         
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</div>
+<romb-register-modal *ngIf="registerModalActive && checkCredential('partners-contacts-register-user') && mode === 'advanced'"
+      [person]="registerPerson"
+      (destroyWindow)="destroyRegisterWindow($event)"
+    ></romb-register-modal>

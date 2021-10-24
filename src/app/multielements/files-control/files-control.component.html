@@ -1,0 +1,128 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <mat-toolbar>
+        <mat-radio-group [(ngModel)]="mode">
+          <mat-radio-button class="example-margin" value="files">
+            Список документов
+          </mat-radio-button>
+          <mat-radio-button class="example-margin" value="comments">
+            Комментарии
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-toolbar>
+      <ng-container *ngIf="mode==='files'; else comments">
+        <div>
+          <i *ngIf="!isFilesPanelOpened" class="material-icons" matTooltip="развернуть всё"
+            (click)="expandAll()">expand_more</i>
+          <i *ngIf="isFilesPanelOpened" class="material-icons" matTooltip="свернуть всё"
+            (click)="closeAll()">expand_less</i>
+        </div>
+        <mat-card>
+          <mat-accordion *ngIf="files" multi="true">
+            <ng-container *ngFor="let category of files">
+              <mat-expansion-panel class="dragdrop-target" (dragover)="onAllowDrop($event)"
+                (dragenter)="onDragEnter($event)" (dragend)="onDragEnd($event)" (drop)="onDrop($event, category)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{category.category}}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let file of category.list; let last = last;">
+                  <div draggable="true" (dragstart)="onFileDrag($event, file)" class="row dragdrop-elem">
+                    <div class="col-md-3">
+                      <img [src]="generateFileLink(file.generatedFileName)">
+                    </div>
+                    <div class="col-md-2">{{ file.description }}</div>
+                    <div class="col-md-7">
+                      <mat-radio-group class="radio-group"
+                        (change)="onFileStatusChange($event, file, category.category)">
+                        <mat-radio-button class="radio-button" color="primary" *ngFor="let status of fileStatus"
+                          [checked]="compareObject(status, file.status)" [matTooltip]="status.description"
+                          [value]="status">
+                          {{ status.title }}
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+                  <div *ngIf="!last" class="border"></div>
+                </ng-container>
+              </mat-expansion-panel>
+            </ng-container>
+          </mat-accordion>
+        </mat-card>
+      </ng-container>
+      <ng-template #comments>
+        <h3>Проверьте первичные документы</h3>
+        <div class="row primary-check-row">
+          <div class="container">
+            <!-- <div class="text-danger check-info"><b>Отметьте ниже если первичные документы <u>корректны</u></b></div>
+            <div class="row">
+              <mat-checkbox (change)="onPrimaryFilesCheckChange($event, item)">Первичные документы корректны
+              </mat-checkbox>
+            </div> -->
+            <div class="text-danger comment-info"><b>Если какой-либо документ не корректен, укажите это в комментарии
+                ниже</b></div>
+            <div class="row">
+              <div class="col-md-12">
+                <form #filesCheckCommentForm="ngForm" (ngSubmit)="onSubmitFileCheckLog(filesCheckCommentForm)">
+                  <div class="row">
+                    <div class="col-md-9">
+                      <mat-form-field>
+                        <label for="commentItem" class="control-label">Комментарий</label>
+                        <input matInput ngModel name="filesCheckCommentItem" id="filesCheckComment">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <button type="submit" class="btn btn-sm btn-success">добавить комментарий</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <mat-accordion>
+                  <mat-expansion-panel (opened)="onFileCheckLogsOpen()">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        История проверки первичных документов
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-list *ngIf="filesCheckLogs" role="list">
+                      <div class="list-header">
+                        <mat-list-item role="listitem">
+                          <div class="col-md-6"><b>Комментарий</b></div>
+                          <div class="col-md-3"><b>Дата</b></div>
+                          <div class="col-md-3"><b>Сотрудник</b></div>
+                        </mat-list-item>
+                      </div>
+                      <ng-container *ngFor="let logItem of filesCheckLogs">
+                        <mat-list-item role="listitem">
+                          <div class="col-md-6">
+                            {{ logItem.description }}
+                          </div>
+                          <div class="col-md-3">
+                            {{ logItem.stamp | date: 'dd.MM.yyyy HH:mm' }}
+                          </div>
+                          <div class="col-md-3">
+                            {{ logItem.author.name || 'неизвестно' }}
+                          </div>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                      </ng-container>
+                    </mat-list>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

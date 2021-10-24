@@ -1,0 +1,156 @@
+.romb-chat {
+  position: fixed;
+  top: 0;
+  right: -480px;
+  width: 480px;
+  z-index: 1099;
+  transition: right .3s;
+
+  background-color: white;
+  border-width: 1px;
+  border-color: #1f1f1f;
+  border-style: none;
+  height: 100vh;
+  box-sizing: border-box;
+
+  &.active {
+    right: 0;
+    box-shadow: 0 15px 40px 0 hsla(0, 0%, 44%, .56);
+
+    ul {
+      list-style: none;
+      word-wrap: break-word;
+    }
+
+    /* Pages */
+
+    .pages {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .page {
+      height: 100%;
+      position: absolute;
+      width: 100%;
+    }
+
+    /* Login Page */
+
+    .login.page .form {
+      height: 100px;
+      margin-top: -100px;
+      position: absolute;
+
+      text-align: center;
+      top: 50%;
+      width: 100%;
+    }
+
+    .login.page .form .usernameInput {
+      background-color: transparent;
+      border: none;
+      border-bottom: 2px solid #ff20cd;
+      outline: none;
+      padding-bottom: 15px;
+      text-align: center;
+      width: 400px;
+    }
+
+    .login.page .title {
+      font-size: 200%;
+    }
+
+    .login.page .usernameInput {
+      font-size: 200%;
+      letter-spacing: 3px;
+    }
+
+    .login.page .title, .login.page .usernameInput {
+      color: #ff3f1f;
+      font-weight: 100;
+    }
+
+    /* Chat page */
+
+    .chat.page {
+      display: block;
+    }
+
+    .settings.page {
+      display: none;
+    }
+
+    .login.page {
+      display: none;
+    }
+
+    /* Font */
+
+    .messages {
+      font-size: 150%;
+    }
+
+    .inputMessage {
+      font-size: 100%;
+    }
+
+    .log {
+      color: gray;
+      font-size: 70%;
+      margin: 5px;
+      text-align: center;
+    }
+
+    /* Messages */
+
+    .chatArea {
+      height: 100%;
+      padding-bottom: 60px;
+    }
+
+    .messages {
+      height: 100%;
+      margin: 0;
+      overflow-y: scroll;
+      padding: 10px 20px 10px 20px;
+    }
+
+    .message.typing .messageBody {
+      color: gray;
+    }
+
+    .username {
+      background-color: #EEE;
+      font-weight: 700;
+      overflow: hidden;
+      padding-right: 15px;
+      text-align: right;
+    }
+
+    /* Input */
+
+    .inputMessage {
+      bottom: 0;
+      left: 0;
+      outline: none;
+      padding-left: 10px;
+      right: 0;
+      width: 100%;
+    }
+
+    .inputMessageFooter {
+      border: 2px solid #000;
+      bottom: 0;
+      height: 48px;
+      left: 0;
+      outline: none;
+      padding-left: 10px;
+      position: absolute;
+      right: 0;
+      width: 100%;
+    }
+  }
+}

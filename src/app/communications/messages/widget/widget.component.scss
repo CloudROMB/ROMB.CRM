@@ -1,0 +1,57 @@
+@import "../../../../assets/sass/material-dashboard/variables";
+@import "../../../../assets/sass/material-dashboard/shadows";
+
+.chat-widget {
+  z-index: 1031;
+  position: fixed; /* блок занимает ширину содержимого, max-width её ограничивает */
+  bottom: 1em; /* прикрепить к верху родителя */
+  right: 1em;
+
+  margin-right: 24px;
+
+  ul {
+    max-width: 240px;
+    width: 220px;
+    left: -160px;
+  }
+
+  li {
+    a:hover,
+    a:focus,
+    a:active {
+      background-color: $brand-info;
+      color: #FFFFFF;
+      @include shadow-big-color($brand-info);
+    }
+
+    .new-message {
+      color: #00b0ff;
+    }
+  }
+
+  .notification {
+    position: absolute;
+    top: 8px;
+    border: 1px solid #FFF;
+    right: -4px;
+    font-size: 9px;
+    background: #f44336;
+    color: #FFFFFF;
+    min-width: 20px;
+    padding: 0px 5px;
+    height: 20px;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 19px;
+    vertical-align: middle;
+    display: block;
+  }
+}
+
+@media (min-width: $screen-md) {
+  .chat-widget {
+    bottom: 0; /* прикрепить к низу родителя */
+    right: 0;
+    //margin-right: 24px;
+  }
+}

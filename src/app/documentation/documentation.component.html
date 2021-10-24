@@ -1,0 +1,32 @@
+<div class="main-content">
+  <div class="container" style="padding-top: 30px">
+    <div class="row">
+      <div class="col-md-6"
+           *ngIf="checkCredentials('documentation_user')">
+        <div class="card">
+          <div class="card-content text-center">
+            <h3>Руководство пользователя</h3>
+            <img src="/assets/img/www/ccorder.jpg" alt="Для пользователя">
+            <a routerLink="/doc/user" class="btn btn-info btn-fill">
+              <!--<fa name="file-text-o"></fa>-->
+              &nbsp;Открыть
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6"
+           *ngIf="checkCredentials('documentation_admin')">
+        <div class="card">
+          <div class="card-content text-center">
+            <h3>Руководство администратора</h3>
+            <img src="/assets/img/www/selforder.jpg" alt="Для администратора">
+            <a routerLink="/doc/system" class="btn btn-info btn-fill">
+              <!--<fa name="file-text-o"></fa>-->
+              &nbsp;Открыть
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

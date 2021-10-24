@@ -1,0 +1,90 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <romb-datatable-lite
+      #mainList      
+      [source]="source"
+      [itemStructure]="structureDoc"
+      (afterOpen)="afterOpen($event)"
+      (beforeSave)="beforeSave($event)"
+      (afterClose)="afterClose()"
+    >
+      <ng-template #dataTableCardTemplate let-item="item">
+        <form #f="ngForm" class="dt-card-form tab-form">
+          <!-- закладки -->
+          <div class="nav-center">
+            <ul class="nav nav-pills nav-pills-info" role="tablist">
+              <li class="active">
+                <a href="#card-pan" role="tab" data-toggle="tab">
+                  Карточка
+                </a>
+              </li>
+              <li >
+                <a href="#partners-pan" role="tab" data-toggle="tab"
+                   (click)="showPartners(item)">
+                  Партнеры
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- tab content -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="card-pan">
+              <h3>Карточка бренда</h3>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group label-floating">
+                    <label class="control-label">Название бренда</label>
+                    <input #name [(ngModel)]="item.name" name="itemName"
+                           type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <!--<label>Основной партнер</label>-->
+                  <!--<romb-ref-select-->
+                      <!--source="partners"-->
+                      <!--label="Владелец бренда"-->
+                      <!--[rcValue]="item.mainPartner"-->
+                      <!--(selected)="selectPartner(item, $event)"-->
+                      <!--(openModalSelect)="mainList.openExernalModalSelect($event)"-->
+                      <!--(closeModalSelect)="mainList.closeExernalModalSelect($event)">-->
+                  <!--</romb-ref-select>-->
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <romb-combo-list
+                    label="Владелец бренда"
+                    [viewValues]="['name', 'inn']"
+                    source="partners"
+                    [limit]="15"
+                    [(clValue)]="item.mainPartner">
+                  </romb-combo-list>
+                </div>
+              </div>
+            </div>
+
+            <!-------------------------------------------------------------------------------------------------------------->
+
+            <div class="tab-pane" id="partners-pan">
+              <h4><strong>Партнеры бренда</strong></h4>
+              <div class="row" *ngFor="let partner of partners"
+                   style="margin-bottom: 16px;border-bottom: 1px dashed darkgray;">
+                <div class="col-sm-4">
+                  <a class="multi-element-link"
+                     [routerLink]="['', 'references', 'partners', partner._id]"
+                     target="_self">{{partner.name}}</a>
+                </div>
+                <div class="col-sm-2">
+                  {{partner.active?'Работает':''}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-template>
+    </romb-datatable-lite>
+  </div>
+</div>

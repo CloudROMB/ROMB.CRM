@@ -1,0 +1,79 @@
+// CONTEXT MENU
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* tasks */
+//.tasks {
+//  chats-style: none;
+//  margin: 0;
+//  padding: 0;
+//}
+//
+//.task {
+//  display: flex;
+//  justify-content: space-between;
+//  padding: 12px 0;
+//  border-bottom: solid 1px #dfdfdf;
+//}
+//
+//.task:last-child {
+//  border-bottom: none;
+//}
+
+/* context menu */
+
+nav  {
+  //display: none;
+  //display: block;
+  //position: absolute;
+  position: fixed;
+  z-index: 20000;
+  //padding: 12px 0;
+  background-color: #fff;
+  border: solid 1px #dfdfdf;
+  box-shadow: 1px 1px 2px #cfcfcf;
+
+  width: 0px;
+  height: 0px;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  color: #4e342e !important;
+}
+
+.dropdown-menu {
+}
+
+.context-menu--active {
+  display: block;
+}
+
+//.context-menu__items {
+//  chats-style: none;
+//  margin: 0;
+//  padding: 0;
+//}
+//
+//.context-menu__item {
+//  display: block;
+//  margin-bottom: 4px;
+//}
+//
+//.context-menu__item:last-child {
+//  margin-bottom: 0;
+//}
+//
+//.context-menu__link {
+//  display: block;
+//  padding: 4px 12px;
+//  color: #0066aa;
+//  text-decoration: none;
+//}
+//
+//.context-menu__link:hover {
+//  color: #fff;
+//  background-color: #0066aa;
+//}

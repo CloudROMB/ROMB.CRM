@@ -1,0 +1,242 @@
+<div class="row mel-files-row mel-component">
+  <div class="col-xs-12 mel-files-col">
+    <div class="row">
+      <div class="col-sm-8">
+        <legend *ngIf="filesList && filesList.length!==1 && showTitle">{{labels.componentDescr}}</legend>
+      </div>
+      <div class="col-sm-4 text-right">
+        <a *ngIf="showSaveButton"
+           class="btn btn-rose btn-raised btn-round btn-xs"
+           style="flex: 1;"
+           (click)="needSaveChangesCkicked()">{{labels.saveChanges}}</a>
+      </div>
+    </div>
+    <div class="edit-mode" *ngIf="editMode">
+      <div class="row" *ngIf="showHeaders">
+        <a class="btn btn-info btn-raised btn-round btn-xs"
+           (click)="editMode=!editMode">{{labels.viewMode}}</a>
+        <a class="btn btn-default btn-raised btn-round btn-xs"
+           (click)="expandCategories()">{{labels.expandCategories}}</a>
+      </div>
+      <div class="row mel-row" *ngFor="let cat of filesList">
+        <div class="col-md-12">
+          <div class="row" id="cat{{cat.id}}">
+            <div class="col-md-12 category-header">
+              <p class="h4">
+                <strong>
+                  <span *ngIf="(!cat.list||(cat.list&&cat.list.length<1))">
+                    {{filesList.length===1?labels.componentDescr:cat.category}}
+                  </span>
+                  <span *ngIf="(cat.list&&cat.list.length>0)">
+                    <a title="Показать файлы" class="clickable"
+                       data-toggle="collapse" [attr.data-target]="'#catBlock' + cat.id">
+                        <span>{{filesList.length===1?labels.componentDescr:cat.category}}</span>
+                        (файлов: {{cat.list.length}})
+                        &nbsp;<span class="fa fa-sort column-sortable-icon"></span>
+                    </a>
+                  </span>
+                </strong>
+              </p>
+              <!--class="btn btn-success btn-raised btn-round btn-xs"-->
+              <a class="text-success multi-element-link"
+                 [hidden]="allowEdit!==true"
+                 (click)="addFile(cat)">{{labels.addFile}}</a>
+              <fa *ngIf="uploading" name="refresh" [spin]="true"
+                  style="margin: 0 16px; flex: 2;"
+                  title="{{labels.uploading}}"></fa>
+              <div class="form-group label-floating"
+                   style="display: block; flex: auto;">
+                <input type="file" multiple class="form-control"
+                       accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.tif,.tiff,.png,.bmp"
+                       [name]="'addFile'+cat.id" [id]="'addFile'+cat.id"
+                       (change)="handleFileInput(cat, $event.target.files)">
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="cat.list"
+               class="file-category collapse"
+               id="catBlock{{cat.id}}">
+            <div class="row mel-filename-row" *ngFor="let file of cat.list">
+              <ng-container *ngIf="canGetFile(file); else docAcceptedTpl">
+                <!-- preview icon -->
+                <div class="col-md-2"
+                    style="display: flex; justify-content: center;">
+                  <div style="width: max-content; height: 75px; text-align: center;">
+                    <!-- <a *ngIf="checkCredential('user_partner') && file.correct" -->
+                    <a [title]="labels.previewFile"
+                      (click)="showPreviewClicked(cat.list, file)">
+                      <img class="preview-photo"
+                          [src]="getPreviewFileLink(file)"
+                          [alt]="file.fileName">
+                    </a>
+                  </div>
+                </div>
+                <!-- download / delete -->
+                <div class="col-md-2">
+                  <!--<a class="preview-link text-info multi-element-link"-->
+                  <!--[title]="labels.previewFile"-->
+                  <!--(click)="showPreviewClicked(cat.list, file)">{{file.fileName | cutCell:40}}-->
+                  <!--</a>-->
+                  <a [href]="getFileLink(file)"
+                    class="text-info"
+                    target="_blank" [title]="labels.openFile">
+                    <fa name="download"
+                        style="margin: 0 16px; flex: 1; font-size: 24px;"></fa>
+                  </a>
+                  <!--<a class="preview-link text-info multi-element-link"-->
+                  <!--data-toggle="modal" data-target="#previewModal"-->
+                  <!--(click)="setPreviewLink(file)">{{labels.previewFile}}-->
+                  <!--</a>-->
+                  <a class="preview-link text-danger"
+                    [title]="labels.removeFile"
+                    [hidden]="(file.correct===true||allowEdit!==true)"
+                    (click)="removeFile(cat, file)">
+                    <fa name="trash-o" style="margin: 0 16px; flex: 1; font-size: 24px;"></fa>
+                  </a>
+                </div>
+              </ng-container>
+              <ng-template #docAcceptedTpl>
+                <div class="col-md-4">
+                  <span class="label label-success">документ принят</span>
+                </div>
+              </ng-template>
+
+              <!-- change category -->
+              <div
+                [ngClass]="!checkCredential('credit_order_document_correct')||allowEdit!==true||fileCheck!==true?'col-md-4':'col-md-2'"
+                [title]="labels.changeCategory">
+                <mat-form-field class="form-select">
+                  <mat-select
+                      #fileCat
+                      [placeholder]="labels.fileCategory"
+                      [value]="cat.category"
+                      [disabled]="(file.correct===true||allowEdit!==true)"
+                      (change)="changeFileCategory(cat, file, fileCat)">
+                      <mat-option *ngFor="let filecat of fileVals()"
+                        [value]="filecat"                        
+                        [title]="filecat"
+                    >{{filecat}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- description -->
+              <div class="col-md-4">
+                <mat-form-field class="">
+                  <input
+                      matInput type="text"
+                      [disabled]="allowEdit!==true"
+                      placeholder="{{labels.description}}"
+                      [style.color]="(dangerComments)?'red':null"
+                      (change)="changeMultiValue($event)"
+                      [(ngModel)]="file.description" name="descriptionFile{{file.id}}">
+                </mat-form-field>
+
+                <!--<div class="form-group label-floating">-->
+                <!--<label class="control-label">{{labels.description}}</label>-->
+                <!--<input type="text"-->
+                <!--[style.color]="(dangerComments)?'red':null"-->
+                <!--[(ngModel)]="file.description" name="descriptionFile{{file.id}}"-->
+                <!--(change)="changeMultiValue($event)"-->
+                <!--class="form-control">-->
+                <!--</div>-->
+              </div>
+              <div class="col-md-2"
+                   [hidden]="!checkCredential('credit_order_document_correct') || fileCheck!==true">
+                <mat-checkbox
+                    class="example-margin"
+                    title="{{labels.documentCorrect}}"
+                    [disabled]="!checkCredential('credit_order_document_correct')||allowEdit!==true"
+                    (change)="changeFileCorrect(file)"
+                    [(ngModel)]="file.correct" name="correct{{file.id}}">
+                  {{labels.documentCorrect}}
+                </mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-mode" *ngIf="!editMode">
+      <div class="row" *ngIf="showHeaders">
+        <a class="btn btn-primary btn-raised btn-round btn-xs"
+           (click)="editMode = (!editMode)">{{labels.editMode}}</a>
+      </div>
+      <div *ngFor="let cat of filesList">
+        <div class="row mel-row mel-row-text" *ngIf="cat.list && cat.list.length">
+          <div class="col-md-12 mel-col ">
+            <div class="row h5">
+              <div class="col-md-4">
+                <p>{{cat.category}}</p>
+              </div>
+            </div>
+            <div *ngIf="cat.list">
+              <div class="row" *ngFor="let file of cat.list">
+                <div class="com-md-2 text-center text-justify">
+                  <div style="width: 100px; height: 75px; text-align: center;">
+                    <a [title]="labels.previewFile"
+                       (click)="showPreviewClicked(cat.list, file)">
+                      <img class="preview-photo"
+                           [src]="getPreviewFileLink(file)"
+                           [alt]="file.fileName">
+                    </a>
+                  </div>
+                </div>
+                <!--<div class="col-md-5">-->
+                <!--<a class="preview-link text-info multi-element-link"-->
+                <!--[title]="labels.previewFile"-->
+                <!--(click)="showPreviewClicked(cat.chats, file)">{{file.fileName}}-->
+                <!--</a>-->
+                <!--</div>-->
+                <div class="col-md-4">
+                  <a [href]="getFileLink(file)"
+                     class="text-info multi-element-link"
+                     target="_blank" [title]="labels.openFile">
+                    {{labels.openFile}}
+                  </a>
+                </div>
+                <div class="col-md-4">
+                  <p [style.color]="(dangerComments)?'red':null">
+                    {{file.description}}
+                  </p>
+                </div>
+
+                <div class="col-md-2">
+                  <p>
+                    {{convertBytesToMB(file.length)}}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="preview-modal" *ngIf="showPreview">
+  <button type="button" class="close"
+          [title]="labels.closePreview"
+          (click)="closePreviewClicked()">
+    <i class="material-icons">clear</i>
+  </button>
+
+  <div class="preview-frame" id="previewLinkBody">
+  </div>
+
+  <button type="button" class="btn btn-round btn-just-icon btn-info photo-prev"
+          *ngIf="previewIndex > 0"
+          [title]="labels.previousPhoto"
+          (click)="prevPhoto()">
+    <i class="material-icons">keyboard_arrow_left</i>
+  </button>
+  <button type="button" class="btn btn-round btn-just-icon btn-info photo-next"
+          *ngIf="previewList && previewIndex < previewList.length - 1"
+          [title]="labels.nextPhoto"
+          (click)="nextPhoto()">
+    <i class="material-icons">keyboard_arrow_right</i>
+  </button>
+</div>

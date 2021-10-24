@@ -1,0 +1,18 @@
+<nav id="context-menu-{{source}}"
+     class="context-menu nav navbar-nav navbar-info dropdown open"
+     [hidden]="!menuVisible">
+  <ul class="dropdown-menu">
+    <li *ngFor="let item of items; let i = index"
+        [class.divider]="(item.type===contextMenuItemTypes.SEPARATOR)"
+    >
+      <a
+          *ngIf="(item.type!==contextMenuItemTypes.SEPARATOR)"
+          [href]="(item.type===contextMenuItemTypes.LINK && item.link)?item.link:null"
+          [routerLink]="(item.type===contextMenuItemTypes.ROUTE)?[item.link]:null"
+          [textContent]="item.text"
+          [id]="item.id"
+          (click)="menuItemSelected(item, $event)"
+      ></a>
+    </li>
+  </ul>
+</nav>

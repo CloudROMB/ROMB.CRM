@@ -1,0 +1,16 @@
+<div class="wrapper">
+  <div class="sidebar" data-active-color="white" data-background-color="black" data-image="../assets/img/sidebar-4.jpg">
+    <romb-sidebar></romb-sidebar>
+    <!--<div class="sidebar-background" style="background-image: url(assets/img/sidebar-2.jpg)"></div>-->
+  </div>
+  <div class="main-panel">
+    <romb-navbar></romb-navbar>
+    <div *ngIf="!isMap()">
+      <!--<romb-footer></romb-footer>-->
+    </div>
+
+    <router-outlet></router-outlet>
+  </div>
+  <romb-chat></romb-chat>
+</div>
+<romb-chat-widget *ngIf="checkCredential('messages_receive')"></romb-chat-widget>

@@ -1,0 +1,60 @@
+<div #modalOverlay
+     *ngIf="overlay"
+     class="ui-modal-overlay"
+     [style.zIndex]="zIndex">
+</div>
+
+<div class="ui-modal" tabindex="-1" role="dialog"
+     #modalRoot
+     [ngClass]="{'minimized': minimized}"
+     [style.width.px]="width"
+     [style.minWidth.px]="minWidth"
+     [style.zIndex]="contentzIndex"
+     (mousedown)="moveOnTop()"
+     (touchstart)="moveOnTop()"
+     >
+  <div class="ui-modal-header" #modalHeader
+      (mousedown)="initDrag($event)"
+     (touchstart)="initDrag($event)">
+    <div class="ui-titlebar">
+      <span class="ui-modal-title" *ngIf="modalTitle">{{modalTitle}}</span>
+      <ng-content select=".app-modal-header"></ng-content>
+    </div>
+    <div class="ui-controlbar">
+      <span *ngIf="minimizable" (click)="toggleMinimize($event)">
+          <i [title]="minimized ? 'развернуть' : 'свернуть'"
+             [ngClass]="minimized ? 'fa fa-window-restore' : 'fa fa-window-minimize'"></i>
+      </span>
+      <span *ngIf="maximizable && !minimized" (click)="toggleMaximize($event)">
+              <i [ngClass]="maximized ? 'fa fa-window-restore' : 'fa fa-window-maximize'"></i>            
+          </span>
+      <span (click)="hide()"
+            (mousedown)="onCloseIcon($event)"
+            (touchstart)="onCloseIcon($event)">
+                <i class="fa fa-window-close-o" aria-hidden="true"></i>
+          </span>
+    </div>
+  </div>
+  <div class="ui-modal-body" #modalBody>
+    <ng-content select=".modal-body"></ng-content>
+  </div>
+  <div class="ui-modal-footer" #modalFooter>
+    <ng-content select=".modal-footer"></ng-content>
+  </div>
+
+  <div class="ui-resizable-s"
+       *ngIf="!maximized"
+       [style.zIndex]="contentzIndex"
+       (mousedown)="initResizeS($event.pageX, $event.pageY)"
+       (touchstart)="initResizeS($event.touches[0].pageX, $event.touches[0].pageY)"></div>
+  <div class="ui-resizable-e"
+       *ngIf="!maximized"
+       [style.zIndex]="contentzIndex"
+       (mousedown)="initResizeE($event.pageX, $event.pageY)"
+       (touchstart)="initResizeE($event.touches[0].pageX, $event.touches[0].pageY)"></div>
+  <div class="ui-resizable-se"
+       *ngIf="!maximized"
+       [style.zIndex]="contentzIndex"
+       (mousedown)="initResizeSE($event.pageX, $event.pageY)"
+       (touchstart)="initResizeSE($event.touches[0].pageX, $event.touches[0].pageY)"></div>
+</div>
